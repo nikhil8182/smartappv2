@@ -134,7 +134,7 @@ class _IndividualPageState extends State<IndividualPage> {
 
                   Container(
                     padding: EdgeInsets.symmetric(horizontal: 40.0),
-                    height: height * 0.45,
+                    height: height * 0.55,
                     width: width * 1.0,
                     color: Colors.transparent,
                     // decoration: BoxDecoration(
@@ -371,14 +371,14 @@ class _SelectCardState extends State<SelectCard> {
                     children: [
                       SvgPicture.asset(
                         widget.choice.image,
-                        height: 50.0,
+                        height: height * 0.051,
                       ),
                       SizedBox(
-                        height: 10.0,
+                        height: height * 0.010,
                       ),
                       Text(
                         widget.choice.title,
-                        style: GoogleFonts.inter(fontSize: 20.0),
+                        style: GoogleFonts.inter(fontSize: height * 0.021),
                       ),
                     ],
                   ),
