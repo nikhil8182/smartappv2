@@ -34,7 +34,7 @@ class _RoutineContainerState extends State<RoutineContainer> {
               mainAxisAlignment:MainAxisAlignment.end,
               children: [
                 IconButton(onPressed: (){},
-                  icon: Icon(Icons.power_settings_new,size: 30.0,),
+                  icon: Icon(Icons.power_settings_new,size:height * 0.031,),
                 ),
               ],
             ),

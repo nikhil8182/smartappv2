@@ -4,8 +4,6 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:onwords_home/Routine_Page/routine_page_final.dart';
 
 class RoutinePage1 extends StatefulWidget {
-
-
   @override
   _RoutinePage1State createState() => _RoutinePage1State();
 }
@@ -22,50 +20,60 @@ class _RoutinePage1State extends State<RoutinePage1> {
           children: [
             SizedBox(
               // height: 40.0,
-              height: height*0.075,
+              height: height * 0.075,
             ),
             Text(
               " Routines ",
               style: GoogleFonts.inter(
-                  fontSize: height*0.038,
+                  fontSize: height * 0.038,
                   fontWeight: FontWeight.bold,
                   color: Colors.white),
             ),
             SizedBox(
               // height: 20.0,
-              height: height*0.035,
+              height: height * 0.035,
             ),
             Center(
               child: Text(
                 " Create new routines ",
                 style: GoogleFonts.inter(
-                    fontSize: height*0.015,
+                    fontSize: height * 0.015,
                     fontWeight: FontWeight.bold,
                     color: Colors.grey),
               ),
             ),
             SizedBox(
               // height: 20.0,
-              height: height*0.035,
+              height: height * 0.035,
             ),
             Padding(
               padding: EdgeInsets.symmetric(horizontal: 58.0),
-              child: Container(
-                height: height*0.095,
-                width: width*0.75,
-                decoration: BoxDecoration(
-                  color: Color.fromRGBO(54, 54, 54, 1.0),
-                  borderRadius: BorderRadius.circular(10.0)
-                ),
-                child: Center(
-                  child: IconButton(onPressed: (){
-                    Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>RoutinePageFinal()));
-                  }, icon: Icon(Icons.add,color: Colors.black,size:height*0.04,),),
+              child: Center(
+                child: Container(
+                  height: height * 0.095,
+                  width: width * 0.75,
+                  decoration: BoxDecoration(
+                      color: Color.fromRGBO(54, 54, 54, 1.0),
+                      borderRadius: BorderRadius.circular(10.0)),
+                  child: Center(
+                    child: IconButton(
+                      onPressed: () {
+                        Navigator.pushReplacement(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => RoutinePageFinal()));
+                      },
+                      icon: Icon(
+                        Icons.add,
+                        color: Colors.black,
+                        size: height * 0.04,
+                      ),
+                    ),
+                  ),
                 ),
               ),
             )
           ],
-        )
-    );
+        ));
   }
 }

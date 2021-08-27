@@ -1,22 +1,30 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:onwords_home/splashScreen.dart';
 //import 'package:onwords_home/home_page.dart';
 import 'package:provider/provider.dart';
 import 'Routine_Page/task_data.dart';
-import 'login_page.dart';
+//import 'log_ins/login_page.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
 
+
+//last cloned 27-aug-2021 - 5-41pm
+
+FirebaseAuth auth = FirebaseAuth.instance;
 
 final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
 FlutterLocalNotificationsPlugin();
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  Firebase.initializeApp();
   var initializationSettingsAndroid =
   AndroidInitializationSettings('launch_background');
   var initializationSettingsIOS = IOSInitializationSettings(
       requestAlertPermission: true,
-      requestBadgePermission: true,
-      requestSoundPermission: true,
+      requestBadgePermission: true,//backup code
+      requestSoundPermission: true,//parthosh
       onDidReceiveLocalNotification:
           (int id, String title, String body, String payload) async {});
   var initializationSettings = InitializationSettings(
@@ -41,7 +49,7 @@ class MyApp extends StatelessWidget {
       //     .copyWith(scaffoldBackgroundColor: Color.fromARGB(255, 18, 32, 47)),
       debugShowCheckedModeBanner: false,
       home: Scaffold(
-        body:LoginPage(),
+        body:SplashScreen(),
       ),
       ),
     );

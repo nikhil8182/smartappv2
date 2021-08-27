@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
-
-import 'home_page.dart';
+import 'package:onwords_home/log_ins/installation_page.dart';
+import '../home_page.dart';
+import '../main.dart';
 
 class LoginPage extends StatefulWidget {
   @override
@@ -10,6 +11,17 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
+  TextEditingController email = TextEditingController();
+  TextEditingController pass = TextEditingController();
+  String loginState;
+
+  @override
+  void initState() {
+    email = TextEditingController();
+    pass = TextEditingController();
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     final height = MediaQuery.of(context).size.height;
@@ -37,12 +49,16 @@ class _LoginPageState extends State<LoginPage> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Image(image: AssetImage('images/logo.png'),height: height*0.15,),
+                Image(
+                  image: AssetImage('images/logo.png'),
+                  height: height * 0.15,
+                ),
                 SizedBox(
-                  height: height*0.050,
+                  height: height * 0.050,
                 ),
                 Center(
                   child: Container(
+                    width: width * 0.81,
                     padding:
                         EdgeInsets.symmetric(horizontal: 0.0, vertical: 90.0),
                     decoration: BoxDecoration(
@@ -109,16 +125,21 @@ class _LoginPageState extends State<LoginPage> {
                                 ),
                               ],
                             ),
-                            child: TextField(
-                              decoration: InputDecoration(
-                                filled: true,
-                                fillColor: Colors.black26,
-                                hintText: "Username",
-                                hintStyle: TextStyle(color: Colors.white),
-                                focusedBorder: OutlineInputBorder(
-                                  borderSide: BorderSide(
-                                      color: Colors.black, width: 2.0),
-                                  borderRadius: BorderRadius.circular(10.0),
+                            child: Padding(
+                              padding: EdgeInsets.all(8.0),
+                              child: TextField(
+                                controller: email,
+                                style: TextStyle(color: Colors.white),
+                                decoration: InputDecoration(
+                                  filled: true,
+                                  fillColor: Colors.transparent,
+                                  hintText: "Username",
+                                  hintStyle: TextStyle(color: Colors.white30),
+                                  focusedBorder: OutlineInputBorder(
+                                    borderSide: BorderSide(
+                                        color: Colors.black, width: width * 0.001),
+                                    borderRadius: BorderRadius.circular(10.0),
+                                  ),
                                 ),
                               ),
                             ),
@@ -155,16 +176,21 @@ class _LoginPageState extends State<LoginPage> {
                                 ),
                               ],
                             ),
-                            child: TextField(
-                              decoration: InputDecoration(
-                                filled: true,
-                                fillColor: Colors.black26,
-                                hintText: "Password",
-                                hintStyle: TextStyle(color: Colors.white),
-                                focusedBorder: OutlineInputBorder(
-                                  borderSide: BorderSide(
-                                      color: Colors.black, width: 2.0),
-                                  borderRadius: BorderRadius.circular(10.0),
+                            child: Padding(
+                              padding: EdgeInsets.all(8.0),
+                              child: TextField(
+                                controller: pass,
+                                style: TextStyle(color: Colors.white),
+                                decoration: InputDecoration(
+                                  filled: true,
+                                  fillColor: Colors.black26,
+                                  hintText: "Password",
+                                  hintStyle: TextStyle(color: Colors.white30),
+                                  focusedBorder: OutlineInputBorder(
+                                    borderSide: BorderSide(
+                                        color: Colors.black, width: width * 0.001),
+                                    borderRadius: BorderRadius.circular(10.0),
+                                  ),
                                 ),
                               ),
                             ),
@@ -174,14 +200,28 @@ class _LoginPageState extends State<LoginPage> {
                           height: height * 0.040,
                         ),
                         OutlinedButton(
-                            onPressed: () {
-                              Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) => HomePage()));
+                            onPressed: () async {
+                              try {
+                                await auth.signInWithEmailAndPassword(email: email.text,password: pass.text);
+                                setState(() {
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) =>
+                                              InstallationPage()));
+                                  // loginState = "logedin succesfully";
+                                  // print(
+                                  //     "curent user = ${Firebase.auth.UserProfile}");
+                                });
+                              } catch (e) {
+                                setState(() {
+                                  loginState = "Acess denied";
+                                });
+                              }
                             },
                             style: ButtonStyle(
-                              padding: MaterialStateProperty.all(EdgeInsets.all(12.0)),
+                              padding: MaterialStateProperty.all(
+                                  EdgeInsets.all(12.0)),
                               shape: MaterialStateProperty.all(
                                   RoundedRectangleBorder(
                                       borderRadius:
@@ -191,23 +231,24 @@ class _LoginPageState extends State<LoginPage> {
                             ),
                             child: Text(
                               " Sign In ",
-                              style: GoogleFonts.inter(color: Colors.white,fontSize: 16.0
-                              ),
+                              style: GoogleFonts.inter(
+                                  color: Colors.white, fontSize: 16.0),
                             ))
                       ],
                     ),
                   ),
                 ),
                 SizedBox(
-                  height: height*0.030,
+                  height: height * 0.030,
                 ),
                 GestureDetector(
-                  onTap: (){
-                    Navigator.push(context, MaterialPageRoute(builder: (context)=>HomePage()));
+                  onTap: () {
+                    Navigator.push(context,
+                        MaterialPageRoute(builder: (context) => HomePage()));
                   },
                   child: Container(
-                    height: height*0.070,
-                    width: width*0.81,
+                    height: height * 0.070,
+                    width: width * 0.81,
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(10.0),
                       gradient: LinearGradient(
@@ -246,13 +287,19 @@ class _LoginPageState extends State<LoginPage> {
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          SvgPicture.asset('images/login.svg',),
-                          SizedBox(
-                            width: width*0.04,
+                          SvgPicture.asset(
+                            'images/login.svg',
                           ),
-                          Text("Demo Login",style: GoogleFonts.inter(
-                            fontSize: 14.0,color: Colors.white60,fontWeight: FontWeight.bold
-                          ),),
+                          SizedBox(
+                            width: width * 0.04,
+                          ),
+                          Text(
+                            "Demo Login",
+                            style: GoogleFonts.inter(
+                                fontSize: height * 0.016,
+                                color: Colors.white60,
+                                fontWeight: FontWeight.bold),
+                          ),
                         ],
                       ),
                     ),

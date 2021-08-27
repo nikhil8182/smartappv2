@@ -38,6 +38,13 @@ dependencies:
   liquid_progress_indicator: ^0.4.0
   percent_indicator: ^3.0.1
   provider: ^5.0.0
+  timeline_tile: ^2.0.0
+  url_launcher: ^6.0.9
+  lottie: ^1.1.0
+  firebase_auth: ^3.1.0
+  firebase_core: ^1.6.0
+  firebase_database:
+  cloud_firestore:
 
 dev_dependencies:
   flutter_test:

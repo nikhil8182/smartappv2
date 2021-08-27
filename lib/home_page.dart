@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:onwords_home/Settings_page.dart';
-import 'package:onwords_home/firstPage.dart';
-import 'package:onwords_home/home_dash/dashBoardPage.dart';
-import 'package:onwords_home/second_dashBoard.dart';
+import 'package:onwords_home/bottomTabs/Settings_page.dart';
+import 'package:onwords_home/bottomTabs/firstPage.dart';
+import 'package:onwords_home/dashbord/second_dashBoard.dart';
 import 'package:floating_bottom_navigation_bar/floating_bottom_navigation_bar.dart';
-import 'routine_page.dart';
+import 'bottomTabs/routine_page.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -56,7 +55,7 @@ class _HomePageState extends State<HomePage> {
       //         label: 'DashBoard',
       //       ),
       //       BottomNavigationBarItem(
-      //         icon: Icon(Icons.settings),
+      //         icon: Icon(Icons.settingsPage),
       //         label: 'Settings',
       //       ),
       //     ],
