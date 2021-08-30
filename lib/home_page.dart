@@ -31,6 +31,7 @@ class _HomePageState extends State<HomePage> {
       // backgroundColor:  Color.fromRGBO(40, 36, 36, 1.0),
       // backgroundColor: Color.fromRGBO(26, 28, 30, 0.6),
       backgroundColor: Color.fromRGBO(26, 28, 30, 1.0),
+      extendBody: true,
       body: page[_currentIndex],
       // bottomNavigationBar: Container(
       //   padding: EdgeInsets.symmetric(horizontal: 1.0),
@@ -90,3 +91,4 @@ class _HomePageState extends State<HomePage> {
     );
   }
 }
+

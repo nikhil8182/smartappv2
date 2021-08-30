@@ -15,36 +15,37 @@ class SecondDashBoard extends StatefulWidget {
 
 class _SecondDashBoardState extends State<SecondDashBoard> {
   //"mailto:ceo@onwords.in?subject=Requesting%20for%20features%20installation&body=test%20body"
-String email = "mailto:ceo@onwords.in?subject=Requesting%20for%20features%20installation";
-
+  String email =
+      "mailto:ceo@onwords.in?subject=Requesting%20for%20features%20installation";
 
   @override
   void initState() {
     super.initState();
-    Future.delayed(Duration.zero, () {
-      this.showAlertDialog(context);
-    });
+    // Future.delayed(Duration.zero, () {
+    //   this.showAlertDialog(context);
+    // });
   }
-
 
   @override
   Widget build(BuildContext context) {
-    final height = MediaQuery
-        .of(context)
-        .size
-        .height;
-    final width = MediaQuery
-        .of(context)
-        .size
-        .width;
+    final height = MediaQuery.of(context).size.height;
+    final width = MediaQuery.of(context).size.width;
     return WillPopScope(
       onWillPop: () => showDialog<bool>(
         context: context,
         builder: (context) => AlertDialog(
           backgroundColor: Colors.black.withOpacity(0.9),
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12.0)),
-          title: Text('Warning',style: TextStyle(color: Colors.white60,fontWeight: FontWeight.bold),),
-          content: Text('Do you really want to exit',style: TextStyle(color: Colors.white60),),
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(12.0)),
+          title: Text(
+            'Warning',
+            style:
+                TextStyle(color: Colors.white60, fontWeight: FontWeight.bold),
+          ),
+          content: Text(
+            'Do you really want to exit',
+            style: TextStyle(color: Colors.white60),
+          ),
           actions: [
             TextButton(
               child: Text('Yes'),
@@ -69,7 +70,6 @@ String email = "mailto:ceo@onwords.in?subject=Requesting%20for%20features%20inst
                 SizedBox(
                   // height: 40.0,
                   height: height * 0.045,
-
                 ),
                 Text(
                   "Dashboard",
@@ -202,8 +202,8 @@ String email = "mailto:ceo@onwords.in?subject=Requesting%20for%20features%20inst
                           percent: 0.4,
                           center: new Text(
                             "40 %",
-                            style:
-                            new TextStyle(fontWeight: FontWeight.bold,
+                            style: new TextStyle(
+                                fontWeight: FontWeight.bold,
                                 fontSize: 9.0,
                                 color: Colors.grey),
                           ),
@@ -255,8 +255,9 @@ String email = "mailto:ceo@onwords.in?subject=Requesting%20for%20features%20inst
                       child: LiquidLinearProgressIndicator(
                         value: 0.5,
                         // Defaults to 0.5.
-                        valueColor: AlwaysStoppedAnimation(Color.fromRGBO(
-                            91, 156, 170, 1.0),),
+                        valueColor: AlwaysStoppedAnimation(
+                          Color.fromRGBO(91, 156, 170, 1.0),
+                        ),
                         // Defaults to the current Theme's accentColor.
                         backgroundColor: Colors.transparent,
                         // Defaults to the current Theme's backgroundColor.
@@ -265,8 +266,11 @@ String email = "mailto:ceo@onwords.in?subject=Requesting%20for%20features%20inst
                         borderRadius: 20.0,
                         direction: Axis.vertical,
                         // The direction the liquid moves (Axis.vertical = bottom to top, Axis.horizontal = left to right). Defaults to Axis.horizontal.
-                        center: Text("50 %", style: GoogleFonts.inter(
-                            color: Colors.grey, fontSize: 20.0),),
+                        center: Text(
+                          "50 %",
+                          style: GoogleFonts.inter(
+                              color: Colors.grey, fontSize: 20.0),
+                        ),
                       ),
                     ),
                     Column(
@@ -296,7 +300,8 @@ String email = "mailto:ceo@onwords.in?subject=Requesting%20for%20features%20inst
                               padding: EdgeInsets.all(10.0),
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.stretch,
-                                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceEvenly,
                                 children: [
                                   Row(
                                     mainAxisAlignment: MainAxisAlignment.start,
@@ -448,9 +453,9 @@ String email = "mailto:ceo@onwords.in?subject=Requesting%20for%20features%20inst
                               borderRadius: BorderRadius.circular(20.0)),
                           child: Center(
                               child: Image(
-                                image: AssetImage("images/lock.png"),
-                                height: height * 0.033,
-                              )),
+                            image: AssetImage("images/lock.png"),
+                            height: height * 0.033,
+                          )),
                         ),
                       ],
                     ),
@@ -509,27 +514,33 @@ String email = "mailto:ceo@onwords.in?subject=Requesting%20for%20features%20inst
   showAlertDialog(BuildContext context) {
     // Create button
     Widget okButton = TextButton(
-      style: ButtonStyle(
-        backgroundColor: MaterialStateProperty.all(Colors.white)
-      ),
+      style:
+          ButtonStyle(backgroundColor: MaterialStateProperty.all(Colors.white)),
       child: Text("Contact"),
-      onPressed: ()async{
-          if (await canLaunch(email)) {
-          await launch(email,
+      onPressed: () async {
+        if (await canLaunch(email)) {
+          await launch(
+            email,
             forceSafariVC: false,
             forceWebView: false,
           );
-          } else {
+        } else {
           print(' could not launch $email');
-          }
+        }
       },
     );
     // Create AlertDialog
     AlertDialog alert = AlertDialog(
       backgroundColor: Colors.black87,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12.0)),
-      title: Text("DashBoard Installation ",style: TextStyle(color: Colors.white70,fontWeight: FontWeight.bold),),
-      content: Text("Enable Dashboard by installing the feature ",style: TextStyle(color: Colors.white70),),
+      title: Text(
+        "DashBoard Installation ",
+        style: TextStyle(color: Colors.white70, fontWeight: FontWeight.bold),
+      ),
+      content: Text(
+        "Enable Dashboard by installing the feature ",
+        style: TextStyle(color: Colors.white70),
+      ),
       actions: [
         okButton,
       ],

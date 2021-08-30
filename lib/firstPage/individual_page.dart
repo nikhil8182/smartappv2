@@ -1,3 +1,7 @@
+import 'dart:async';
+import 'dart:convert';
+
+import 'package:http/http.dart' as http;
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -12,12 +16,56 @@ class IndividualPage extends StatefulWidget {
   _IndividualPageState createState() => _IndividualPageState();
 }
 
+var data;
+
+bool data1 = false;
+bool tubeLight = false;
+bool tubeLight2 = false;
+var rating;
+double fan = 0.0;
+var roundRat;
+bool  wallFan1 = false;
+bool  wallFan2 = false;
+bool  tFan1 = false;
+bool bBulb = false;
+
 class _IndividualPageState extends State<IndividualPage> {
+  List val = [];
+  Timer timer;
+
+
+  Future<dynamic> getData() async {
+    http.Response response =
+        await http.get(Uri.parse('http://192.168.1.18:8000/'));
+    Map data = json.decode(response.body);
+
+    setState(() {
+      int fan1 = data['Fan_Slide_Admin_Room'];
+      fan = fan1.roundToDouble();
+      data1 = data['Nfc1'];
+      tubeLight = data['Tube_Light_1_Button_Admin_Room'];
+      tubeLight2 = data['Tube_Light_2_Button_Admin_Room'];
+      wallFan1 = data['Wall_Mount_Fan_1_Push_Admin_Room'];
+      wallFan2 = data['Wall_Mount_Fan_2_Push_Admin_Room'];
+      tFan1 = data['Tower_Fan_Push_Admin_Room'];
+      bBulb = data['Bulb_Button_Admin_Room'];
+    });
+
+  }
+
+  @override
+  void initState() {
+    timer = Timer.periodic(Duration(seconds: 1),(timer)=>getData());
+    super.initState();
+  }
+
+
   bool value = false;
   @override
   Widget build(BuildContext context) {
     final height = MediaQuery.of(context).size.height;
     final width = MediaQuery.of(context).size.width;
+    getData();
     return Scaffold(
       extendBodyBehindAppBar: true,
       appBar: AppBar(
@@ -134,7 +182,7 @@ class _IndividualPageState extends State<IndividualPage> {
 
                   Container(
                     padding: EdgeInsets.symmetric(horizontal: 40.0),
-                    height: height * 0.55,
+                    height: height * 0.60,
                     width: width * 1.0,
                     color: Colors.transparent,
                     // decoration: BoxDecoration(
@@ -153,7 +201,7 @@ class _IndividualPageState extends State<IndividualPage> {
                         scrollDirection: Axis.vertical,
                         crossAxisCount: 2,
                         crossAxisSpacing: 19.0,
-                        mainAxisSpacing: 12.0,
+                        mainAxisSpacing: 16.0,
                         children: List.generate(choices.length, (index) {
                           return SelectCard(choice: choices[index]);
                         })),
@@ -282,14 +330,19 @@ class _IndividualPageState extends State<IndividualPage> {
 }
 
 class Choice {
-  const Choice({this.title, this.image});
+  const Choice({this.title, this.image, this.url});
   final String title;
   final String image;
+  final String url;
 }
 
 const List<Choice> choices = const <Choice>[
-  const Choice(title: 'Light', image: "images/light.svg"),
-  const Choice(title: 'Ac', image: "images/ac.svg"),
+  const Choice(title: 'Light', image: "images/light.svg", url: "bBulb"),
+  const Choice(title: 'Light', image: "images/light.svg", url: "tubeLight"),
+  const Choice(title: 'Light', image: "images/light.svg", url: "tubeLight2"),
+  const Choice(title: 'Fan', image: "images/ac.svg", url: "wallFan1"),
+  const Choice(title: 'Fan', image: "images/ac.svg", url: "wallFan2"),
+  // const Choice(title: 'Fan', image: "images/ac.svg", url: "tFan1"),
 ];
 
 class SelectCard extends StatefulWidget {
@@ -332,59 +385,143 @@ class _SelectCardState extends State<SelectCard> {
           ),
         ],
       ),
-      child: Container(
-        height: height * 0.17,
-        width: width * 0.33,
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(20.0),
-          color: value
-              ? Color.fromRGBO(247, 179, 28, 1.0)
-              : Color.fromRGBO(39, 39, 40, 1.0),
-        ),
-        child: Padding(
-          padding: EdgeInsets.symmetric(horizontal: 15.0, vertical: 10.0),
-          child: Column(
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  Transform.scale(
-                    scale: 1.3,
-                    child: Switch(
-                        activeColor: Colors.white,
-                        thumbColor: MaterialStateProperty.all(Colors.white),
-                        value: value,
-                        onChanged: (bool newValue) {
-                          setState(() {
-                            value = newValue;
-                          });
-                        }),
-                  ),
-                ],
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  Column(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      SvgPicture.asset(
-                        widget.choice.image,
-                        height: height * 0.051,
-                      ),
-                      SizedBox(
-                        height: height * 0.010,
-                      ),
-                      Text(
-                        widget.choice.title,
-                        style: GoogleFonts.inter(fontSize: height * 0.021),
-                      ),
-                    ],
-                  ),
-                ],
-              )
-            ],
+      child: GestureDetector(
+        onTap: () async {
+          print("pressedd+++++");
+          setState(() {
+            value = !value;
+          });
+
+          if ((widget.choice.url) == "bBulb") {
+            bBulb
+                ? await http.get(Uri.parse(
+                'http://192.168.1.18:8000/Bulb_Button_Admin_Room/0/'))
+                : await http.get(Uri.parse(
+                'http://192.168.1.18:8000/Bulb_Button_Admin_Room/1/'));
+            setState(() {
+              bBulb = !bBulb;
+            });
+          }
+          if ((widget.choice.url).toString() == "tubeLight") {
+            print("im inside ${widget.choice.url}");
+            tubeLight
+                ? await http.get(Uri.parse(
+                    'http://192.168.1.18:8000/Tube_Light_1_Button_Admin_Room/0/'))
+                : await http.get(Uri.parse(
+                    'http://192.168.1.18:8000/Tube_Light_1_Button_Admin_Room/1/'));
+            setState(() {
+              tubeLight = !tubeLight;
+            });
+
+            // if(tubeLight){
+            //   print("im turning off the light");
+            //   await http.get(Uri.parse(
+            //             'http://192.168.1.18:8000/Tube_Light_1_Button_Admin_Room/1/'));
+            //   setState(() {
+            //     tubeLight = false;
+            //   });
+            // }
+            // else{
+            //   print("im turning ON the light");
+            //   await http.get(Uri.parse(
+            //       'http://192.168.1.18:8000/Tube_Light_1_Button_Admin_Room/0/'));
+            //   setState(() {
+            //     tubeLight = true;
+            //   });
+            // }
+          }
+
+          if ((widget.choice.url) == "tubeLight2") {
+            tubeLight2
+                ? await http.get(Uri.parse(
+                    'http://192.168.1.18:8000/Tube_Light_2_Button_Admin_Room/0/'))
+                : await http.get(Uri.parse(
+                    'http://192.168.1.18:8000/Tube_Light_2_Button_Admin_Room/1/'));
+            setState(() {
+              tubeLight2 = !tubeLight2;
+            });
+          }
+          if ((widget.choice.url) == "wallFan1") {
+            wallFan1
+                ? await http.get(Uri.parse(
+                'http://192.168.1.18:8000/Wall_Mount_Fan_1_Push_Admin_Room/0/'))
+                : await http.get(Uri.parse(
+                'http://192.168.1.18:8000/Wall_Mount_Fan_1_Push_Admin_Room/1/'));
+            setState(() {
+              wallFan1 = !wallFan1;
+            });
+          }
+          if ((widget.choice.url) == "wallFan2") {
+            wallFan2
+                ? await http.get(Uri.parse(
+                'http://192.168.1.18:8000/Wall_Mount_Fan_2_Push_Admin_Room/0/'))
+                : await http.get(Uri.parse(
+                'http://192.168.1.18:8000/Wall_Mount_Fan_2_Push_Admin_Room/1/'));
+            setState(() {
+              wallFan2 = !wallFan2;
+            });
+          }
+
+        },
+        child: Container(
+          height: height * 0.17,
+          width: width * 0.33,
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(20.0),
+            color: value
+                ? Color.fromRGBO(247, 179, 28, 1.0)
+                : Color.fromRGBO(39, 39, 40, 1.0),
+          ),
+          child: Padding(
+            padding: EdgeInsets.symmetric(horizontal: 15.0, vertical: 10.0),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                // Row(
+                //   mainAxisAlignment: MainAxisAlignment.end,
+                //   children: [
+                //     Transform.scale(
+                //       scale: 1.3,
+                //       child: Switch(
+                //           activeColor: Colors.white,
+                //           thumbColor: MaterialStateProperty.all(Colors.white),
+                //           value: data1,
+                //           onChanged: (bool newValue) {
+                //             setState(() async {
+                //               data1
+                //                   ? await http.get(Uri.parse(
+                //                       'http://192.168.1.18:8000/Nfc1/0/'))
+                //                   : await http.get(Uri.parse(
+                //                       'http://192.168.1.18:8000/Nfc1/1/'));
+                //             });
+                //           }),
+                //     ),
+                //   ],
+                // ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    Column(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        SvgPicture.asset(
+                          widget.choice.image,
+                          height: height * 0.051,
+                        ),
+                        SizedBox(
+                          height: height * 0.010,
+                        ),
+                        Text(
+                          widget.choice.title,
+                          style: GoogleFonts.inter(fontSize: height * 0.021),
+                        ),
+                      ],
+                    ),
+                  ],
+                )
+              ],
+            ),
           ),
         ),
       ),

@@ -175,7 +175,7 @@ class _RoutinePageState extends State<RoutinePage> {
     Widget okButton = TextButton(
       child: Text("ok"),
       onPressed: (){
-        Navigator.push(
+        Navigator.pushReplacement(
             context,
             MaterialPageRoute(
                 builder: (context) => RoutinePage1()));

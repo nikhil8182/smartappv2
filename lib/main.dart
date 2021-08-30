@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:onwords_home/home_page.dart';
 import 'package:onwords_home/splashScreen.dart';
 //import 'package:onwords_home/home_page.dart';
 import 'package:provider/provider.dart';
@@ -9,7 +10,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 
 
-//last cloned 27-aug-2021 - 5-41pm
+//last cloned 30-aug 5-16 pm
 
 FirebaseAuth auth = FirebaseAuth.instance;
 
@@ -49,7 +50,7 @@ class MyApp extends StatelessWidget {
       //     .copyWith(scaffoldBackgroundColor: Color.fromARGB(255, 18, 32, 47)),
       debugShowCheckedModeBanner: false,
       home: Scaffold(
-        body:SplashScreen(),
+        body:HomePage(),
       ),
       ),
     );
