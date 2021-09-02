@@ -46,6 +46,9 @@ dependencies:
   firebase_database:
   cloud_firestore:
   shared_preferences:
+  overlay_support: ^1.2.1
+  internet_connection_checker: ^0.0.1+2
+  connectivity_plus: ^1.1.0
 
 dev_dependencies:
   flutter_test:

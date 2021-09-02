@@ -4,6 +4,7 @@ import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:onwords_home/log_ins/login_page.dart';
 import 'package:onwords_home/settingsPage/tab_sett/tab_settings_page.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class DummySettingsPage extends StatefulWidget {
   @override
@@ -11,6 +12,23 @@ class DummySettingsPage extends StatefulWidget {
 }
 
 class _DummySettingsPageState extends State<DummySettingsPage> {
+
+  SharedPreferences logindata;
+  String username;
+  void initial() async {
+    logindata = await SharedPreferences.getInstance();
+    setState(() {
+      username = logindata.getString('username');
+    });
+  }
+
+  @override
+  void initState() {
+    initial();
+    super.initState();
+  }
+
+
   bool buttonStatus = false;
   @override
   Widget build(BuildContext context) {
@@ -189,10 +207,9 @@ class _DummySettingsPageState extends State<DummySettingsPage> {
                 padding: EdgeInsets.all(18.0),
                 child: GestureDetector(
                   onTap: (){
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => LoginPage()));
+                    logindata.setBool('login', true);
+                    Navigator.pushReplacement(context,
+                        MaterialPageRoute(builder: (context) => LoginPage()));
                   },
                   child: Container(
                     decoration: BoxDecoration(

@@ -2,8 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:onwords_home/log_ins/installation_page.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../home_page.dart';
 import '../main.dart';
+import 'package:internet_connection_checker/internet_connection_checker.dart';
+import 'package:overlay_support/overlay_support.dart';
+import 'package:connectivity_plus/connectivity_plus.dart';
+
 
 class LoginPage extends StatefulWidget {
   @override
@@ -14,13 +19,56 @@ class _LoginPageState extends State<LoginPage> {
   TextEditingController email = TextEditingController();
   TextEditingController pass = TextEditingController();
   String loginState;
+  SharedPreferences loginData;
+  bool newUser;
+
+  bool hasInternet = false;
+  ConnectivityResult result = ConnectivityResult.none;
+
 
   @override
   void initState() {
+
+    Connectivity().onConnectivityChanged.listen((result) {
+      setState(() {
+        this.result = result;
+      });
+    });
+    InternetConnectionChecker().onStatusChange.listen((status) async {
+      final hasInternet = status == InternetConnectionStatus.connected;
+      setState(() {
+        this.hasInternet = hasInternet;
+      });
+    });
+
     email = TextEditingController();
     pass = TextEditingController();
+    check_if_already_login();
+
     super.initState();
   }
+
+
+  void check_if_already_login() async {
+    loginData = await SharedPreferences.getInstance();
+    newUser = (loginData.getBool('login') ?? true);
+    // print(newUser);
+    if (newUser == false) {
+      Navigator.pushReplacement(
+          context, new MaterialPageRoute(builder: (context) => HomePage()));
+    }
+  }
+
+  @override
+  void dispose() {
+    email.dispose();
+    pass.dispose();
+    super.dispose();
+  }
+
+
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -201,23 +249,43 @@ class _LoginPageState extends State<LoginPage> {
                         ),
                         OutlinedButton(
                             onPressed: () async {
-                              try {
-                                await auth.signInWithEmailAndPassword(email: email.text,password: pass.text);
-                                setState(() {
-                                  Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) =>
-                                              InstallationPage()));
-                                  // loginState = "logedin succesfully";
-                                  // print(
-                                  //     "curent user = ${Firebase.auth.UserProfile}");
-                                });
-                              } catch (e) {
-                                setState(() {
-                                  loginState = "Acess denied";
-                                });
+                              print("$hasInternet inetrnet is available or not_____________________------------------");
+
+                              hasInternet = await InternetConnectionChecker().hasConnection;
+                              result = await Connectivity().checkConnectivity();
+
+                              print("$hasInternet inetrnet is after pressing the button  ++++++++++++++");
+
+                              if(hasInternet) {
+                                try {
+                                  await auth.signInWithEmailAndPassword(email: email.text,password: pass.text);
+                                  setState(() {
+                                    loginData.setBool('login', false);
+                                    loginData.setString('username', email.text);
+
+                                    Navigator.pushReplacement(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) =>
+                                                InstallationPage()));
+                                    // loginState = "logedin succesfully";
+                                    // print(
+                                    //     "curent user = ${Firebase.auth.UserProfile}");
+                                  });
+                                } catch (e) {
+                                  setState(() {
+                                    loginState = "Acess denied";
+                                  });
+                                }
                               }
+                              else{
+                                showSimpleNotification(
+                                  Text("No Network",
+                                    style: TextStyle(color: Colors.white),),
+                                  background: Colors.red,
+                                );
+                              }
+
                             },
                             style: ButtonStyle(
                               padding: MaterialStateProperty.all(
