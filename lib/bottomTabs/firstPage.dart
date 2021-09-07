@@ -9,6 +9,7 @@ import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:http/http.dart' as http;
 import 'package:internet_connection_checker/internet_connection_checker.dart';
+import 'package:onwords_home/firstPage/individual_page.dart';
 import 'package:overlay_support/overlay_support.dart';
 import 'dart:async';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -30,6 +31,13 @@ class _FirstPageState extends State<FirstPage> with AutomaticKeepAliveClientMixi
   String username;
   bool notifier = false;
   bool mobNotifier = false;
+  Gradient g1 = LinearGradient(
+      begin: Alignment.centerLeft,
+      end: Alignment.centerRight,
+      colors: [
+        Colors.grey[800],
+        Colors.grey[800],
+      ]);
 
 
   void initial() async {
@@ -43,7 +51,7 @@ class _FirstPageState extends State<FirstPage> with AutomaticKeepAliveClientMixi
   String userName = " ";
   String ipAddress;
 
-  String getData(){
+  Future <String> getData(){
 
     databaseReference.child(auth.currentUser.uid).once().then((DataSnapshot snapshot) {
 
@@ -53,8 +61,10 @@ class _FirstPageState extends State<FirstPage> with AutomaticKeepAliveClientMixi
       // print("dataJson = $dataJson");
       // print(dataJson["name"]);
       setState(() {
+
         userName = dataJson["name"];
         ipAddress= dataJson["ip"];
+
         // print("$ipAddress --------");
       });
 
@@ -258,27 +268,25 @@ class _FirstPageState extends State<FirstPage> with AutomaticKeepAliveClientMixi
                 // snap: _snap,
                 floating: _floating,
                 expandedHeight: height * 0.164,
-                flexibleSpace: Flexible(
-                  child: Padding(
-                    padding: EdgeInsets.all(15.0),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          "Welcome Home",
-                          style: GoogleFonts.inter(
-                              color: Colors.white,
-                              fontSize: height * 0.031,
-                              fontWeight: FontWeight.w900),
-                        ),
-                        Text(
-                          userName,
-                          style: GoogleFonts.inter(
-                              fontWeight: FontWeight.w300, color: Colors.white),
-                        ),
-                      ],
-                    ),
+                flexibleSpace: Padding(
+                  padding: EdgeInsets.all(15.0),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        "Welcome Home",
+                        style: GoogleFonts.inter(
+                            color: Colors.white,
+                            fontSize: height * 0.031,
+                            fontWeight: FontWeight.w900),
+                      ),
+                      Text(
+                        " Nikhil ",
+                        style: GoogleFonts.inter(
+                            fontWeight: FontWeight.w300, color: Colors.white),
+                      ),
+                    ],
                   ),
                 ),
               ),
@@ -393,1960 +401,1981 @@ class _FirstPageState extends State<FirstPage> with AutomaticKeepAliveClientMixi
                   ),
                 ),
               ),
-                currentIndex ?
-                SliverGrid(
-                  delegate: SliverChildBuilderDelegate(
-                        (BuildContext context, int index) {
-                      return Container(
-                        color: Color.fromRGBO(26, 28, 30, 0.6),
-                        child: Padding(
-                          padding: EdgeInsets.all(12.0),
-                          child: GestureDetector(
-                            onTap: () {
-                              //Navigator.push(context, MaterialPageRoute(builder: (context)=>IndividualPage(imgValue: widget.choice.backGroundImage,txtValue: widget.choice.title,)));
-                            },
-                            child: Padding(
-                              padding: EdgeInsets.symmetric(vertical: 10.0),
-                              child: Container(
-                                decoration: BoxDecoration(
-                                  color: Colors.black,
-                                  borderRadius: BorderRadius.circular(10.0),
-                                  boxShadow: [
-                                    BoxShadow(
-                                      color: Colors.white38,
-                                      offset: Offset(
-                                        -2.5,
-                                        -2.5,
-                                      ),
-                                      blurRadius: 6.0,
-                                      spreadRadius: 1.0,
+              currentIndex?
+              SliverGrid(
+                delegate: SliverChildBuilderDelegate(
+                      (BuildContext context, int index) {
+                    return Container(
+                      color: Color.fromRGBO(26, 28, 30, 0.6),
+                      child: Padding(
+                        padding: EdgeInsets.all(12.0),
+                        child: GestureDetector(
+                          onTap: (){
+                            //Navigator.push(context, MaterialPageRoute(builder: (context)=>IndividualPage(imgValue: widget.choice.backGroundImage,txtValue: widget.choice.title,)));
+                          },
+                          child: Padding(
+                            padding: EdgeInsets.symmetric(vertical: 10.0),
+                            child: Container(
+                              decoration: BoxDecoration(
+                                color: Colors.black,
+                                borderRadius: BorderRadius.circular(10.0),
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Colors.white38,
+                                    offset: Offset(
+                                      -2.5,
+                                      -2.5,
                                     ),
-                                    BoxShadow(
-                                      color: Colors.black,
-                                      offset: Offset(
-                                        2.5,
-                                        2.5,
-                                      ),
-                                      blurRadius: 10.0,
-                                      spreadRadius: 1.0,
-                                    ),
-                                  ],
-                                ),
-                                child: Container(
-                                  height: height * 0.20,
-                                  width: width * 0.80,
-                                  decoration: BoxDecoration(
-                                    color: Colors.white,
-                                    borderRadius: BorderRadius.circular(10.0),
-                                    image: DecorationImage(
-                                      fit: BoxFit.cover,
-                                      colorFilter: ColorFilter.mode(
-                                          Colors.black.withOpacity(0.7),
-                                          BlendMode.dstATop),
-                                      image: name[index]
-                                          .toString()
-                                          .contains("Hall")
-                                          ? AssetImage(
-                                        "images/fur.jpg",
-                                      )
-                                          : name[index]
-                                          .toString()
-                                          .contains("Admin")
-                                          ? AssetImage(
-                                        "images/adminr.jpg",
-                                      )
-                                          : name[index]
-                                          .toString()
-                                          .contains(
-                                          "Garage")
-                                          ? AssetImage(
-                                        "images/guest.png",
-                                      )
-                                          : name[index]
-                                          .toString()
-                                          .contains(
-                                          "Kitchen")
-                                          ? AssetImage(
-                                        "images/kitchen.png",
-                                      )
-                                          : name[index]
-                                          .toString()
-                                          .contains(
-                                          "Bathroom")
-                                          ? AssetImage(
-                                        "images/bathroom.png",
-                                      )
-                                          : name[index]
-                                          .toString()
-                                          .contains(
-                                          "Bedroom_1")
-                                          ? AssetImage(
-                                        "images/bedroom.png",
-                                      )
-                                          : name[index].toString().contains(
-                                          "Bedroom_2")
-                                          ? AssetImage(
-                                        "images/bedroom.png",
-                                      )
-                                          : name[index].toString().contains(
-                                          "Master_Bedroom")
-                                          ? AssetImage(
-                                        "images/bedroom.png",
-                                      )
-                                          : name[index].toString().contains(
-                                          "Bedroom")
-                                          ? AssetImage(
-                                        "images/bedroom.png",
-                                      )
-                                          : name[index].toString().contains(
-                                          "Outside")
-                                          ? AssetImage(
-                                        "images/fur.jpg",
-                                      )
-                                          : name[index].toString().contains(
-                                          "Garden")
-                                          ? AssetImage(
-                                        "images/fur.jpg",
-                                      )
-                                          : name[index].toString().contains(
-                                          "Parking")
-                                          ? AssetImage(
-                                        "images/fur.jpg",
-                                      )
-                                          : name[index].toString().contains(
-                                          "Living_Room")
-                                          ? AssetImage(
-                                        "images/fur.jpg",
-
-                                      )
-                                          : name[index].toString().contains(
-                                          "Store_Room")
-                                          ? AssetImage(
-                                        "images/fur.jpg",
-                                      )
-                                          : AssetImage(""),
-                                    ),
+                                    blurRadius: 6.0,
+                                    spreadRadius: 1.0,
                                   ),
-                                  child: Container(
-                                    padding: EdgeInsets.all(4),
-                                    child: name[index]
+                                  BoxShadow(
+                                    color: Colors.black,
+                                    offset: Offset(
+                                      2.5,
+                                      2.5,
+                                    ),
+                                    blurRadius: 10.0,
+                                    spreadRadius: 1.0,
+                                  ),
+                                ],
+                              ),
+                              child: Container(
+                                height: height * 0.20,
+                                width: width * 0.80,
+                                decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  borderRadius: BorderRadius.circular(10.0),
+                                  image: DecorationImage(
+                                    fit: BoxFit.cover,
+                                    colorFilter: ColorFilter.mode(
+                                        Colors.black.withOpacity(0.7), BlendMode.dstATop),
+                                    image: name[index]
                                         .toString()
                                         .contains("Hall")
-                                        ? Row(
-                                      crossAxisAlignment:
-                                      CrossAxisAlignment
-                                          .start,
-                                      mainAxisAlignment:
-                                      MainAxisAlignment
-                                          .spaceBetween,
-                                      children: [
-                                        Column(
-                                          mainAxisAlignment:
-                                          MainAxisAlignment
-                                              .center,
-                                          crossAxisAlignment:
-                                          CrossAxisAlignment
-                                              .start,
-                                          children: [
-                                            Image.asset(
-                                              "images/chair.png",
-                                              width:
-                                              width * 0.2,
-                                              height: height *
-                                                  0.1,
-                                            ),
-                                            Text(name[index].toString()),
-                                            Text(
-                                              "6 devices",
-                                              style: TextStyle(
-                                                  color: Colors
-                                                      .black,
-                                                  fontWeight:
-                                                  FontWeight
-                                                      .w900,
-                                                  fontSize:
-                                                  height *
-                                                      0.012),
-                                            )
-                                          ],
-                                        ),
-                                        Switch(
-                                            activeColor:
-                                            Colors.orange,
-                                            thumbColor:
-                                            MaterialStateProperty
-                                                .all(Colors
-                                                .orange),
-                                            value:
-                                            valueStatus,
-                                            onChanged:
-                                                (bool value) {
-                                              setState(() {
-                                                valueStatus =
-                                                    value;
-                                              });
-                                            })
-                                      ],
+                                        ? AssetImage(
+                                      "images/fur.jpg",
                                     )
                                         : name[index]
                                         .toString()
                                         .contains("Admin")
-                                        ? Row(
-                                      crossAxisAlignment:
-                                      CrossAxisAlignment
-                                          .start,
-                                      mainAxisAlignment:
-                                      MainAxisAlignment
-                                          .spaceBetween,
-                                      children: [
-                                        Column(
-                                          crossAxisAlignment:
-                                          CrossAxisAlignment
-                                              .start,
-                                          children: [
-                                            Image.asset(
-                                              "images/chair.png",
-                                              width:
-                                              width *
-                                                  0.2,
-                                              height:
-                                              height *
-                                                  0.1,
-                                            ),
-                                            Text(name[index].toString()),
-                                            Text(
-                                              "6 devices",
-                                              style: TextStyle(
-                                                  color: Colors
-                                                      .black,
-                                                  fontWeight:
-                                                  FontWeight
-                                                      .w900,
-                                                  fontSize:
-                                                  height *
-                                                      0.012),
-                                            )
-                                          ],
-                                        ),
-                                        Switch(
-                                            activeColor:
-                                            Colors
-                                                .orange,
-                                            thumbColor:
-                                            MaterialStateProperty.all(
-                                                Colors
-                                                    .orange),
-                                            value:
-                                            valueStatus,
-                                            onChanged: (bool
-                                            value) {
-                                              setState(
-                                                      () {
-                                                    valueStatus =
-                                                        value;
-                                                  });
-                                            })
-                                      ],
+                                        ? AssetImage(
+                                      "images/fur.jpg",
                                     )
                                         : name[index]
                                         .toString()
                                         .contains(
                                         "Garage")
-                                        ? Row(
-                                      crossAxisAlignment:
-                                      CrossAxisAlignment
-                                          .start,
-                                      mainAxisAlignment:
-                                      MainAxisAlignment
-                                          .spaceBetween,
-                                      children: [
-                                        Column(
-                                          mainAxisAlignment:
-                                          MainAxisAlignment
-                                              .center,
-                                          crossAxisAlignment:
-                                          CrossAxisAlignment
-                                              .start,
-                                          children: [
-                                            Image.asset(
-                                              "images/chair.png",
-                                              width:
-                                              width * 0.2,
-                                              height: height *
-                                                  0.1,
-                                            ),
-                                            Text(name[index].toString()),
-                                            Text(
-                                              "6 devices",
-                                              style: TextStyle(
-                                                  color: Colors
-                                                      .black,
-                                                  fontWeight:
-                                                  FontWeight
-                                                      .w900,
-                                                  fontSize:
-                                                  height *
-                                                      0.012),
-                                            )
-                                          ],
-                                        ),
-                                        Switch(
-                                            activeColor:
-                                            Colors.orange,
-                                            thumbColor:
-                                            MaterialStateProperty
-                                                .all(Colors
-                                                .orange),
-                                            value:
-                                            valueStatus,
-                                            onChanged:
-                                                (bool value) {
-                                              setState(() {
-                                                valueStatus =
-                                                    value;
-                                              });
-                                            })
-                                      ],
+                                        ? AssetImage(
+                                      "images/guest.png",
                                     )
                                         : name[index]
                                         .toString()
                                         .contains(
                                         "Kitchen")
-                                        ? Row(
-                                      crossAxisAlignment:
-                                      CrossAxisAlignment
-                                          .start,
-                                      mainAxisAlignment:
-                                      MainAxisAlignment
-                                          .spaceBetween,
-                                      children: [
-                                        Column(
-                                          mainAxisAlignment:
-                                          MainAxisAlignment
-                                              .center,
-                                          crossAxisAlignment:
-                                          CrossAxisAlignment
-                                              .start,
-                                          children: [
-                                            Image.asset(
-                                              "images/chair.png",
-                                              width:
-                                              width * 0.2,
-                                              height: height *
-                                                  0.1,
-                                            ),
-                                            Text(name[index].toString()),
-                                            Text(
-                                              "6 devices",
-                                              style: TextStyle(
-                                                  color: Colors
-                                                      .black,
-                                                  fontWeight:
-                                                  FontWeight
-                                                      .w900,
-                                                  fontSize:
-                                                  height *
-                                                      0.012),
-                                            )
-                                          ],
-                                        ),
-                                        Switch(
-                                            activeColor:
-                                            Colors.orange,
-                                            thumbColor:
-                                            MaterialStateProperty
-                                                .all(Colors
-                                                .orange),
-                                            value:
-                                            valueStatus,
-                                            onChanged:
-                                                (bool value) {
-                                              setState(() {
-                                                valueStatus =
-                                                    value;
-                                              });
-                                            })
-                                      ],
+                                        ? AssetImage(
+                                      "images/kitchen.png",
                                     )
                                         : name[index]
                                         .toString()
                                         .contains(
                                         "Bathroom")
-                                        ? Row(
-                                      crossAxisAlignment:
-                                      CrossAxisAlignment
-                                          .start,
-                                      mainAxisAlignment:
-                                      MainAxisAlignment
-                                          .spaceBetween,
-                                      children: [
-                                        Column(
-                                          mainAxisAlignment:
-                                          MainAxisAlignment
-                                              .center,
-                                          crossAxisAlignment:
-                                          CrossAxisAlignment
-                                              .start,
-                                          children: [
-                                            Image.asset(
-                                              "images/chair.png",
-                                              width:
-                                              width * 0.2,
-                                              height: height *
-                                                  0.1,
-                                            ),
-                                            Text(name[index].toString()),
-                                            Text(
-                                              "6 devices",
-                                              style: TextStyle(
-                                                  color: Colors
-                                                      .black,
-                                                  fontWeight:
-                                                  FontWeight
-                                                      .w900,
-                                                  fontSize:
-                                                  height *
-                                                      0.012),
-                                            )
-                                          ],
-                                        ),
-                                        Switch(
-                                            activeColor:
-                                            Colors.orange,
-                                            thumbColor:
-                                            MaterialStateProperty
-                                                .all(Colors
-                                                .orange),
-                                            value:
-                                            valueStatus,
-                                            onChanged:
-                                                (bool value) {
-                                              setState(() {
-                                                valueStatus =
-                                                    value;
-                                              });
-                                            })
-                                      ],
+                                        ? AssetImage(
+                                      "images/bathroom.png",
                                     )
                                         : name[index]
                                         .toString()
                                         .contains(
                                         "Bedroom_1")
-                                        ? Row(
-                                      crossAxisAlignment:
-                                      CrossAxisAlignment
-                                          .start,
-                                      mainAxisAlignment:
-                                      MainAxisAlignment
-                                          .spaceBetween,
-                                      children: [
-                                        Column(
-                                          mainAxisAlignment:
-                                          MainAxisAlignment
-                                              .center,
-                                          crossAxisAlignment:
-                                          CrossAxisAlignment
-                                              .start,
-                                          children: [
-                                            Image.asset(
-                                              "images/chair.png",
-                                              width:
-                                              width * 0.2,
-                                              height: height *
-                                                  0.1,
-                                            ),
-                                            Text(name[index].toString()),
-                                            Text(
-                                              "6 devices",
-                                              style: TextStyle(
-                                                  color: Colors
-                                                      .black,
-                                                  fontWeight:
-                                                  FontWeight
-                                                      .w900,
-                                                  fontSize:
-                                                  height *
-                                                      0.012),
-                                            )
-                                          ],
-                                        ),
-                                        Switch(
-                                            activeColor:
-                                            Colors.orange,
-                                            thumbColor:
-                                            MaterialStateProperty
-                                                .all(Colors
-                                                .orange),
-                                            value:
-                                            valueStatus,
-                                            onChanged:
-                                                (bool value) {
-                                              setState(() {
-                                                valueStatus =
-                                                    value;
-                                              });
-                                            })
-                                      ],
+                                        ? AssetImage(
+                                      "images/bedroom.png",
                                     )
-                                        : name[index].toString().contains(
-                                        "Bedroom_2")
-                                        ? Row(
-                                      crossAxisAlignment:
-                                      CrossAxisAlignment
-                                          .start,
-                                      mainAxisAlignment:
-                                      MainAxisAlignment
-                                          .spaceBetween,
-                                      children: [
-                                        Column(
-                                          mainAxisAlignment:
-                                          MainAxisAlignment
-                                              .center,
-                                          crossAxisAlignment:
-                                          CrossAxisAlignment
-                                              .start,
-                                          children: [
-                                            Image.asset(
-                                              "images/chair.png",
-                                              width:
-                                              width * 0.2,
-                                              height: height *
-                                                  0.1,
-                                            ),
-                                            Text(name[index].toString()),
-                                            Text(
-                                              "6 devices",
-                                              style: TextStyle(
-                                                  color: Colors
-                                                      .black,
-                                                  fontWeight:
-                                                  FontWeight
-                                                      .w900,
-                                                  fontSize:
-                                                  height *
-                                                      0.012),
-                                            )
-                                          ],
-                                        ),
-                                        Switch(
-                                            activeColor:
-                                            Colors.orange,
-                                            thumbColor:
-                                            MaterialStateProperty
-                                                .all(Colors
-                                                .orange),
-                                            value:
-                                            valueStatus,
-                                            onChanged:
-                                                (bool value) {
-                                              setState(() {
-                                                valueStatus =
-                                                    value;
-                                              });
-                                            })
-                                      ],
+                                        : name[index].toString().contains("Bedroom_2")
+                                        ? AssetImage(
+                                      "images/bedroom.png",
                                     )
-                                        : name[index].toString().contains(
-                                        "Master_Bedroom")
-                                        ? Row(
-                                      crossAxisAlignment:
-                                      CrossAxisAlignment
-                                          .start,
-                                      mainAxisAlignment:
-                                      MainAxisAlignment
-                                          .spaceBetween,
-                                      children: [
-                                        Column(
-                                          mainAxisAlignment:
-                                          MainAxisAlignment
-                                              .center,
-                                          crossAxisAlignment:
-                                          CrossAxisAlignment
-                                              .start,
-                                          children: [
-                                            Image.asset(
-                                              "images/chair.png",
-                                              width:
-                                              width * 0.2,
-                                              height: height *
-                                                  0.1,
-                                            ),
-                                            Text(name[index].toString(),
-                                              style: TextStyle(
-                                                  fontSize: 11.0),),
-                                            Text(
-                                              "6 devices",
-                                              style: TextStyle(
-                                                  color: Colors
-                                                      .black,
-                                                  fontWeight:
-                                                  FontWeight
-                                                      .w900,
-                                                  fontSize:
-                                                  height *
-                                                      0.012),
-                                            )
-                                          ],
-                                        ),
-                                        Switch(
-                                            activeColor:
-                                            Colors.orange,
-                                            thumbColor:
-                                            MaterialStateProperty
-                                                .all(Colors
-                                                .orange),
-                                            value:
-                                            valueStatus,
-                                            onChanged:
-                                                (bool value) {
-                                              setState(() {
-                                                valueStatus =
-                                                    value;
-                                              });
-                                            })
-                                      ],
+                                        : name[index].toString().contains("Master_Bedroom")
+                                        ? AssetImage(
+                                      "images/bedroom.png",
                                     )
-                                        : name[index].toString().contains(
-                                        "Bedroom")
-                                        ? Row(
-                                      crossAxisAlignment:
-                                      CrossAxisAlignment
-                                          .start,
-                                      mainAxisAlignment:
-                                      MainAxisAlignment
-                                          .spaceBetween,
-                                      children: [
-                                        Column(
-                                          mainAxisAlignment:
-                                          MainAxisAlignment
-                                              .center,
-                                          crossAxisAlignment:
-                                          CrossAxisAlignment
-                                              .start,
-                                          children: [
-                                            Image.asset(
-                                              "images/chair.png",
-                                              width:
-                                              width * 0.2,
-                                              height: height *
-                                                  0.1,
-                                            ),
-                                            Text(name[index].toString()),
-                                            Text(
-                                              "6 devices",
-                                              style: TextStyle(
-                                                  color: Colors
-                                                      .black,
-                                                  fontWeight:
-                                                  FontWeight
-                                                      .w900,
-                                                  fontSize:
-                                                  height *
-                                                      0.012),
-                                            )
-                                          ],
-                                        ),
-                                        Switch(
-                                            activeColor:
-                                            Colors.orange,
-                                            thumbColor:
-                                            MaterialStateProperty
-                                                .all(Colors
-                                                .orange),
-                                            value:
-                                            valueStatus,
-                                            onChanged:
-                                                (bool value) {
-                                              setState(() {
-                                                valueStatus =
-                                                    value;
-                                              });
-                                            })
-                                      ],
+                                        : name[index].toString().contains("Bedroom")
+                                        ? AssetImage(
+                                      "images/bedroom.png",
                                     )
-                                        : name[index].toString().contains(
-                                        "Outside")
-                                        ? Row(
-                                      crossAxisAlignment:
-                                      CrossAxisAlignment
-                                          .start,
-                                      mainAxisAlignment:
-                                      MainAxisAlignment
-                                          .spaceBetween,
-                                      children: [
-                                        Column(
-                                          mainAxisAlignment:
-                                          MainAxisAlignment
-                                              .center,
-                                          crossAxisAlignment:
-                                          CrossAxisAlignment
-                                              .start,
-                                          children: [
-                                            Image.asset(
-                                              "images/chair.png",
-                                              width:
-                                              width * 0.2,
-                                              height: height *
-                                                  0.1,
-                                            ),
-                                            Text(name[index].toString()),
-                                            Text(
-                                              "6 devices",
-                                              style: TextStyle(
-                                                  color: Colors
-                                                      .black,
-                                                  fontWeight:
-                                                  FontWeight
-                                                      .w900,
-                                                  fontSize:
-                                                  height *
-                                                      0.012),
-                                            )
-                                          ],
-                                        ),
-                                        Switch(
-                                            activeColor:
-                                            Colors.orange,
-                                            thumbColor:
-                                            MaterialStateProperty
-                                                .all(Colors
-                                                .orange),
-                                            value:
-                                            valueStatus,
-                                            onChanged:
-                                                (bool value) {
-                                              setState(() {
-                                                valueStatus =
-                                                    value;
-                                              });
-                                            })
-                                      ],
+                                        : name[index].toString().contains("Outside")
+                                        ? AssetImage(
+                                      "images/fur.jpg",
                                     )
-                                        : name[index].toString().contains(
-                                        "Garden")
-                                        ? Row(
-                                      crossAxisAlignment:
-                                      CrossAxisAlignment
-                                          .start,
-                                      mainAxisAlignment:
-                                      MainAxisAlignment
-                                          .spaceBetween,
-                                      children: [
-                                        Column(
-                                          mainAxisAlignment:
-                                          MainAxisAlignment
-                                              .center,
-                                          crossAxisAlignment:
-                                          CrossAxisAlignment
-                                              .start,
-                                          children: [
-                                            Image.asset(
-                                              "images/chair.png",
-                                              width:
-                                              width * 0.2,
-                                              height: height *
-                                                  0.1,
-                                            ),
-                                            Text(name[index].toString()),
-                                            Text(
-                                              "6 devices",
-                                              style: TextStyle(
-                                                  color: Colors
-                                                      .black,
-                                                  fontWeight:
-                                                  FontWeight
-                                                      .w900,
-                                                  fontSize:
-                                                  height *
-                                                      0.012),
-                                            )
-                                          ],
-                                        ),
-                                        Switch(
-                                            activeColor:
-                                            Colors.orange,
-                                            thumbColor:
-                                            MaterialStateProperty
-                                                .all(Colors
-                                                .orange),
-                                            value:
-                                            valueStatus,
-                                            onChanged:
-                                                (bool value) {
-                                              setState(() {
-                                                valueStatus =
-                                                    value;
-                                              });
-                                            })
-                                      ],
+                                        : name[index].toString().contains("Garden")
+                                        ? AssetImage(
+                                      "images/fur.jpg",
                                     )
-                                        : name[index].toString().contains(
-                                        "Parking")
-                                        ? Row(
-                                      crossAxisAlignment:
-                                      CrossAxisAlignment
-                                          .start,
-                                      mainAxisAlignment:
-                                      MainAxisAlignment
-                                          .spaceBetween,
-                                      children: [
-                                        Column(
-                                          mainAxisAlignment:
-                                          MainAxisAlignment
-                                              .center,
-                                          crossAxisAlignment:
-                                          CrossAxisAlignment
-                                              .start,
-                                          children: [
-                                            Image.asset(
-                                              "images/chair.png",
-                                              width:
-                                              width * 0.2,
-                                              height: height *
-                                                  0.1,
-                                            ),
-                                            Text(name[index].toString()),
-                                            Text(
-                                              "6 devices",
-                                              style: TextStyle(
-                                                  color: Colors
-                                                      .black,
-                                                  fontWeight:
-                                                  FontWeight
-                                                      .w900,
-                                                  fontSize:
-                                                  height *
-                                                      0.012),
-                                            )
-                                          ],
-                                        ),
-                                        Switch(
-                                            activeColor:
-                                            Colors.orange,
-                                            thumbColor:
-                                            MaterialStateProperty
-                                                .all(Colors
-                                                .orange),
-                                            value:
-                                            valueStatus,
-                                            onChanged:
-                                                (bool value) {
-                                              setState(() {
-                                                valueStatus =
-                                                    value;
-                                              });
-                                            })
-                                      ],
+                                        : name[index].toString().contains("Parking")
+                                        ? AssetImage(
+                                      "images/fur.jpg",
                                     )
-                                        : name[index].toString().contains(
-                                        "Living_Room")
-                                        ? Row(
-                                      crossAxisAlignment:
-                                      CrossAxisAlignment
-                                          .start,
-                                      mainAxisAlignment:
-                                      MainAxisAlignment
-                                          .spaceBetween,
-                                      children: [
-                                        Column(
-                                          mainAxisAlignment:
-                                          MainAxisAlignment
-                                              .center,
-                                          crossAxisAlignment:
-                                          CrossAxisAlignment
-                                              .start,
-                                          children: [
-                                            Image.asset(
-                                              "images/chair.png",
-                                              width:
-                                              width * 0.2,
-                                              height: height *
-                                                  0.1,
-                                            ),
-                                            Text(name[index].toString()),
-                                            Text(
-                                              "6 devices",
-                                              style: TextStyle(
-                                                  color: Colors
-                                                      .black,
-                                                  fontWeight:
-                                                  FontWeight
-                                                      .w900,
-                                                  fontSize:
-                                                  height *
-                                                      0.012),
-                                            )
-                                          ],
-                                        ),
-                                        Switch(
-                                            activeColor:
-                                            Colors.orange,
-                                            thumbColor:
-                                            MaterialStateProperty
-                                                .all(Colors
-                                                .orange),
-                                            value:
-                                            valueStatus,
-                                            onChanged:
-                                                (bool value) {
-                                              setState(() {
-                                                valueStatus =
-                                                    value;
-                                              });
-                                            })
-                                      ],
+                                        : name[index].toString().contains("Living_Room")
+                                        ? AssetImage(
+                                      "images/fur.jpg",
+
                                     )
-                                        : name[index].toString().contains(
-                                        "Store_Room")
-                                        ? Row(
-                                      crossAxisAlignment:
-                                      CrossAxisAlignment
-                                          .start,
-                                      mainAxisAlignment:
-                                      MainAxisAlignment
-                                          .spaceBetween,
-                                      children: [
-                                        Column(
-                                          mainAxisAlignment:
-                                          MainAxisAlignment
-                                              .center,
-                                          crossAxisAlignment:
-                                          CrossAxisAlignment
-                                              .start,
-                                          children: [
-                                            Image.asset(
-                                              "images/chair.png",
-                                              width:
-                                              width * 0.2,
-                                              height: height *
-                                                  0.1,
-                                            ),
-                                            Text(name[index].toString()),
-                                            Text(
-                                              "6 devices",
-                                              style: TextStyle(
-                                                  color: Colors
-                                                      .black,
-                                                  fontWeight:
-                                                  FontWeight
-                                                      .w900,
-                                                  fontSize:
-                                                  height *
-                                                      0.012),
-                                            )
-                                          ],
-                                        ),
-                                        Switch(
-                                            activeColor:
-                                            Colors.orange,
-                                            thumbColor:
-                                            MaterialStateProperty
-                                                .all(Colors
-                                                .orange),
-                                            value:
-                                            valueStatus,
-                                            onChanged:
-                                                (bool value) {
-                                              setState(() {
-                                                valueStatus =
-                                                    value;
-                                              });
-                                            })
-                                      ],
+                                        : name[index].toString().contains("Store_Room")
+                                        ? AssetImage(
+                                      "images/fur.jpg",
                                     )
-                                        : Container(),
+                                        : AssetImage(""),
+                                  ),
+                                ),
+                                child: Padding(
+                                  padding: EdgeInsets.all(8.0),
+                                  child: Row(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Column(
+                                        mainAxisAlignment: MainAxisAlignment.center,
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        children: [
+                                          Container(
+                                            padding: EdgeInsets.all(4),
+                                            child: name[index]
+                                                .toString()
+                                                .contains("Hall")
+                                                ? Row(
+                                              crossAxisAlignment:
+                                              CrossAxisAlignment
+                                                  .start,
+                                              mainAxisAlignment:
+                                              MainAxisAlignment
+                                                  .spaceBetween,
+                                              children: [
+                                                Column(
+                                                  mainAxisAlignment:
+                                                  MainAxisAlignment
+                                                      .center,
+                                                  crossAxisAlignment:
+                                                  CrossAxisAlignment
+                                                      .start,
+                                                  children: [
+                                                    Image.asset(
+                                                      "images/chair.png",
+                                                      width:
+                                                      width * 0.2,
+                                                      height: height *
+                                                          0.1,
+                                                    ),
+                                                    Text(name[index].toString()),
+
+                                                    Text(
+                                                      "6 devices",
+                                                      style: TextStyle(
+                                                          color: Colors
+                                                              .black,
+                                                          fontWeight:
+                                                          FontWeight
+                                                              .w900,
+                                                          fontSize:
+                                                          height *
+                                                              0.012),
+                                                    )
+                                                  ],
+                                                ),
+                                                Switch(
+                                                    activeColor:
+                                                    Colors.orange,
+                                                    thumbColor:
+                                                    MaterialStateProperty
+                                                        .all(Colors
+                                                        .orange),
+                                                    value:
+                                                    valueStatus,
+                                                    onChanged:
+                                                        (bool value) {
+                                                      setState(() {
+                                                        valueStatus =
+                                                            value;
+                                                      });
+                                                    })
+                                              ],
+                                            )
+                                                : name[index]
+                                                .toString()
+                                                .contains("Admin")
+                                                ? Row(
+                                              crossAxisAlignment:
+                                              CrossAxisAlignment
+                                                  .start,
+                                              mainAxisAlignment:
+                                              MainAxisAlignment
+                                                  .spaceBetween,
+                                              children: [
+                                                Column(
+                                                  crossAxisAlignment:
+                                                  CrossAxisAlignment
+                                                      .start,
+                                                  children: [
+                                                    Image.asset(
+                                                      "images/chair.png",
+                                                      width:
+                                                      width *
+                                                          0.2,
+                                                      height:
+                                                      height *
+                                                          0.1,
+                                                    ),
+                                                    Text(name[index].toString()),
+                                                    Text(
+                                                      "6 devices",
+                                                      style: TextStyle(
+                                                          color: Colors
+                                                              .black,
+                                                          fontWeight:
+                                                          FontWeight
+                                                              .w900,
+                                                          fontSize:
+                                                          height *
+                                                              0.012),
+                                                    )
+                                                  ],
+                                                ),
+                                                Switch(
+                                                    activeColor:
+                                                    Colors
+                                                        .orange,
+                                                    thumbColor:
+                                                    MaterialStateProperty.all(
+                                                        Colors
+                                                            .orange),
+                                                    value:
+                                                    valueStatus,
+                                                    onChanged: (bool
+                                                    value) {
+                                                      setState(
+                                                              () {
+                                                            valueStatus =
+                                                                value;
+                                                          });
+                                                    })
+                                              ],
+                                            )
+                                                : name[index]
+                                                .toString()
+                                                .contains(
+                                                "Garage")
+                                                ? Row(
+                                              crossAxisAlignment:
+                                              CrossAxisAlignment
+                                                  .start,
+                                              mainAxisAlignment:
+                                              MainAxisAlignment
+                                                  .spaceBetween,
+                                              children: [
+                                                Column(
+                                                  mainAxisAlignment:
+                                                  MainAxisAlignment
+                                                      .center,
+                                                  crossAxisAlignment:
+                                                  CrossAxisAlignment
+                                                      .start,
+                                                  children: [
+                                                    Image.asset(
+                                                      "images/chair.png",
+                                                      width:
+                                                      width * 0.2,
+                                                      height: height *
+                                                          0.1,
+                                                    ),
+                                                    Text(name[index].toString()),
+                                                    Text(
+                                                      "6 devices",
+                                                      style: TextStyle(
+                                                          color: Colors
+                                                              .black,
+                                                          fontWeight:
+                                                          FontWeight
+                                                              .w900,
+                                                          fontSize:
+                                                          height *
+                                                              0.012),
+                                                    )
+                                                  ],
+                                                ),
+                                                Switch(
+                                                    activeColor:
+                                                    Colors.orange,
+                                                    thumbColor:
+                                                    MaterialStateProperty
+                                                        .all(Colors
+                                                        .orange),
+                                                    value:
+                                                    valueStatus,
+                                                    onChanged:
+                                                        (bool value) {
+                                                      setState(() {
+                                                        valueStatus =
+                                                            value;
+                                                      });
+                                                    })
+                                              ],
+                                            )
+                                                : name[index]
+                                                .toString()
+                                                .contains(
+                                                "Kitchen")
+                                                ? Row(
+                                              crossAxisAlignment:
+                                              CrossAxisAlignment
+                                                  .start,
+                                              mainAxisAlignment:
+                                              MainAxisAlignment
+                                                  .spaceBetween,
+                                              children: [
+                                                Column(
+                                                  mainAxisAlignment:
+                                                  MainAxisAlignment
+                                                      .center,
+                                                  crossAxisAlignment:
+                                                  CrossAxisAlignment
+                                                      .start,
+                                                  children: [
+                                                    Image.asset(
+                                                      "images/chair.png",
+                                                      width:
+                                                      width * 0.2,
+                                                      height: height *
+                                                          0.1,
+                                                    ),
+                                                    Text(name[index].toString()),
+                                                    Text(
+                                                      "6 devices",
+                                                      style: TextStyle(
+                                                          color: Colors
+                                                              .black,
+                                                          fontWeight:
+                                                          FontWeight
+                                                              .w900,
+                                                          fontSize:
+                                                          height *
+                                                              0.012),
+                                                    )
+                                                  ],
+                                                ),
+                                                Switch(
+                                                    activeColor:
+                                                    Colors.orange,
+                                                    thumbColor:
+                                                    MaterialStateProperty
+                                                        .all(Colors
+                                                        .orange),
+                                                    value:
+                                                    valueStatus,
+                                                    onChanged:
+                                                        (bool value) {
+                                                      setState(() {
+                                                        valueStatus =
+                                                            value;
+                                                      });
+                                                    })
+                                              ],
+                                            )
+                                                : name[index]
+                                                .toString()
+                                                .contains(
+                                                "Bathroom")
+                                                ? Row(
+                                              crossAxisAlignment:
+                                              CrossAxisAlignment
+                                                  .start,
+                                              mainAxisAlignment:
+                                              MainAxisAlignment
+                                                  .spaceBetween,
+                                              children: [
+                                                Column(
+                                                  mainAxisAlignment:
+                                                  MainAxisAlignment
+                                                      .center,
+                                                  crossAxisAlignment:
+                                                  CrossAxisAlignment
+                                                      .start,
+                                                  children: [
+                                                    Image.asset(
+                                                      "images/chair.png",
+                                                      width:
+                                                      width * 0.2,
+                                                      height: height *
+                                                          0.1,
+                                                    ),
+                                                    Text(name[index].toString()),
+                                                    Text(
+                                                      "6 devices",
+                                                      style: TextStyle(
+                                                          color: Colors
+                                                              .black,
+                                                          fontWeight:
+                                                          FontWeight
+                                                              .w900,
+                                                          fontSize:
+                                                          height *
+                                                              0.012),
+                                                    )
+                                                  ],
+                                                ),
+                                                Switch(
+                                                    activeColor:
+                                                    Colors.orange,
+                                                    thumbColor:
+                                                    MaterialStateProperty
+                                                        .all(Colors
+                                                        .orange),
+                                                    value:
+                                                    valueStatus,
+                                                    onChanged:
+                                                        (bool value) {
+                                                      setState(() {
+                                                        valueStatus =
+                                                            value;
+                                                      });
+                                                    })
+                                              ],
+                                            )
+                                                : name[index]
+                                                .toString()
+                                                .contains(
+                                                "Bedroom_1")
+                                                ? Row(
+                                              crossAxisAlignment:
+                                              CrossAxisAlignment
+                                                  .start,
+                                              mainAxisAlignment:
+                                              MainAxisAlignment
+                                                  .spaceBetween,
+                                              children: [
+                                                Column(
+                                                  mainAxisAlignment:
+                                                  MainAxisAlignment
+                                                      .center,
+                                                  crossAxisAlignment:
+                                                  CrossAxisAlignment
+                                                      .start,
+                                                  children: [
+                                                    Image.asset(
+                                                      "images/chair.png",
+                                                      width:
+                                                      width * 0.2,
+                                                      height: height *
+                                                          0.1,
+                                                    ),
+                                                    Text(name[index].toString()),
+                                                    Text(
+                                                      "6 devices",
+                                                      style: TextStyle(
+                                                          color: Colors
+                                                              .black,
+                                                          fontWeight:
+                                                          FontWeight
+                                                              .w900,
+                                                          fontSize:
+                                                          height *
+                                                              0.012),
+                                                    )
+                                                  ],
+                                                ),
+                                                Switch(
+                                                    activeColor:
+                                                    Colors.orange,
+                                                    thumbColor:
+                                                    MaterialStateProperty
+                                                        .all(Colors
+                                                        .orange),
+                                                    value:
+                                                    valueStatus,
+                                                    onChanged:
+                                                        (bool value) {
+                                                      setState(() {
+                                                        valueStatus =
+                                                            value;
+                                                      });
+                                                    })
+                                              ],
+                                            )
+                                                : name[index].toString().contains("Bedroom_2")
+                                                ? Row(
+                                              crossAxisAlignment:
+                                              CrossAxisAlignment
+                                                  .start,
+                                              mainAxisAlignment:
+                                              MainAxisAlignment
+                                                  .spaceBetween,
+                                              children: [
+                                                Column(
+                                                  mainAxisAlignment:
+                                                  MainAxisAlignment
+                                                      .center,
+                                                  crossAxisAlignment:
+                                                  CrossAxisAlignment
+                                                      .start,
+                                                  children: [
+                                                    Image.asset(
+                                                      "images/chair.png",
+                                                      width:
+                                                      width * 0.2,
+                                                      height: height *
+                                                          0.1,
+                                                    ),
+                                                    Text(name[index].toString()),
+                                                    Text(
+                                                      "6 devices",
+                                                      style: TextStyle(
+                                                          color: Colors
+                                                              .black,
+                                                          fontWeight:
+                                                          FontWeight
+                                                              .w900,
+                                                          fontSize:
+                                                          height *
+                                                              0.012),
+                                                    )
+                                                  ],
+                                                ),
+                                                Switch(
+                                                    activeColor:
+                                                    Colors.orange,
+                                                    thumbColor:
+                                                    MaterialStateProperty
+                                                        .all(Colors
+                                                        .orange),
+                                                    value:
+                                                    valueStatus,
+                                                    onChanged:
+                                                        (bool value) {
+                                                      setState(() {
+                                                        valueStatus =
+                                                            value;
+                                                      });
+                                                    })
+                                              ],
+                                            )
+                                                : name[index].toString().contains("Master_Bedroom")
+                                                ? Row(
+                                              crossAxisAlignment:
+                                              CrossAxisAlignment
+                                                  .start,
+                                              mainAxisAlignment:
+                                              MainAxisAlignment
+                                                  .spaceBetween,
+                                              children: [
+                                                Column(
+                                                  mainAxisAlignment:
+                                                  MainAxisAlignment
+                                                      .center,
+                                                  crossAxisAlignment:
+                                                  CrossAxisAlignment
+                                                      .start,
+                                                  children: [
+                                                    Image.asset(
+                                                      "images/chair.png",
+                                                      width:
+                                                      width * 0.2,
+                                                      height: height *
+                                                          0.1,
+                                                    ),
+                                                    Text(name[index].toString()),
+                                                    Text(
+                                                      "6 devices",
+                                                      style: TextStyle(
+                                                          color: Colors
+                                                              .black,
+                                                          fontWeight:
+                                                          FontWeight
+                                                              .w900,
+                                                          fontSize:
+                                                          height *
+                                                              0.012),
+                                                    )
+                                                  ],
+                                                ),
+                                                Switch(
+                                                    activeColor:
+                                                    Colors.orange,
+                                                    thumbColor:
+                                                    MaterialStateProperty
+                                                        .all(Colors
+                                                        .orange),
+                                                    value:
+                                                    valueStatus,
+                                                    onChanged:
+                                                        (bool value) {
+                                                      setState(() {
+                                                        valueStatus =
+                                                            value;
+                                                      });
+                                                    })
+                                              ],
+                                            )
+                                                : name[index].toString().contains("Bedroom")
+                                                ? Row(
+                                              crossAxisAlignment:
+                                              CrossAxisAlignment
+                                                  .start,
+                                              mainAxisAlignment:
+                                              MainAxisAlignment
+                                                  .spaceBetween,
+                                              children: [
+                                                Column(
+                                                  mainAxisAlignment:
+                                                  MainAxisAlignment
+                                                      .center,
+                                                  crossAxisAlignment:
+                                                  CrossAxisAlignment
+                                                      .start,
+                                                  children: [
+                                                    Image.asset(
+                                                      "images/chair.png",
+                                                      width:
+                                                      width * 0.2,
+                                                      height: height *
+                                                          0.1,
+                                                    ),
+                                                    Text(name[index].toString()),
+                                                    Text(
+                                                      "6 devices",
+                                                      style: TextStyle(
+                                                          color: Colors
+                                                              .black,
+                                                          fontWeight:
+                                                          FontWeight
+                                                              .w900,
+                                                          fontSize:
+                                                          height *
+                                                              0.012),
+                                                    )
+                                                  ],
+                                                ),
+                                                Switch(
+                                                    activeColor:
+                                                    Colors.orange,
+                                                    thumbColor:
+                                                    MaterialStateProperty
+                                                        .all(Colors
+                                                        .orange),
+                                                    value:
+                                                    valueStatus,
+                                                    onChanged:
+                                                        (bool value) {
+                                                      setState(() {
+                                                        valueStatus =
+                                                            value;
+                                                      });
+                                                    })
+                                              ],
+                                            )
+                                                : name[index].toString().contains("Outside")
+                                                ? Row(
+                                              crossAxisAlignment:
+                                              CrossAxisAlignment
+                                                  .start,
+                                              mainAxisAlignment:
+                                              MainAxisAlignment
+                                                  .spaceBetween,
+                                              children: [
+                                                Column(
+                                                  mainAxisAlignment:
+                                                  MainAxisAlignment
+                                                      .center,
+                                                  crossAxisAlignment:
+                                                  CrossAxisAlignment
+                                                      .start,
+                                                  children: [
+                                                    Image.asset(
+                                                      "images/chair.png",
+                                                      width:
+                                                      width * 0.2,
+                                                      height: height *
+                                                          0.1,
+                                                    ),
+                                                    Text(name[index].toString()),
+                                                    Text(
+                                                      "6 devices",
+                                                      style: TextStyle(
+                                                          color: Colors
+                                                              .black,
+                                                          fontWeight:
+                                                          FontWeight
+                                                              .w900,
+                                                          fontSize:
+                                                          height *
+                                                              0.012),
+                                                    )
+                                                  ],
+                                                ),
+                                                Switch(
+                                                    activeColor:
+                                                    Colors.orange,
+                                                    thumbColor:
+                                                    MaterialStateProperty
+                                                        .all(Colors
+                                                        .orange),
+                                                    value:
+                                                    valueStatus,
+                                                    onChanged:
+                                                        (bool value) {
+                                                      setState(() {
+                                                        valueStatus =
+                                                            value;
+                                                      });
+                                                    })
+                                              ],
+                                            )
+                                                : name[index].toString().contains("Garden")
+                                                ? Row(
+                                              crossAxisAlignment:
+                                              CrossAxisAlignment
+                                                  .start,
+                                              mainAxisAlignment:
+                                              MainAxisAlignment
+                                                  .spaceBetween,
+                                              children: [
+                                                Column(
+                                                  mainAxisAlignment:
+                                                  MainAxisAlignment
+                                                      .center,
+                                                  crossAxisAlignment:
+                                                  CrossAxisAlignment
+                                                      .start,
+                                                  children: [
+                                                    Image.asset(
+                                                      "images/chair.png",
+                                                      width:
+                                                      width * 0.2,
+                                                      height: height *
+                                                          0.1,
+                                                    ),
+                                                    Text(name[index].toString()),
+                                                    Text(
+                                                      "6 devices",
+                                                      style: TextStyle(
+                                                          color: Colors
+                                                              .black,
+                                                          fontWeight:
+                                                          FontWeight
+                                                              .w900,
+                                                          fontSize:
+                                                          height *
+                                                              0.012),
+                                                    )
+                                                  ],
+                                                ),
+                                                Switch(
+                                                    activeColor:
+                                                    Colors.orange,
+                                                    thumbColor:
+                                                    MaterialStateProperty
+                                                        .all(Colors
+                                                        .orange),
+                                                    value:
+                                                    valueStatus,
+                                                    onChanged:
+                                                        (bool value) {
+                                                      setState(() {
+                                                        valueStatus =
+                                                            value;
+                                                      });
+                                                    })
+                                              ],
+                                            )
+                                                : name[index].toString().contains("Parking")
+                                                ? Row(
+                                              crossAxisAlignment:
+                                              CrossAxisAlignment
+                                                  .start,
+                                              mainAxisAlignment:
+                                              MainAxisAlignment
+                                                  .spaceBetween,
+                                              children: [
+                                                Column(
+                                                  mainAxisAlignment:
+                                                  MainAxisAlignment
+                                                      .center,
+                                                  crossAxisAlignment:
+                                                  CrossAxisAlignment
+                                                      .start,
+                                                  children: [
+                                                    Image.asset(
+                                                      "images/chair.png",
+                                                      width:
+                                                      width * 0.2,
+                                                      height: height *
+                                                          0.1,
+                                                    ),
+                                                    Text(name[index].toString()),
+                                                    Text(
+                                                      "6 devices",
+                                                      style: TextStyle(
+                                                          color: Colors
+                                                              .black,
+                                                          fontWeight:
+                                                          FontWeight
+                                                              .w900,
+                                                          fontSize:
+                                                          height *
+                                                              0.012),
+                                                    )
+                                                  ],
+                                                ),
+                                                Switch(
+                                                    activeColor:
+                                                    Colors.orange,
+                                                    thumbColor:
+                                                    MaterialStateProperty
+                                                        .all(Colors
+                                                        .orange),
+                                                    value:
+                                                    valueStatus,
+                                                    onChanged:
+                                                        (bool value) {
+                                                      setState(() {
+                                                        valueStatus =
+                                                            value;
+                                                      });
+                                                    })
+                                              ],
+                                            )
+                                                : name[index].toString().contains("Living_Room")
+                                                ? Row(
+                                              crossAxisAlignment:
+                                              CrossAxisAlignment
+                                                  .start,
+                                              mainAxisAlignment:
+                                              MainAxisAlignment
+                                                  .spaceBetween,
+                                              children: [
+                                                Column(
+                                                  mainAxisAlignment:
+                                                  MainAxisAlignment
+                                                      .center,
+                                                  crossAxisAlignment:
+                                                  CrossAxisAlignment
+                                                      .start,
+                                                  children: [
+                                                    Image.asset(
+                                                      "images/chair.png",
+                                                      width:
+                                                      width * 0.2,
+                                                      height: height *
+                                                          0.1,
+                                                    ),
+                                                    Text(name[index].toString()),
+                                                    Text(
+                                                      "6 devices",
+                                                      style: TextStyle(
+                                                          color: Colors
+                                                              .black,
+                                                          fontWeight:
+                                                          FontWeight
+                                                              .w900,
+                                                          fontSize:
+                                                          height *
+                                                              0.012),
+                                                    )
+                                                  ],
+                                                ),
+                                                Switch(
+                                                    activeColor:
+                                                    Colors.orange,
+                                                    thumbColor:
+                                                    MaterialStateProperty
+                                                        .all(Colors
+                                                        .orange),
+                                                    value:
+                                                    valueStatus,
+                                                    onChanged:
+                                                        (bool value) {
+                                                      setState(() {
+                                                        valueStatus =
+                                                            value;
+                                                      });
+                                                    })
+                                              ],
+                                            )
+                                                : name[index].toString().contains("Store_Room")
+                                                ? Row(
+                                              crossAxisAlignment:
+                                              CrossAxisAlignment
+                                                  .start,
+                                              mainAxisAlignment:
+                                              MainAxisAlignment
+                                                  .spaceBetween,
+                                              children: [
+                                                Column(
+                                                  mainAxisAlignment:
+                                                  MainAxisAlignment
+                                                      .center,
+                                                  crossAxisAlignment:
+                                                  CrossAxisAlignment
+                                                      .start,
+                                                  children: [
+                                                    Image.asset(
+                                                      "images/chair.png",
+                                                      width:
+                                                      width * 0.2,
+                                                      height: height *
+                                                          0.1,
+                                                    ),
+                                                    Text(name[index].toString()),
+                                                    Text(
+                                                      "6 devices",
+                                                      style: TextStyle(
+                                                          color: Colors
+                                                              .black,
+                                                          fontWeight:
+                                                          FontWeight
+                                                              .w900,
+                                                          fontSize:
+                                                          height *
+                                                              0.012),
+                                                    )
+                                                  ],
+                                                ),
+                                                Switch(
+                                                    activeColor:
+                                                    Colors.orange,
+                                                    thumbColor:
+                                                    MaterialStateProperty
+                                                        .all(Colors
+                                                        .orange),
+                                                    value:
+                                                    valueStatus,
+                                                    onChanged:
+                                                        (bool value) {
+                                                      setState(() {
+                                                        valueStatus =
+                                                            value;
+                                                      });
+                                                    })
+                                              ],
+                                            )
+                                                : Container(),
+                                          ),
+                                        ],
+                                      ),
+                                    ],
                                   ),
                                 ),
                               ),
                             ),
                           ),
                         ),
-                      );
-                    },
-                    childCount: name.length,
-                  ),
-                  gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
-                    maxCrossAxisExtent: 350.0,
-                    mainAxisSpacing: 0.0,
-                    crossAxisSpacing: 0.0,
-                    childAspectRatio: 1.0,
-                  ),
-                ) :
-                SliverList(
-                  delegate: SliverChildBuilderDelegate(
-                        (BuildContext context, int index) {
-                      return Container(
-                        color: Color.fromRGBO(26, 28, 30, 0.6),
-                        child: Padding(
-                          padding: EdgeInsets.all(18.0),
-                          child: GestureDetector(
-                            onTap: () {
-                              //Navigator.push(context, MaterialPageRoute(builder: (context)=>IndividualPage(imgValue: widget.choice.backGroundImage,txtValue: widget.choice.title,)));
-                            },
-                            child: Padding(
-                              padding: EdgeInsets.symmetric(vertical: 10.0),
-                              child: Container(
-                                decoration: BoxDecoration(
-                                  color: Colors.black,
-                                  borderRadius: BorderRadius.circular(10.0),
-                                  boxShadow: [
-                                    BoxShadow(
-                                      color: Colors.white38,
-                                      offset: Offset(
-                                        -2.5,
-                                        -2.5,
-                                      ),
-                                      blurRadius: 6.0,
-                                      spreadRadius: 1.0,
-                                    ),
-                                    BoxShadow(
-                                      color: Colors.black,
-                                      offset: Offset(
-                                        2.5,
-                                        2.5,
-                                      ),
-                                      blurRadius: 10.0,
-                                      spreadRadius: 1.0,
-                                    ),
-                                  ],
-                                ),
-                                child: Container(
-                                  height: height * 0.20,
-                                  width: width * 0.80,
-                                  decoration: BoxDecoration(
-                                    color: Colors.white,
-                                    borderRadius: BorderRadius.circular(10.0),
-                                    image: DecorationImage(
-                                      fit: BoxFit.cover,
-                                      colorFilter: ColorFilter.mode(
-                                          Colors.black.withOpacity(0.7),
-                                          BlendMode.dstATop),
-                                      image: name[index]
-                                          .toString()
-                                          .contains("Hall")
-                                          ? AssetImage(
-                                        "images/fur.jpg",
-                                      )
-                                          : name[index]
-                                          .toString()
-                                          .contains("Admin")
-                                          ? AssetImage(
-                                        "images/adminr.jpg",
-                                      )
-                                          : name[index]
-                                          .toString()
-                                          .contains(
-                                          "Garage")
-                                          ? AssetImage(
-                                        "images/guest.png",
-                                      )
-                                          : name[index]
-                                          .toString()
-                                          .contains(
-                                          "Kitchen")
-                                          ? AssetImage(
-                                        "images/kitchen.png",
-                                      )
-                                          : name[index]
-                                          .toString()
-                                          .contains(
-                                          "Bathroom")
-                                          ? AssetImage(
-                                        "images/bathroom.png",
-                                      )
-                                          : name[index]
-                                          .toString()
-                                          .contains(
-                                          "Bedroom_1")
-                                          ? AssetImage(
-                                        "images/bedroom.png",
-                                      )
-                                          : name[index].toString().contains(
-                                          "Bedroom_2")
-                                          ? AssetImage(
-                                        "images/bedroom.png",
-                                      )
-                                          : name[index].toString().contains(
-                                          "Master_Bedroom")
-                                          ? AssetImage(
-                                        "images/bedroom.png",
-                                      )
-                                          : name[index].toString().contains(
-                                          "Bedroom")
-                                          ? AssetImage(
-                                        "images/bedroom.png",
-                                      )
-                                          : name[index].toString().contains(
-                                          "Outside")
-                                          ? AssetImage(
-                                        "images/fur.jpg",
-                                      )
-                                          : name[index].toString().contains(
-                                          "Garden")
-                                          ? AssetImage(
-                                        "images/fur.jpg",
-                                      )
-                                          : name[index].toString().contains(
-                                          "Parking")
-                                          ? AssetImage(
-                                        "images/fur.jpg",
-                                      )
-                                          : name[index].toString().contains(
-                                          "Living_Room")
-                                          ? AssetImage(
-                                        "images/fur.jpg",
-
-                                      )
-                                          : name[index].toString().contains(
-                                          "Store_Room")
-                                          ? AssetImage(
-                                        "images/fur.jpg",
-                                      )
-                                          : AssetImage(""),
-                                    ),
-                                  ),
-                                  child: Padding(
-                                    padding: EdgeInsets.all(8.0),
-                                    child: Container(
-                                      padding: EdgeInsets.all(4),
-                                      child: name[index]
-                                          .toString()
-                                          .contains("Hall")
-                                          ? Row(
-                                        crossAxisAlignment:
-                                        CrossAxisAlignment
-                                            .start,
-                                        mainAxisAlignment:
-                                        MainAxisAlignment
-                                            .spaceBetween,
-                                        children: [
-                                          Column(
-                                            mainAxisAlignment:
-                                            MainAxisAlignment
-                                                .center,
-                                            crossAxisAlignment:
-                                            CrossAxisAlignment
-                                                .start,
-                                            children: [
-                                              Image.asset(
-                                                "images/chair.png",
-                                                width:
-                                                width * 0.2,
-                                                height: height *
-                                                    0.1,
-                                              ),
-                                              Text(name[index].toString()),
-
-                                              Text(
-                                                "6 devices",
-                                                style: TextStyle(
-                                                    color: Colors
-                                                        .black,
-                                                    fontWeight:
-                                                    FontWeight
-                                                        .w900,
-                                                    fontSize:
-                                                    height *
-                                                        0.012),
-                                              )
-                                            ],
-                                          ),
-                                          Switch(
-                                              activeColor:
-                                              Colors.orange,
-                                              thumbColor:
-                                              MaterialStateProperty
-                                                  .all(Colors
-                                                  .orange),
-                                              value:
-                                              valueStatus,
-                                              onChanged:
-                                                  (bool value) {
-                                                setState(() {
-                                                  valueStatus =
-                                                      value;
-                                                });
-                                              })
-                                        ],
-                                      )
-                                          : name[index]
-                                          .toString()
-                                          .contains("Admin")
-                                          ? Row(
-                                        crossAxisAlignment:
-                                        CrossAxisAlignment
-                                            .start,
-                                        mainAxisAlignment:
-                                        MainAxisAlignment
-                                            .spaceBetween,
-                                        children: [
-                                          Column(
-                                            crossAxisAlignment:
-                                            CrossAxisAlignment
-                                                .start,
-                                            children: [
-                                              Image.asset(
-                                                "images/chair.png",
-                                                width:
-                                                width *
-                                                    0.2,
-                                                height:
-                                                height *
-                                                    0.1,
-                                              ),
-                                              Text(name[index].toString()),
-                                              Text(
-                                                "6 devices",
-                                                style: TextStyle(
-                                                    color: Colors
-                                                        .black,
-                                                    fontWeight:
-                                                    FontWeight
-                                                        .w900,
-                                                    fontSize:
-                                                    height *
-                                                        0.012),
-                                              )
-                                            ],
-                                          ),
-                                          Switch(
-                                              activeColor:
-                                              Colors
-                                                  .orange,
-                                              thumbColor:
-                                              MaterialStateProperty.all(
-                                                  Colors
-                                                      .orange),
-                                              value:
-                                              valueStatus,
-                                              onChanged: (bool
-                                              value) {
-                                                setState(
-                                                        () {
-                                                      valueStatus =
-                                                          value;
-                                                    });
-                                              })
-                                        ],
-                                      )
-                                          : name[index]
-                                          .toString()
-                                          .contains(
-                                          "Garage")
-                                          ? Row(
-                                        crossAxisAlignment:
-                                        CrossAxisAlignment
-                                            .start,
-                                        mainAxisAlignment:
-                                        MainAxisAlignment
-                                            .spaceBetween,
-                                        children: [
-                                          Column(
-                                            mainAxisAlignment:
-                                            MainAxisAlignment
-                                                .center,
-                                            crossAxisAlignment:
-                                            CrossAxisAlignment
-                                                .start,
-                                            children: [
-                                              Image.asset(
-                                                "images/chair.png",
-                                                width:
-                                                width * 0.2,
-                                                height: height *
-                                                    0.1,
-                                              ),
-                                              Text(name[index].toString()),
-                                              Text(
-                                                "6 devices",
-                                                style: TextStyle(
-                                                    color: Colors
-                                                        .black,
-                                                    fontWeight:
-                                                    FontWeight
-                                                        .w900,
-                                                    fontSize:
-                                                    height *
-                                                        0.012),
-                                              )
-                                            ],
-                                          ),
-                                          Switch(
-                                              activeColor:
-                                              Colors.orange,
-                                              thumbColor:
-                                              MaterialStateProperty
-                                                  .all(Colors
-                                                  .orange),
-                                              value:
-                                              valueStatus,
-                                              onChanged:
-                                                  (bool value) {
-                                                setState(() {
-                                                  valueStatus =
-                                                      value;
-                                                });
-                                              })
-                                        ],
-                                      )
-                                          : name[index]
-                                          .toString()
-                                          .contains(
-                                          "Kitchen")
-                                          ? Row(
-                                        crossAxisAlignment:
-                                        CrossAxisAlignment
-                                            .start,
-                                        mainAxisAlignment:
-                                        MainAxisAlignment
-                                            .spaceBetween,
-                                        children: [
-                                          Column(
-                                            mainAxisAlignment:
-                                            MainAxisAlignment
-                                                .center,
-                                            crossAxisAlignment:
-                                            CrossAxisAlignment
-                                                .start,
-                                            children: [
-                                              Image.asset(
-                                                "images/chair.png",
-                                                width:
-                                                width * 0.2,
-                                                height: height *
-                                                    0.1,
-                                              ),
-                                              Text(name[index].toString()),
-                                              Text(
-                                                "6 devices",
-                                                style: TextStyle(
-                                                    color: Colors
-                                                        .black,
-                                                    fontWeight:
-                                                    FontWeight
-                                                        .w900,
-                                                    fontSize:
-                                                    height *
-                                                        0.012),
-                                              )
-                                            ],
-                                          ),
-                                          Switch(
-                                              activeColor:
-                                              Colors.orange,
-                                              thumbColor:
-                                              MaterialStateProperty
-                                                  .all(Colors
-                                                  .orange),
-                                              value:
-                                              valueStatus,
-                                              onChanged:
-                                                  (bool value) {
-                                                setState(() {
-                                                  valueStatus =
-                                                      value;
-                                                });
-                                              })
-                                        ],
-                                      )
-                                          : name[index]
-                                          .toString()
-                                          .contains(
-                                          "Bathroom")
-                                          ? Row(
-                                        crossAxisAlignment:
-                                        CrossAxisAlignment
-                                            .start,
-                                        mainAxisAlignment:
-                                        MainAxisAlignment
-                                            .spaceBetween,
-                                        children: [
-                                          Column(
-                                            mainAxisAlignment:
-                                            MainAxisAlignment
-                                                .center,
-                                            crossAxisAlignment:
-                                            CrossAxisAlignment
-                                                .start,
-                                            children: [
-                                              Image.asset(
-                                                "images/chair.png",
-                                                width:
-                                                width * 0.2,
-                                                height: height *
-                                                    0.1,
-                                              ),
-                                              Text(name[index].toString()),
-                                              Text(
-                                                "6 devices",
-                                                style: TextStyle(
-                                                    color: Colors
-                                                        .black,
-                                                    fontWeight:
-                                                    FontWeight
-                                                        .w900,
-                                                    fontSize:
-                                                    height *
-                                                        0.012),
-                                              )
-                                            ],
-                                          ),
-                                          Switch(
-                                              activeColor:
-                                              Colors.orange,
-                                              thumbColor:
-                                              MaterialStateProperty
-                                                  .all(Colors
-                                                  .orange),
-                                              value:
-                                              valueStatus,
-                                              onChanged:
-                                                  (bool value) {
-                                                setState(() {
-                                                  valueStatus =
-                                                      value;
-                                                });
-                                              })
-                                        ],
-                                      )
-                                          : name[index]
-                                          .toString()
-                                          .contains(
-                                          "Bedroom_1")
-                                          ? Row(
-                                        crossAxisAlignment:
-                                        CrossAxisAlignment
-                                            .start,
-                                        mainAxisAlignment:
-                                        MainAxisAlignment
-                                            .spaceBetween,
-                                        children: [
-                                          Column(
-                                            mainAxisAlignment:
-                                            MainAxisAlignment
-                                                .center,
-                                            crossAxisAlignment:
-                                            CrossAxisAlignment
-                                                .start,
-                                            children: [
-                                              Image.asset(
-                                                "images/chair.png",
-                                                width:
-                                                width * 0.2,
-                                                height: height *
-                                                    0.1,
-                                              ),
-                                              Text(name[index].toString()),
-                                              Text(
-                                                "6 devices",
-                                                style: TextStyle(
-                                                    color: Colors
-                                                        .black,
-                                                    fontWeight:
-                                                    FontWeight
-                                                        .w900,
-                                                    fontSize:
-                                                    height *
-                                                        0.012),
-                                              )
-                                            ],
-                                          ),
-                                          Switch(
-                                              activeColor:
-                                              Colors.orange,
-                                              thumbColor:
-                                              MaterialStateProperty
-                                                  .all(Colors
-                                                  .orange),
-                                              value:
-                                              valueStatus,
-                                              onChanged:
-                                                  (bool value) {
-                                                setState(() {
-                                                  valueStatus =
-                                                      value;
-                                                });
-                                              })
-                                        ],
-                                      )
-                                          : name[index].toString().contains(
-                                          "Bedroom_2")
-                                          ? Row(
-                                        crossAxisAlignment:
-                                        CrossAxisAlignment
-                                            .start,
-                                        mainAxisAlignment:
-                                        MainAxisAlignment
-                                            .spaceBetween,
-                                        children: [
-                                          Column(
-                                            mainAxisAlignment:
-                                            MainAxisAlignment
-                                                .center,
-                                            crossAxisAlignment:
-                                            CrossAxisAlignment
-                                                .start,
-                                            children: [
-                                              Image.asset(
-                                                "images/chair.png",
-                                                width:
-                                                width * 0.2,
-                                                height: height *
-                                                    0.1,
-                                              ),
-                                              Text(name[index].toString()),
-                                              Text(
-                                                "6 devices",
-                                                style: TextStyle(
-                                                    color: Colors
-                                                        .black,
-                                                    fontWeight:
-                                                    FontWeight
-                                                        .w900,
-                                                    fontSize:
-                                                    height *
-                                                        0.012),
-                                              )
-                                            ],
-                                          ),
-                                          Switch(
-                                              activeColor:
-                                              Colors.orange,
-                                              thumbColor:
-                                              MaterialStateProperty
-                                                  .all(Colors
-                                                  .orange),
-                                              value:
-                                              valueStatus,
-                                              onChanged:
-                                                  (bool value) {
-                                                setState(() {
-                                                  valueStatus =
-                                                      value;
-                                                });
-                                              })
-                                        ],
-                                      )
-                                          : name[index].toString().contains(
-                                          "Master_Bedroom")
-                                          ? Row(
-                                        crossAxisAlignment:
-                                        CrossAxisAlignment
-                                            .start,
-                                        mainAxisAlignment:
-                                        MainAxisAlignment
-                                            .spaceBetween,
-                                        children: [
-                                          Column(
-                                            mainAxisAlignment:
-                                            MainAxisAlignment
-                                                .center,
-                                            crossAxisAlignment:
-                                            CrossAxisAlignment
-                                                .start,
-                                            children: [
-                                              Image.asset(
-                                                "images/chair.png",
-                                                width:
-                                                width * 0.2,
-                                                height: height *
-                                                    0.1,
-                                              ),
-                                              Text(name[index].toString()),
-                                              Text(
-                                                "6 devices",
-                                                style: TextStyle(
-                                                    color: Colors
-                                                        .black,
-                                                    fontWeight:
-                                                    FontWeight
-                                                        .w900,
-                                                    fontSize:
-                                                    height *
-                                                        0.012),
-                                              )
-                                            ],
-                                          ),
-                                          Switch(
-                                              activeColor:
-                                              Colors.orange,
-                                              thumbColor:
-                                              MaterialStateProperty
-                                                  .all(Colors
-                                                  .orange),
-                                              value:
-                                              valueStatus,
-                                              onChanged:
-                                                  (bool value) {
-                                                setState(() {
-                                                  valueStatus =
-                                                      value;
-                                                });
-                                              })
-                                        ],
-                                      )
-                                          : name[index].toString().contains(
-                                          "Bedroom")
-                                          ? Row(
-                                        crossAxisAlignment:
-                                        CrossAxisAlignment
-                                            .start,
-                                        mainAxisAlignment:
-                                        MainAxisAlignment
-                                            .spaceBetween,
-                                        children: [
-                                          Column(
-                                            mainAxisAlignment:
-                                            MainAxisAlignment
-                                                .center,
-                                            crossAxisAlignment:
-                                            CrossAxisAlignment
-                                                .start,
-                                            children: [
-                                              Image.asset(
-                                                "images/chair.png",
-                                                width:
-                                                width * 0.2,
-                                                height: height *
-                                                    0.1,
-                                              ),
-                                              Text(name[index].toString()),
-                                              Text(
-                                                "6 devices",
-                                                style: TextStyle(
-                                                    color: Colors
-                                                        .black,
-                                                    fontWeight:
-                                                    FontWeight
-                                                        .w900,
-                                                    fontSize:
-                                                    height *
-                                                        0.012),
-                                              )
-                                            ],
-                                          ),
-                                          Switch(
-                                              activeColor:
-                                              Colors.orange,
-                                              thumbColor:
-                                              MaterialStateProperty
-                                                  .all(Colors
-                                                  .orange),
-                                              value:
-                                              valueStatus,
-                                              onChanged:
-                                                  (bool value) {
-                                                setState(() {
-                                                  valueStatus =
-                                                      value;
-                                                });
-                                              })
-                                        ],
-                                      )
-                                          : name[index].toString().contains(
-                                          "Outside")
-                                          ? Row(
-                                        crossAxisAlignment:
-                                        CrossAxisAlignment
-                                            .start,
-                                        mainAxisAlignment:
-                                        MainAxisAlignment
-                                            .spaceBetween,
-                                        children: [
-                                          Column(
-                                            mainAxisAlignment:
-                                            MainAxisAlignment
-                                                .center,
-                                            crossAxisAlignment:
-                                            CrossAxisAlignment
-                                                .start,
-                                            children: [
-                                              Image.asset(
-                                                "images/chair.png",
-                                                width:
-                                                width * 0.2,
-                                                height: height *
-                                                    0.1,
-                                              ),
-                                              Text(name[index].toString()),
-                                              Text(
-                                                "6 devices",
-                                                style: TextStyle(
-                                                    color: Colors
-                                                        .black,
-                                                    fontWeight:
-                                                    FontWeight
-                                                        .w900,
-                                                    fontSize:
-                                                    height *
-                                                        0.012),
-                                              )
-                                            ],
-                                          ),
-                                          Switch(
-                                              activeColor:
-                                              Colors.orange,
-                                              thumbColor:
-                                              MaterialStateProperty
-                                                  .all(Colors
-                                                  .orange),
-                                              value:
-                                              valueStatus,
-                                              onChanged:
-                                                  (bool value) {
-                                                setState(() {
-                                                  valueStatus =
-                                                      value;
-                                                });
-                                              })
-                                        ],
-                                      )
-                                          : name[index].toString().contains(
-                                          "Garden")
-                                          ? Row(
-                                        crossAxisAlignment:
-                                        CrossAxisAlignment
-                                            .start,
-                                        mainAxisAlignment:
-                                        MainAxisAlignment
-                                            .spaceBetween,
-                                        children: [
-                                          Column(
-                                            mainAxisAlignment:
-                                            MainAxisAlignment
-                                                .center,
-                                            crossAxisAlignment:
-                                            CrossAxisAlignment
-                                                .start,
-                                            children: [
-                                              Image.asset(
-                                                "images/chair.png",
-                                                width:
-                                                width * 0.2,
-                                                height: height *
-                                                    0.1,
-                                              ),
-                                              Text(name[index].toString()),
-                                              Text(
-                                                "6 devices",
-                                                style: TextStyle(
-                                                    color: Colors
-                                                        .black,
-                                                    fontWeight:
-                                                    FontWeight
-                                                        .w900,
-                                                    fontSize:
-                                                    height *
-                                                        0.012),
-                                              )
-                                            ],
-                                          ),
-                                          Switch(
-                                              activeColor:
-                                              Colors.orange,
-                                              thumbColor:
-                                              MaterialStateProperty
-                                                  .all(Colors
-                                                  .orange),
-                                              value:
-                                              valueStatus,
-                                              onChanged:
-                                                  (bool value) {
-                                                setState(() {
-                                                  valueStatus =
-                                                      value;
-                                                });
-                                              })
-                                        ],
-                                      )
-                                          : name[index].toString().contains(
-                                          "Parking")
-                                          ? Row(
-                                        crossAxisAlignment:
-                                        CrossAxisAlignment
-                                            .start,
-                                        mainAxisAlignment:
-                                        MainAxisAlignment
-                                            .spaceBetween,
-                                        children: [
-                                          Column(
-                                            mainAxisAlignment:
-                                            MainAxisAlignment
-                                                .center,
-                                            crossAxisAlignment:
-                                            CrossAxisAlignment
-                                                .start,
-                                            children: [
-                                              Image.asset(
-                                                "images/chair.png",
-                                                width:
-                                                width * 0.2,
-                                                height: height *
-                                                    0.1,
-                                              ),
-                                              Text(name[index].toString()),
-                                              Text(
-                                                "6 devices",
-                                                style: TextStyle(
-                                                    color: Colors
-                                                        .black,
-                                                    fontWeight:
-                                                    FontWeight
-                                                        .w900,
-                                                    fontSize:
-                                                    height *
-                                                        0.012),
-                                              )
-                                            ],
-                                          ),
-                                          Switch(
-                                              activeColor:
-                                              Colors.orange,
-                                              thumbColor:
-                                              MaterialStateProperty
-                                                  .all(Colors
-                                                  .orange),
-                                              value:
-                                              valueStatus,
-                                              onChanged:
-                                                  (bool value) {
-                                                setState(() {
-                                                  valueStatus =
-                                                      value;
-                                                });
-                                              })
-                                        ],
-                                      )
-                                          : name[index].toString().contains(
-                                          "Living_Room")
-                                          ? Row(
-                                        crossAxisAlignment:
-                                        CrossAxisAlignment
-                                            .start,
-                                        mainAxisAlignment:
-                                        MainAxisAlignment
-                                            .spaceBetween,
-                                        children: [
-                                          Column(
-                                            mainAxisAlignment:
-                                            MainAxisAlignment
-                                                .center,
-                                            crossAxisAlignment:
-                                            CrossAxisAlignment
-                                                .start,
-                                            children: [
-                                              Image.asset(
-                                                "images/chair.png",
-                                                width:
-                                                width * 0.2,
-                                                height: height *
-                                                    0.1,
-                                              ),
-                                              Text(name[index].toString()),
-                                              Text(
-                                                "6 devices",
-                                                style: TextStyle(
-                                                    color: Colors
-                                                        .black,
-                                                    fontWeight:
-                                                    FontWeight
-                                                        .w900,
-                                                    fontSize:
-                                                    height *
-                                                        0.012),
-                                              )
-                                            ],
-                                          ),
-                                          Switch(
-                                              activeColor:
-                                              Colors.orange,
-                                              thumbColor:
-                                              MaterialStateProperty
-                                                  .all(Colors
-                                                  .orange),
-                                              value:
-                                              valueStatus,
-                                              onChanged:
-                                                  (bool value) {
-                                                setState(() {
-                                                  valueStatus =
-                                                      value;
-                                                });
-                                              })
-                                        ],
-                                      )
-                                          : name[index].toString().contains(
-                                          "Store_Room")
-                                          ? Row(
-                                        crossAxisAlignment:
-                                        CrossAxisAlignment
-                                            .start,
-                                        mainAxisAlignment:
-                                        MainAxisAlignment
-                                            .spaceBetween,
-                                        children: [
-                                          Column(
-                                            mainAxisAlignment:
-                                            MainAxisAlignment
-                                                .center,
-                                            crossAxisAlignment:
-                                            CrossAxisAlignment
-                                                .start,
-                                            children: [
-                                              Image.asset(
-                                                "images/chair.png",
-                                                width:
-                                                width * 0.2,
-                                                height: height *
-                                                    0.1,
-                                              ),
-                                              Text(name[index].toString()),
-                                              Text(
-                                                "6 devices",
-                                                style: TextStyle(
-                                                    color: Colors
-                                                        .black,
-                                                    fontWeight:
-                                                    FontWeight
-                                                        .w900,
-                                                    fontSize:
-                                                    height *
-                                                        0.012),
-                                              )
-                                            ],
-                                          ),
-                                          Switch(
-                                              activeColor:
-                                              Colors.orange,
-                                              thumbColor:
-                                              MaterialStateProperty
-                                                  .all(Colors
-                                                  .orange),
-                                              value:
-                                              valueStatus,
-                                              onChanged:
-                                                  (bool value) {
-                                                setState(() {
-                                                  valueStatus =
-                                                      value;
-                                                });
-                                              })
-                                        ],
-                                      )
-                                          : Container(),
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ),
-                        ),
-                      );
-                    },
-                    childCount: name.length,
-                  ),
+                      ),
+                    );
+                  },
+                  childCount: name.length,
                 ),
+                gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
+                  maxCrossAxisExtent: 400.0,
+                  mainAxisSpacing: 0.0,
+                  crossAxisSpacing: 0.0,
+                  childAspectRatio: 1.0,
+                ),
+              ):
+              SliverList(
+                delegate: SliverChildBuilderDelegate(
+                      (BuildContext context, int index) {
+                    return Container(
+                      color: Color.fromRGBO(26, 28, 30, 0.6),
+                      child: Padding(
+                        padding: EdgeInsets.all(18.0),
+                        child: GestureDetector(
+                          onTap: (){
+                            Navigator.push(context, MaterialPageRoute(builder: (context)=>Button(name[index].toString(),index,ipAddress,g1,)));
+                          },
+                          child: Padding(
+                            padding: EdgeInsets.symmetric(vertical: 10.0),
+                            child: Container(
+                              decoration: BoxDecoration(
+                                color: Colors.black,
+                                borderRadius: BorderRadius.circular(10.0),
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Colors.white38,
+                                    offset: Offset(
+                                      -2.5,
+                                      -2.5,
+                                    ),
+                                    blurRadius: 6.0,
+                                    spreadRadius: 1.0,
+                                  ),
+                                  BoxShadow(
+                                    color: Colors.black,
+                                    offset: Offset(
+                                      2.5,
+                                      2.5,
+                                    ),
+                                    blurRadius: 10.0,
+                                    spreadRadius: 1.0,
+                                  ),
+                                ],
+                              ),
+                              child: Container(
+                                height: height * 0.20,
+                                width: width * 0.80,
+                                decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  borderRadius: BorderRadius.circular(10.0),
+                                  image: DecorationImage(
+                                    fit: BoxFit.cover,
+                                    colorFilter: ColorFilter.mode(
+                                        Colors.black.withOpacity(0.7), BlendMode.dstATop),
+                                    image: name[index]
+                                        .toString()
+                                        .contains("Hall")
+                                        ? AssetImage(
+                                      "images/fur.jpg",
+                                    )
+                                        : name[index]
+                                        .toString()
+                                        .contains("Admin")
+                                        ? AssetImage(
+                                      "images/fur.jpg",
+                                    )
+                                        : name[index]
+                                        .toString()
+                                        .contains(
+                                        "Garage")
+                                        ? AssetImage(
+                                      "images/guest.png",
+                                    )
+                                        : name[index]
+                                        .toString()
+                                        .contains(
+                                        "Kitchen")
+                                        ? AssetImage(
+                                      "images/kitchen.png",
+                                    )
+                                        : name[index]
+                                        .toString()
+                                        .contains(
+                                        "Bathroom")
+                                        ? AssetImage(
+                                      "images/bathroom.png",
+                                    )
+                                        : name[index]
+                                        .toString()
+                                        .contains(
+                                        "Bedroom_1")
+                                        ? AssetImage(
+                                      "images/bedroom.png",
+                                    )
+                                        : name[index].toString().contains("Bedroom_2")
+                                        ? AssetImage(
+                                      "images/bedroom.png",
+                                    )
+                                        : name[index].toString().contains("Master_Bedroom")
+                                        ? AssetImage(
+                                      "images/bedroom.png",
+                                    )
+                                        : name[index].toString().contains("Bedroom")
+                                        ? AssetImage(
+                                      "images/bedroom.png",
+                                    )
+                                        : name[index].toString().contains("Outside")
+                                        ? AssetImage(
+                                      "images/fur.jpg",
+                                    )
+                                        : name[index].toString().contains("Garden")
+                                        ? AssetImage(
+                                      "images/fur.jpg",
+                                    )
+                                        : name[index].toString().contains("Parking")
+                                        ? AssetImage(
+                                      "images/fur.jpg",
+                                    )
+                                        : name[index].toString().contains("Living_Room")
+                                        ? AssetImage(
+                                      "images/fur.jpg",
 
+                                    )
+                                        : name[index].toString().contains("Store_Room")
+                                        ? AssetImage(
+                                      "images/fur.jpg",
+                                    )
+                                        : AssetImage(""),
+                                  ),
+                                ),
+                                child: Padding(
+                                  padding: EdgeInsets.all(8.0),
+                                  child: Row(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Column(
+                                        mainAxisAlignment: MainAxisAlignment.center,
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        children: [
+                                          Container(
+                                            padding: EdgeInsets.all(4),
+                                            child: name[index]
+                                                .toString()
+                                                .contains("Hall")
+                                                ? Row(
+                                              crossAxisAlignment:
+                                              CrossAxisAlignment
+                                                  .start,
+                                              mainAxisAlignment:
+                                              MainAxisAlignment
+                                                  .spaceBetween,
+                                              children: [
+                                                Column(
+                                                  mainAxisAlignment:
+                                                  MainAxisAlignment
+                                                      .center,
+                                                  crossAxisAlignment:
+                                                  CrossAxisAlignment
+                                                      .start,
+                                                  children: [
+                                                    Image.asset(
+                                                      "images/chair.png",
+                                                      width:
+                                                      width * 0.2,
+                                                      height: height *
+                                                          0.1,
+                                                    ),
+                                                    Text(name[index].toString()),
+
+                                                    Text(
+                                                      "6 devices",
+                                                      style: TextStyle(
+                                                          color: Colors
+                                                              .black,
+                                                          fontWeight:
+                                                          FontWeight
+                                                              .w900,
+                                                          fontSize:
+                                                          height *
+                                                              0.012),
+                                                    )
+                                                  ],
+                                                ),
+                                                SizedBox(
+                                                  width: width*0.50,
+                                                ),
+                                                Switch(
+                                                    activeColor:
+                                                    Colors.orange,
+                                                    thumbColor:
+                                                    MaterialStateProperty
+                                                        .all(Colors
+                                                        .orange),
+                                                    value:
+                                                    valueStatus,
+                                                    onChanged:
+                                                        (bool value) {
+                                                      setState(() {
+                                                        valueStatus =
+                                                            value;
+                                                      });
+                                                    })
+                                              ],
+                                            )
+                                                : name[index]
+                                                .toString()
+                                                .contains("Admin")
+                                                ? Row(
+                                              crossAxisAlignment:
+                                              CrossAxisAlignment
+                                                  .start,
+                                              mainAxisAlignment:
+                                              MainAxisAlignment
+                                                  .spaceBetween,
+                                              children: [
+                                                Column(
+                                                  crossAxisAlignment:
+                                                  CrossAxisAlignment
+                                                      .start,
+                                                  children: [
+                                                    Image.asset(
+                                                      "images/chair.png",
+                                                      width:
+                                                      width *
+                                                          0.2,
+                                                      height:
+                                                      height *
+                                                          0.1,
+                                                    ),
+                                                    Text(name[index].toString()),
+                                                    Text(
+                                                      "6 devices",
+                                                      style: TextStyle(
+                                                          color: Colors
+                                                              .black,
+                                                          fontWeight:
+                                                          FontWeight
+                                                              .w900,
+                                                          fontSize:
+                                                          height *
+                                                              0.012),
+                                                    )
+                                                  ],
+                                                ),
+                                                SizedBox(
+                                                  width: width*0.40,
+                                                ),
+                                                Switch(
+                                                    activeColor:
+                                                    Colors
+                                                        .orange,
+                                                    thumbColor:
+                                                    MaterialStateProperty.all(
+                                                        Colors
+                                                            .orange),
+                                                    value:
+                                                    valueStatus,
+                                                    onChanged: (bool
+                                                    value) {
+                                                      setState(
+                                                              () {
+                                                            valueStatus =
+                                                                value;
+                                                          });
+                                                    })
+                                              ],
+                                            )
+                                                : name[index]
+                                                .toString()
+                                                .contains(
+                                                "Garage")
+                                                ? Row(
+                                              crossAxisAlignment:
+                                              CrossAxisAlignment
+                                                  .start,
+                                              mainAxisAlignment:
+                                              MainAxisAlignment
+                                                  .spaceBetween,
+                                              children: [
+                                                Column(
+                                                  mainAxisAlignment:
+                                                  MainAxisAlignment
+                                                      .center,
+                                                  crossAxisAlignment:
+                                                  CrossAxisAlignment
+                                                      .start,
+                                                  children: [
+                                                    Image.asset(
+                                                      "images/chair.png",
+                                                      width:
+                                                      width * 0.2,
+                                                      height: height *
+                                                          0.1,
+                                                    ),
+                                                    Text(name[index].toString()),
+                                                    Text(
+                                                      "6 devices",
+                                                      style: TextStyle(
+                                                          color: Colors
+                                                              .black,
+                                                          fontWeight:
+                                                          FontWeight
+                                                              .w900,
+                                                          fontSize:
+                                                          height *
+                                                              0.012),
+                                                    )
+                                                  ],
+                                                ),SizedBox(
+                                                  width: width*0.50,
+                                                ),
+                                                Switch(
+                                                    activeColor:
+                                                    Colors.orange,
+                                                    thumbColor:
+                                                    MaterialStateProperty
+                                                        .all(Colors
+                                                        .orange),
+                                                    value:
+                                                    valueStatus,
+                                                    onChanged:
+                                                        (bool value) {
+                                                      setState(() {
+                                                        valueStatus =
+                                                            value;
+                                                      });
+                                                    })
+                                              ],
+                                            )
+                                                : name[index]
+                                                .toString()
+                                                .contains(
+                                                "Kitchen")
+                                                ? Row(
+                                              crossAxisAlignment:
+                                              CrossAxisAlignment
+                                                  .start,
+                                              mainAxisAlignment:
+                                              MainAxisAlignment
+                                                  .spaceBetween,
+                                              children: [
+                                                Column(
+                                                  mainAxisAlignment:
+                                                  MainAxisAlignment
+                                                      .center,
+                                                  crossAxisAlignment:
+                                                  CrossAxisAlignment
+                                                      .start,
+                                                  children: [
+                                                    Image.asset(
+                                                      "images/chair.png",
+                                                      width:
+                                                      width * 0.2,
+                                                      height: height *
+                                                          0.1,
+                                                    ),
+                                                    Text(name[index].toString()),
+                                                    Text(
+                                                      "6 devices",
+                                                      style: TextStyle(
+                                                          color: Colors
+                                                              .black,
+                                                          fontWeight:
+                                                          FontWeight
+                                                              .w900,
+                                                          fontSize:
+                                                          height *
+                                                              0.012),
+                                                    )
+                                                  ],
+                                                ),SizedBox(
+                                                  width: width*0.50,
+                                                ),
+                                                Switch(
+                                                    activeColor:
+                                                    Colors.orange,
+                                                    thumbColor:
+                                                    MaterialStateProperty
+                                                        .all(Colors
+                                                        .orange),
+                                                    value:
+                                                    valueStatus,
+                                                    onChanged:
+                                                        (bool value) {
+                                                      setState(() {
+                                                        valueStatus =
+                                                            value;
+                                                      });
+                                                    })
+                                              ],
+                                            )
+                                                : name[index]
+                                                .toString()
+                                                .contains(
+                                                "Bathroom")
+                                                ? Row(
+                                              crossAxisAlignment:
+                                              CrossAxisAlignment
+                                                  .start,
+                                              mainAxisAlignment:
+                                              MainAxisAlignment
+                                                  .spaceBetween,
+                                              children: [
+                                                Column(
+                                                  mainAxisAlignment:
+                                                  MainAxisAlignment
+                                                      .center,
+                                                  crossAxisAlignment:
+                                                  CrossAxisAlignment
+                                                      .start,
+                                                  children: [
+                                                    Image.asset(
+                                                      "images/chair.png",
+                                                      width:
+                                                      width * 0.2,
+                                                      height: height *
+                                                          0.1,
+                                                    ),
+                                                    Text(name[index].toString()),
+                                                    Text(
+                                                      "6 devices",
+                                                      style: TextStyle(
+                                                          color: Colors
+                                                              .black,
+                                                          fontWeight:
+                                                          FontWeight
+                                                              .w900,
+                                                          fontSize:
+                                                          height *
+                                                              0.012),
+                                                    )
+                                                  ],
+                                                ),SizedBox(
+                                                  width: width*0.50,
+                                                ),
+                                                Switch(
+                                                    activeColor:
+                                                    Colors.orange,
+                                                    thumbColor:
+                                                    MaterialStateProperty
+                                                        .all(Colors
+                                                        .orange),
+                                                    value:
+                                                    valueStatus,
+                                                    onChanged:
+                                                        (bool value) {
+                                                      setState(() {
+                                                        valueStatus =
+                                                            value;
+                                                      });
+                                                    })
+                                              ],
+                                            )
+                                                : name[index]
+                                                .toString()
+                                                .contains(
+                                                "Bedroom_1")
+                                                ? Row(
+                                              crossAxisAlignment:
+                                              CrossAxisAlignment
+                                                  .start,
+                                              mainAxisAlignment:
+                                              MainAxisAlignment
+                                                  .spaceBetween,
+                                              children: [
+                                                Column(
+                                                  mainAxisAlignment:
+                                                  MainAxisAlignment
+                                                      .center,
+                                                  crossAxisAlignment:
+                                                  CrossAxisAlignment
+                                                      .start,
+                                                  children: [
+                                                    Image.asset(
+                                                      "images/chair.png",
+                                                      width:
+                                                      width * 0.2,
+                                                      height: height *
+                                                          0.1,
+                                                    ),
+                                                    Text(name[index].toString()),
+                                                    Text(
+                                                      "6 devices",
+                                                      style: TextStyle(
+                                                          color: Colors
+                                                              .black,
+                                                          fontWeight:
+                                                          FontWeight
+                                                              .w900,
+                                                          fontSize:
+                                                          height *
+                                                              0.012),
+                                                    )
+                                                  ],
+                                                ),SizedBox(
+                                                  width: width*0.50,
+                                                ),
+                                                Switch(
+                                                    activeColor:
+                                                    Colors.orange,
+                                                    thumbColor:
+                                                    MaterialStateProperty
+                                                        .all(Colors
+                                                        .orange),
+                                                    value:
+                                                    valueStatus,
+                                                    onChanged:
+                                                        (bool value) {
+                                                      setState(() {
+                                                        valueStatus =
+                                                            value;
+                                                      });
+                                                    })
+                                              ],
+                                            )
+                                                : name[index].toString().contains("Bedroom_2")
+                                                ? Row(
+                                              crossAxisAlignment:
+                                              CrossAxisAlignment
+                                                  .start,
+                                              mainAxisAlignment:
+                                              MainAxisAlignment
+                                                  .spaceBetween,
+                                              children: [
+                                                Column(
+                                                  mainAxisAlignment:
+                                                  MainAxisAlignment
+                                                      .center,
+                                                  crossAxisAlignment:
+                                                  CrossAxisAlignment
+                                                      .start,
+                                                  children: [
+                                                    Image.asset(
+                                                      "images/chair.png",
+                                                      width:
+                                                      width * 0.2,
+                                                      height: height *
+                                                          0.1,
+                                                    ),
+                                                    Text(name[index].toString()),
+                                                    Text(
+                                                      "6 devices",
+                                                      style: TextStyle(
+                                                          color: Colors
+                                                              .black,
+                                                          fontWeight:
+                                                          FontWeight
+                                                              .w900,
+                                                          fontSize:
+                                                          height *
+                                                              0.012),
+                                                    )
+                                                  ],
+                                                ),SizedBox(
+                                                  width: width*0.50,
+                                                ),
+                                                Switch(
+                                                    activeColor:
+                                                    Colors.orange,
+                                                    thumbColor:
+                                                    MaterialStateProperty
+                                                        .all(Colors
+                                                        .orange),
+                                                    value:
+                                                    valueStatus,
+                                                    onChanged:
+                                                        (bool value) {
+                                                      setState(() {
+                                                        valueStatus =
+                                                            value;
+                                                      });
+                                                    })
+                                              ],
+                                            )
+                                                : name[index].toString().contains("Master_Bedroom")
+                                                ? Row(
+                                              crossAxisAlignment:
+                                              CrossAxisAlignment
+                                                  .start,
+                                              mainAxisAlignment:
+                                              MainAxisAlignment
+                                                  .spaceBetween,
+                                              children: [
+                                                Column(
+                                                  mainAxisAlignment:
+                                                  MainAxisAlignment
+                                                      .center,
+                                                  crossAxisAlignment:
+                                                  CrossAxisAlignment
+                                                      .start,
+                                                  children: [
+                                                    Image.asset(
+                                                      "images/chair.png",
+                                                      width:
+                                                      width * 0.2,
+                                                      height: height *
+                                                          0.1,
+                                                    ),
+                                                    Text(name[index].toString()),
+                                                    Text(
+                                                      "6 devices",
+                                                      style: TextStyle(
+                                                          color: Colors
+                                                              .black,
+                                                          fontWeight:
+                                                          FontWeight
+                                                              .w900,
+                                                          fontSize:
+                                                          height *
+                                                              0.012),
+                                                    )
+                                                  ],
+                                                ),SizedBox(
+                                                  width: width*0.40,
+                                                ),
+                                                Switch(
+                                                    activeColor:
+                                                    Colors.orange,
+                                                    thumbColor:
+                                                    MaterialStateProperty
+                                                        .all(Colors
+                                                        .orange),
+                                                    value:
+                                                    valueStatus,
+                                                    onChanged:
+                                                        (bool value) {
+                                                      setState(() {
+                                                        valueStatus =
+                                                            value;
+                                                      });
+                                                    })
+                                              ],
+                                            )
+                                                : name[index].toString().contains("Bedroom")
+                                                ? Row(
+                                              crossAxisAlignment:
+                                              CrossAxisAlignment
+                                                  .start,
+                                              mainAxisAlignment:
+                                              MainAxisAlignment
+                                                  .spaceBetween,
+                                              children: [
+                                                Column(
+                                                  mainAxisAlignment:
+                                                  MainAxisAlignment
+                                                      .center,
+                                                  crossAxisAlignment:
+                                                  CrossAxisAlignment
+                                                      .start,
+                                                  children: [
+                                                    Image.asset(
+                                                      "images/chair.png",
+                                                      width:
+                                                      width * 0.2,
+                                                      height: height *
+                                                          0.1,
+                                                    ),
+                                                    Text(name[index].toString()),
+                                                    Text(
+                                                      "6 devices",
+                                                      style: TextStyle(
+                                                          color: Colors
+                                                              .black,
+                                                          fontWeight:
+                                                          FontWeight
+                                                              .w900,
+                                                          fontSize:
+                                                          height *
+                                                              0.012),
+                                                    )
+                                                  ],
+                                                ),SizedBox(
+                                                  width: width*0.50,
+                                                ),
+                                                Switch(
+                                                    activeColor:
+                                                    Colors.orange,
+                                                    thumbColor:
+                                                    MaterialStateProperty
+                                                        .all(Colors
+                                                        .orange),
+                                                    value:
+                                                    valueStatus,
+                                                    onChanged:
+                                                        (bool value) {
+                                                      setState(() {
+                                                        valueStatus =
+                                                            value;
+                                                      });
+                                                    })
+                                              ],
+                                            )
+                                                : name[index].toString().contains("Outside")
+                                                ? Row(
+                                              crossAxisAlignment:
+                                              CrossAxisAlignment
+                                                  .start,
+                                              mainAxisAlignment:
+                                              MainAxisAlignment
+                                                  .spaceBetween,
+                                              children: [
+                                                Column(
+                                                  mainAxisAlignment:
+                                                  MainAxisAlignment
+                                                      .center,
+                                                  crossAxisAlignment:
+                                                  CrossAxisAlignment
+                                                      .start,
+                                                  children: [
+                                                    Image.asset(
+                                                      "images/chair.png",
+                                                      width:
+                                                      width * 0.2,
+                                                      height: height *
+                                                          0.1,
+                                                    ),
+                                                    Text(name[index].toString()),
+                                                    Text(
+                                                      "6 devices",
+                                                      style: TextStyle(
+                                                          color: Colors
+                                                              .black,
+                                                          fontWeight:
+                                                          FontWeight
+                                                              .w900,
+                                                          fontSize:
+                                                          height *
+                                                              0.012),
+                                                    )
+                                                  ],
+                                                ),SizedBox(
+                                                  width: width*0.50,
+                                                ),
+                                                Switch(
+                                                    activeColor:
+                                                    Colors.orange,
+                                                    thumbColor:
+                                                    MaterialStateProperty
+                                                        .all(Colors
+                                                        .orange),
+                                                    value:
+                                                    valueStatus,
+                                                    onChanged:
+                                                        (bool value) {
+                                                      setState(() {
+                                                        valueStatus =
+                                                            value;
+                                                      });
+                                                    })
+                                              ],
+                                            )
+                                                : name[index].toString().contains("Garden")
+                                                ? Row(
+                                              crossAxisAlignment:
+                                              CrossAxisAlignment
+                                                  .start,
+                                              mainAxisAlignment:
+                                              MainAxisAlignment
+                                                  .spaceBetween,
+                                              children: [
+                                                Column(
+                                                  mainAxisAlignment:
+                                                  MainAxisAlignment
+                                                      .center,
+                                                  crossAxisAlignment:
+                                                  CrossAxisAlignment
+                                                      .start,
+                                                  children: [
+                                                    Image.asset(
+                                                      "images/chair.png",
+                                                      width:
+                                                      width * 0.2,
+                                                      height: height *
+                                                          0.1,
+                                                    ),
+                                                    Text(name[index].toString()),
+                                                    Text(
+                                                      "6 devices",
+                                                      style: TextStyle(
+                                                          color: Colors
+                                                              .black,
+                                                          fontWeight:
+                                                          FontWeight
+                                                              .w900,
+                                                          fontSize:
+                                                          height *
+                                                              0.012),
+                                                    )
+                                                  ],
+                                                ),SizedBox(
+                                                  width: width*0.50,
+                                                ),
+                                                Switch(
+                                                    activeColor:
+                                                    Colors.orange,
+                                                    thumbColor:
+                                                    MaterialStateProperty
+                                                        .all(Colors
+                                                        .orange),
+                                                    value:
+                                                    valueStatus,
+                                                    onChanged:
+                                                        (bool value) {
+                                                      setState(() {
+                                                        valueStatus =
+                                                            value;
+                                                      });
+                                                    })
+                                              ],
+                                            )
+                                                : name[index].toString().contains("Parking")
+                                                ? Row(
+                                              crossAxisAlignment:
+                                              CrossAxisAlignment
+                                                  .start,
+                                              mainAxisAlignment:
+                                              MainAxisAlignment
+                                                  .spaceBetween,
+                                              children: [
+                                                Column(
+                                                  mainAxisAlignment:
+                                                  MainAxisAlignment
+                                                      .center,
+                                                  crossAxisAlignment:
+                                                  CrossAxisAlignment
+                                                      .start,
+                                                  children: [
+                                                    Image.asset(
+                                                      "images/chair.png",
+                                                      width:
+                                                      width * 0.2,
+                                                      height: height *
+                                                          0.1,
+                                                    ),
+                                                    Text(name[index].toString()),
+                                                    Text(
+                                                      "6 devices",
+                                                      style: TextStyle(
+                                                          color: Colors
+                                                              .black,
+                                                          fontWeight:
+                                                          FontWeight
+                                                              .w900,
+                                                          fontSize:
+                                                          height *
+                                                              0.012),
+                                                    )
+                                                  ],
+                                                ),SizedBox(
+                                                  width: width*0.50,
+                                                ),
+                                                Switch(
+                                                    activeColor:
+                                                    Colors.orange,
+                                                    thumbColor:
+                                                    MaterialStateProperty
+                                                        .all(Colors
+                                                        .orange),
+                                                    value:
+                                                    valueStatus,
+                                                    onChanged:
+                                                        (bool value) {
+                                                      setState(() {
+                                                        valueStatus =
+                                                            value;
+                                                      });
+                                                    })
+                                              ],
+                                            )
+                                                : name[index].toString().contains("Living_Room")
+                                                ? Row(
+                                              crossAxisAlignment:
+                                              CrossAxisAlignment
+                                                  .start,
+                                              mainAxisAlignment:
+                                              MainAxisAlignment
+                                                  .spaceBetween,
+                                              children: [
+                                                Column(
+                                                  mainAxisAlignment:
+                                                  MainAxisAlignment
+                                                      .center,
+                                                  crossAxisAlignment:
+                                                  CrossAxisAlignment
+                                                      .start,
+                                                  children: [
+                                                    Image.asset(
+                                                      "images/chair.png",
+                                                      width:
+                                                      width * 0.2,
+                                                      height: height *
+                                                          0.1,
+                                                    ),
+                                                    Text(name[index].toString()),
+                                                    Text(
+                                                      "6 devices",
+                                                      style: TextStyle(
+                                                          color: Colors
+                                                              .black,
+                                                          fontWeight:
+                                                          FontWeight
+                                                              .w900,
+                                                          fontSize:
+                                                          height *
+                                                              0.012),
+                                                    )
+                                                  ],
+                                                ),SizedBox(
+                                                  width: width*0.50,
+                                                ),
+                                                Switch(
+                                                    activeColor:
+                                                    Colors.orange,
+                                                    thumbColor:
+                                                    MaterialStateProperty
+                                                        .all(Colors
+                                                        .orange),
+                                                    value:
+                                                    valueStatus,
+                                                    onChanged:
+                                                        (bool value) {
+                                                      setState(() {
+                                                        valueStatus =
+                                                            value;
+                                                      });
+                                                    })
+                                              ],
+                                            )
+                                                : name[index].toString().contains("Store_Room")
+                                                ? Row(
+                                              crossAxisAlignment:
+                                              CrossAxisAlignment
+                                                  .start,
+                                              mainAxisAlignment:
+                                              MainAxisAlignment
+                                                  .spaceBetween,
+                                              children: [
+                                                Column(
+                                                  mainAxisAlignment:
+                                                  MainAxisAlignment
+                                                      .center,
+                                                  crossAxisAlignment:
+                                                  CrossAxisAlignment
+                                                      .start,
+                                                  children: [
+                                                    Image.asset(
+                                                      "images/chair.png",
+                                                      width:
+                                                      width * 0.2,
+                                                      height: height *
+                                                          0.1,
+                                                    ),
+                                                    Text(name[index].toString()),
+                                                    Text(
+                                                      "6 devices",
+                                                      style: TextStyle(
+                                                          color: Colors
+                                                              .black,
+                                                          fontWeight:
+                                                          FontWeight
+                                                              .w900,
+                                                          fontSize:
+                                                          height *
+                                                              0.012),
+                                                    )
+                                                  ],
+                                                ),SizedBox(
+                                                  width: width*0.50,
+                                                ),
+                                                Switch(
+                                                    activeColor:
+                                                    Colors.orange,
+                                                    thumbColor:
+                                                    MaterialStateProperty
+                                                        .all(Colors
+                                                        .orange),
+                                                    value:
+                                                    valueStatus,
+                                                    onChanged:
+                                                        (bool value) {
+                                                      setState(() {
+                                                        valueStatus =
+                                                            value;
+                                                      });
+                                                    })
+                                              ],
+                                            )
+                                                : Container(),
+                                          ),
+                                        ],
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    );
+                  },
+                  childCount: name.length,
+                ),
+              ),
             ],
           ),
         ),
