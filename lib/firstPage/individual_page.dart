@@ -1209,7 +1209,8 @@ class _PagesState extends State<Pages> with WidgetsBindingObserver {
               ));
           //print("Connection: not present");
         }
-      });
+      }
+      );
       timer = Timer.periodic(
           Duration(seconds: 3),
               (Timer t) => check().then((intenet) {
@@ -1370,7 +1371,7 @@ class _PagesState extends State<Pages> with WidgetsBindingObserver {
                               ? AssetImage(
                             "images/bedroom.png",
                           )
-                              : ((widget.room_name.toString().replaceAll("_", " ") ==  "Master_Bedroom"))
+                              : ((widget.room_name.toString().replaceAll("_", " ") ==  "Master Bedroom"))
                               ? AssetImage(
                             "images/bedroom.png",
                           )

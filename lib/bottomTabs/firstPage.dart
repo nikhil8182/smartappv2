@@ -13,6 +13,7 @@ import 'package:onwords_home/firstPage/individual_page.dart';
 import 'package:overlay_support/overlay_support.dart';
 import 'dart:async';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:auto_size_text/auto_size_text.dart';
 
 
 
@@ -76,11 +77,11 @@ class _FirstPageState extends State<FirstPage> with AutomaticKeepAliveClientMixi
       // }
 
       if(result == ConnectivityResult.wifi) {
-        print("wifi =============_________(((((((((()))))))");
+        //print("wifi =============_________(((((((((()))))))");
         get_name();
       }
       else if((result == ConnectivityResult.mobile)&&(!mobNotifier)){
-        print("mobile ****************************");
+        //print("mobile ****************************");
         if(!mobNotifier){
           showSimpleNotification(
             Text(" please switch on your wifi network ",
@@ -91,10 +92,10 @@ class _FirstPageState extends State<FirstPage> with AutomaticKeepAliveClientMixi
       }
       else if((result == ConnectivityResult.none)&&(!notifier))
       {
-        print(" ************** none **************");
-        print("$notifier the value of the notifier is 00000000");
+        // print(" ************** none **************");
+        // print("$notifier the value of the notifier is 00000000");
         if(!notifier){
-          print(" im inside the if notifier class");
+          // print(" im inside the if notifier class");
           showSimpleNotification(
             Text(" No Internet Connectivity ",
               style: TextStyle(color: Colors.white),), background: Colors.red,
@@ -411,7 +412,8 @@ class _FirstPageState extends State<FirstPage> with AutomaticKeepAliveClientMixi
                         padding: EdgeInsets.all(12.0),
                         child: GestureDetector(
                           onTap: (){
-                            //Navigator.push(context, MaterialPageRoute(builder: (context)=>IndividualPage(imgValue: widget.choice.backGroundImage,txtValue: widget.choice.title,)));
+                            Navigator.push(context, MaterialPageRoute(builder: (context)=>Button(name[index].toString(),index,ipAddress,g1,)));
+                            // Navigator.push(context, MaterialPageRoute(builder: (context)=>IndividualPage(imgValue: widget.choice.backGroundImage,txtValue: widget.choice.title,)));
                           },
                           child: Padding(
                             padding: EdgeInsets.symmetric(vertical: 10.0),
@@ -527,7 +529,7 @@ class _FirstPageState extends State<FirstPage> with AutomaticKeepAliveClientMixi
                                   ),
                                 ),
                                 child: Padding(
-                                  padding: EdgeInsets.all(8.0),
+                                  padding: EdgeInsets.all(2.0),
                                   child: Row(
                                     crossAxisAlignment: CrossAxisAlignment.start,
                                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -537,7 +539,7 @@ class _FirstPageState extends State<FirstPage> with AutomaticKeepAliveClientMixi
                                         crossAxisAlignment: CrossAxisAlignment.start,
                                         children: [
                                           Container(
-                                            padding: EdgeInsets.all(4),
+                                            padding: EdgeInsets.all(3),
                                             child: name[index]
                                                 .toString()
                                                 .contains("Hall")
@@ -579,7 +581,7 @@ class _FirstPageState extends State<FirstPage> with AutomaticKeepAliveClientMixi
                                                               0.012),
                                                     )
                                                   ],
-                                                ),
+                                                ),SizedBox(width: width*0.080,),
                                                 Switch(
                                                     activeColor:
                                                     Colors.orange,
@@ -623,7 +625,7 @@ class _FirstPageState extends State<FirstPage> with AutomaticKeepAliveClientMixi
                                                       height *
                                                           0.1,
                                                     ),
-                                                    Text(name[index].toString()),
+                                                    AutoSizeText(name[index].toString(),style: TextStyle(fontSize: height*0.013),),
                                                     Text(
                                                       "6 devices",
                                                       style: TextStyle(
@@ -638,6 +640,7 @@ class _FirstPageState extends State<FirstPage> with AutomaticKeepAliveClientMixi
                                                     )
                                                   ],
                                                 ),
+                                                SizedBox(width: width*0.080,),
                                                 Switch(
                                                     activeColor:
                                                     Colors
@@ -700,6 +703,7 @@ class _FirstPageState extends State<FirstPage> with AutomaticKeepAliveClientMixi
                                                     )
                                                   ],
                                                 ),
+                                                SizedBox(width: width*0.080,),
                                                 Switch(
                                                     activeColor:
                                                     Colors.orange,
@@ -759,7 +763,7 @@ class _FirstPageState extends State<FirstPage> with AutomaticKeepAliveClientMixi
                                                               0.012),
                                                     )
                                                   ],
-                                                ),
+                                                ),SizedBox(width: width*0.080,),
                                                 Switch(
                                                     activeColor:
                                                     Colors.orange,
@@ -819,7 +823,7 @@ class _FirstPageState extends State<FirstPage> with AutomaticKeepAliveClientMixi
                                                               0.012),
                                                     )
                                                   ],
-                                                ),
+                                                ),SizedBox(width: width*0.080,),
                                                 Switch(
                                                     activeColor:
                                                     Colors.orange,
@@ -879,7 +883,7 @@ class _FirstPageState extends State<FirstPage> with AutomaticKeepAliveClientMixi
                                                               0.012),
                                                     )
                                                   ],
-                                                ),
+                                                ),SizedBox(width: width*0.080,),
                                                 Switch(
                                                     activeColor:
                                                     Colors.orange,
@@ -936,7 +940,7 @@ class _FirstPageState extends State<FirstPage> with AutomaticKeepAliveClientMixi
                                                               0.012),
                                                     )
                                                   ],
-                                                ),
+                                                ),SizedBox(width: width*0.080,),
                                                 Switch(
                                                     activeColor:
                                                     Colors.orange,
@@ -979,7 +983,7 @@ class _FirstPageState extends State<FirstPage> with AutomaticKeepAliveClientMixi
                                                       height: height *
                                                           0.1,
                                                     ),
-                                                    Text(name[index].toString()),
+                                                    AutoSizeText(name[index].toString(),style: TextStyle(fontSize: height*0.013),),
                                                     Text(
                                                       "6 devices",
                                                       style: TextStyle(
@@ -993,7 +997,7 @@ class _FirstPageState extends State<FirstPage> with AutomaticKeepAliveClientMixi
                                                               0.012),
                                                     )
                                                   ],
-                                                ),
+                                                ),SizedBox(width: width*0.030,),
                                                 Switch(
                                                     activeColor:
                                                     Colors.orange,
@@ -1050,7 +1054,7 @@ class _FirstPageState extends State<FirstPage> with AutomaticKeepAliveClientMixi
                                                               0.012),
                                                     )
                                                   ],
-                                                ),
+                                                ),SizedBox(width: width*0.080,),
                                                 Switch(
                                                     activeColor:
                                                     Colors.orange,
@@ -1107,7 +1111,7 @@ class _FirstPageState extends State<FirstPage> with AutomaticKeepAliveClientMixi
                                                               0.012),
                                                     )
                                                   ],
-                                                ),
+                                                ),SizedBox(width: width*0.080,),
                                                 Switch(
                                                     activeColor:
                                                     Colors.orange,
@@ -1164,7 +1168,7 @@ class _FirstPageState extends State<FirstPage> with AutomaticKeepAliveClientMixi
                                                               0.012),
                                                     )
                                                   ],
-                                                ),
+                                                ),SizedBox(width: width*0.080,),
                                                 Switch(
                                                     activeColor:
                                                     Colors.orange,
@@ -1221,7 +1225,7 @@ class _FirstPageState extends State<FirstPage> with AutomaticKeepAliveClientMixi
                                                               0.012),
                                                     )
                                                   ],
-                                                ),
+                                                ),SizedBox(width: width*0.080,),
                                                 Switch(
                                                     activeColor:
                                                     Colors.orange,
@@ -1278,7 +1282,7 @@ class _FirstPageState extends State<FirstPage> with AutomaticKeepAliveClientMixi
                                                               0.012),
                                                     )
                                                   ],
-                                                ),
+                                                ),SizedBox(width: width*0.080,),
                                                 Switch(
                                                     activeColor:
                                                     Colors.orange,
@@ -1335,7 +1339,7 @@ class _FirstPageState extends State<FirstPage> with AutomaticKeepAliveClientMixi
                                                               0.012),
                                                     )
                                                   ],
-                                                ),
+                                                ),SizedBox(width: width*0.080,),
                                                 Switch(
                                                     activeColor:
                                                     Colors.orange,
@@ -1502,17 +1506,17 @@ class _FirstPageState extends State<FirstPage> with AutomaticKeepAliveClientMixi
                                   ),
                                 ),
                                 child: Padding(
-                                  padding: EdgeInsets.all(8.0),
+                                  padding: EdgeInsets.all(1.0),
                                   child: Row(
                                     crossAxisAlignment: CrossAxisAlignment.start,
-                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                                     children: [
                                       Column(
                                         mainAxisAlignment: MainAxisAlignment.center,
                                         crossAxisAlignment: CrossAxisAlignment.start,
                                         children: [
                                           Container(
-                                            padding: EdgeInsets.all(4),
+                                            padding: EdgeInsets.all(1),
                                             child: name[index]
                                                 .toString()
                                                 .contains("Hall")
@@ -1539,8 +1543,8 @@ class _FirstPageState extends State<FirstPage> with AutomaticKeepAliveClientMixi
                                                       height: height *
                                                           0.1,
                                                     ),
-                                                    Text(name[index].toString()),
-
+                                                    AutoSizeText(name[index].toString(),),
+                                                    // Text(name[index].toString()),
                                                     Text(
                                                       "6 devices",
                                                       style: TextStyle(
@@ -1552,7 +1556,7 @@ class _FirstPageState extends State<FirstPage> with AutomaticKeepAliveClientMixi
                                                           fontSize:
                                                           height *
                                                               0.012),
-                                                    )
+                                                    ),
                                                   ],
                                                 ),
                                                 SizedBox(
@@ -1601,7 +1605,8 @@ class _FirstPageState extends State<FirstPage> with AutomaticKeepAliveClientMixi
                                                       height *
                                                           0.1,
                                                     ),
-                                                    Text(name[index].toString()),
+                                                    AutoSizeText(name[index].toString(),
+                                                    ),
                                                     Text(
                                                       "6 devices",
                                                       style: TextStyle(
@@ -1617,7 +1622,7 @@ class _FirstPageState extends State<FirstPage> with AutomaticKeepAliveClientMixi
                                                   ],
                                                 ),
                                                 SizedBox(
-                                                  width: width*0.40,
+                                                  width: width*0.50,
                                                 ),
                                                 Switch(
                                                     activeColor:
