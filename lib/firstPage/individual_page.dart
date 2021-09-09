@@ -705,7 +705,129 @@ class _PagesState extends State<Pages> with WidgetsBindingObserver {
                   ],
                 ))),
       ));
-    } else if (data[i].toString().contains("Slide") &&
+    }
+    else if (data[i].toString().contains("Fan") &&
+        data[i].toString().contains(widget.room_name)) {
+      buttonsList.add(Container(
+          child: InkWell(
+              onTap: () {
+                check().then((intenet) {
+                  if (intenet) {
+                    // Internet Present Case
+                    if ((data_value[0][i] == 1) || (data_value[0][i] == "1")) {
+                      setState(() {
+                        data_value[0][i] = 0;
+                        up = "False";
+                      });
+                    } else {
+                      setState(() {
+                        data_value[0][i] = 1;
+                        up = "True";
+                      });
+                    }
+                    setState(() {
+                      // if(widget.check_url==false){
+                      //   update_value(data[i],data_value[0][i], i);
+                      // }else{
+                      //   update_value(data[i],up, i);
+                      // }
+
+                      update_value(data[i],up, i);
+                      _buildButtonsWithNames();
+                    });
+                    //print("Connection: present");
+                  } else {
+                    showDialog(
+                        context: context,
+                        builder: (_) => AlertDialog(
+                          backgroundColor: Colors.black,
+                          title: Text(
+                            "No Internet Connection",
+                            style: TextStyle(color: Colors.white),
+                          ),
+                          content: Text(
+                              "Please check your Internet Connection",
+                              style: TextStyle(color: Colors.white)),
+                        ));
+                    //print("Connection: not present");
+                  }
+                });
+              },
+              child: Container(
+                // height: MediaQuery.of(context).size.height * 0.12,
+                // width: MediaQuery.of(context).size.width * 0.265,
+                  height: MediaQuery.of(context).size.height * 0.17,
+                  width: MediaQuery.of(context).size.width * 0.37,
+
+                  padding: const EdgeInsets.all(5),
+                  margin: EdgeInsets.all(10),
+                  decoration: BoxDecoration(
+                      color: (data_value[0][i] == 0) || (data_value[0][i] == "0")? Colors.grey[900]:Colors.orange,
+                      borderRadius: BorderRadius.circular(20),
+                      boxShadow: [
+                        BoxShadow(
+                            offset: Offset(0, 0),
+                            color: Colors.grey[700],
+                            blurRadius: 1,
+                            spreadRadius: 1),
+                        BoxShadow(
+                            offset: Offset(1, 1),
+                            color: Colors.black87,
+                            blurRadius: 1,
+                            spreadRadius: 1)
+                      ]),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Container(
+                        height: MediaQuery.of(context).size.height * 0.04,
+                        width: MediaQuery.of(context).size.width * 0.2,
+                        margin: EdgeInsets.only(top: 10),
+                        child:
+                        SvgPicture.asset(
+                          "images/ac.svg",
+                          height: MediaQuery.of(context).size.height * 0.051,
+                        ),
+
+                      ),
+                      SizedBox(
+                        height: MediaQuery.of(context).size.height * 0.015,
+                      ),
+                      Container(
+                        child: Column(
+                          children: [
+                            (data_value[0][i] == 1) || (data_value[0][i] == "1")
+                                ? AutoSizeText(
+                              data[i]
+                                  .toString()
+                                  .split("Fan")[0]
+                                  .replaceAll("_", " ") +
+                                  "",
+                              style: GoogleFonts.robotoSlab(
+                                color: Colors.white, /*fontSize: 12*/
+                              ),
+                              maxLines: 1,
+                              minFontSize: 10,
+                            )
+                                : AutoSizeText(
+                              data[i]
+                                  .toString()
+                                  .split("Fan")[0]
+                                  .replaceAll("_", " ") +
+                                  "",
+                              style: GoogleFonts.robotoSlab(
+                                /*fontSize: 12,*/ color: Colors.white),
+                              maxLines: 1,
+                              minFontSize: 10,
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  )))));
+    }
+    else if (data[i].toString().contains("Slide") &&
         data[i].toString().contains(widget.room_name)) {
       buttonsList.add(Container(
         child: Container(
@@ -793,7 +915,8 @@ class _PagesState extends State<Pages> with WidgetsBindingObserver {
               ],
             )),
       ));
-    } else if (data[i].toString().contains("Switch") &&
+    }
+    else if (data[i].toString().contains("Switch") &&
         data[i].toString().contains(widget.room_name)) {
       buttonsList.add(Container(
           child: InkWell(

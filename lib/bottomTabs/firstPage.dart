@@ -106,8 +106,49 @@ class _FirstPageState extends State<FirstPage> with AutomaticKeepAliveClientMixi
 
     });
   }
+  bool adminStatus = false;
+  bool kitchenStatus = false;
+  bool hallStatus = false;
+  bool bedRoomStatus = false;
+  bool bedRoom1Status = false;
+  bool bedRoom2Status = false;
+  bool masterBedStatus = false;
+  bool bathRoomStatus = false;
+  bool garageStatus = false;
+  bool gardenStatus = false;
+  bool storeStatus = false;
+  bool parkingStatus = false;
+  bool livingStatus = false;
+  bool outSideStatus = false;
+  bool status = false;
+  int statusInt = 0;
+  List toggleValues = [];
+  int intValue = 0;
 
+  Future<void> toggleButton(int index,int sts) async {
+    setState(() {
+      intValue=0;
+    });
+    toggleValues.clear();
+    for (int i = 0; i < data.length; i++) {
+      if (data[i].toString().contains(name[index].toString())) {
+        toggleValues.add(data[i].toString());
+      }}
+    for (int i = 0; i < toggleValues.length; i++){
+      print(toggleValues[i]);
+      while(intValue < 2){
+        // print(toggleValues[i]);
+        // print("$ipAddress =======");
+        await http.get(Uri.parse('http://$ipAddress/${toggleValues[i]}/$sts'));
+        intValue++;
+        print(intValue);
+      }
+      setState(() {
+        intValue=0;
+      });
 
+    }
+  }
 
 
   bool currentIndex = false;
@@ -1570,13 +1611,22 @@ class _FirstPageState extends State<FirstPage> with AutomaticKeepAliveClientMixi
                                                         .all(Colors
                                                         .orange),
                                                     value:
-                                                    valueStatus,
+                                                    hallStatus,
                                                     onChanged:
                                                         (bool value) {
                                                       setState(() {
-                                                        valueStatus =
+                                                        hallStatus =
                                                             value;
-                                                      });
+                                                        if(hallStatus == true){
+                                                          statusInt = 1;
+                                                        }
+                                                        else{
+                                                          statusInt = 0;
+                                                        }
+
+                                                        toggleButton(index, statusInt);
+                                                      }
+                                                      );
                                                     })
                                               ],
                                             )
@@ -1633,14 +1683,22 @@ class _FirstPageState extends State<FirstPage> with AutomaticKeepAliveClientMixi
                                                         Colors
                                                             .orange),
                                                     value:
-                                                    valueStatus,
-                                                    onChanged: (bool
-                                                    value) {
+                                                    adminStatus,
+                                                    onChanged: (bool value){
                                                       setState(
                                                               () {
-                                                            valueStatus =
-                                                                value;
-                                                          });
+                                                            adminStatus =  value;
+                                                            if(adminStatus == true){
+                                                              statusInt = 1;
+                                                            }
+                                                            else{
+                                                              statusInt = 0;
+                                                            }
+
+                                                            toggleButton(index, statusInt);
+                                                          }
+                                                      );
+
                                                     })
                                               ],
                                             )
@@ -1696,12 +1754,20 @@ class _FirstPageState extends State<FirstPage> with AutomaticKeepAliveClientMixi
                                                         .all(Colors
                                                         .orange),
                                                     value:
-                                                    valueStatus,
+                                                    garageStatus,
                                                     onChanged:
                                                         (bool value) {
                                                       setState(() {
-                                                        valueStatus =
+                                                        garageStatus =
                                                             value;
+                                                        if(garageStatus == true){
+                                                          statusInt = 1;
+                                                        }
+                                                        else{
+                                                          statusInt = 0;
+                                                        }
+
+                                                        toggleButton(index, statusInt);
                                                       });
                                                     })
                                               ],
@@ -1758,12 +1824,21 @@ class _FirstPageState extends State<FirstPage> with AutomaticKeepAliveClientMixi
                                                         .all(Colors
                                                         .orange),
                                                     value:
-                                                    valueStatus,
+                                                    kitchenStatus,
                                                     onChanged:
                                                         (bool value) {
                                                       setState(() {
-                                                        valueStatus =
+                                                        kitchenStatus =
                                                             value;
+                                                        if(kitchenStatus == true){
+                                                          statusInt = 1;
+                                                        }
+                                                        else{
+                                                          statusInt = 0;
+                                                        }
+
+                                                        toggleButton(index, statusInt);
+
                                                       });
                                                     })
                                               ],
@@ -1820,12 +1895,20 @@ class _FirstPageState extends State<FirstPage> with AutomaticKeepAliveClientMixi
                                                         .all(Colors
                                                         .orange),
                                                     value:
-                                                    valueStatus,
+                                                    bathRoomStatus,
                                                     onChanged:
                                                         (bool value) {
                                                       setState(() {
-                                                        valueStatus =
+                                                        bathRoomStatus =
                                                             value;
+                                                        if(bathRoomStatus == true){
+                                                          statusInt = 1;
+                                                        }
+                                                        else{
+                                                          statusInt = 0;
+                                                        }
+
+                                                        toggleButton(index, statusInt);
                                                       });
                                                     })
                                               ],
@@ -1882,12 +1965,20 @@ class _FirstPageState extends State<FirstPage> with AutomaticKeepAliveClientMixi
                                                         .all(Colors
                                                         .orange),
                                                     value:
-                                                    valueStatus,
+                                                    bedRoom1Status,
                                                     onChanged:
                                                         (bool value) {
                                                       setState(() {
-                                                        valueStatus =
+                                                        bedRoom1Status =
                                                             value;
+                                                        if(bedRoom1Status == true){
+                                                          statusInt = 1;
+                                                        }
+                                                        else{
+                                                          statusInt = 0;
+                                                        }
+
+                                                        toggleButton(index, statusInt);
                                                       });
                                                     })
                                               ],
@@ -1941,12 +2032,20 @@ class _FirstPageState extends State<FirstPage> with AutomaticKeepAliveClientMixi
                                                         .all(Colors
                                                         .orange),
                                                     value:
-                                                    valueStatus,
+                                                    bedRoom2Status,
                                                     onChanged:
                                                         (bool value) {
                                                       setState(() {
-                                                        valueStatus =
+                                                        bedRoom2Status =
                                                             value;
+                                                        if(bedRoom2Status == true){
+                                                          statusInt = 1;
+                                                        }
+                                                        else{
+                                                          statusInt = 0;
+                                                        }
+
+                                                        toggleButton(index, statusInt);
                                                       });
                                                     })
                                               ],
@@ -2000,12 +2099,20 @@ class _FirstPageState extends State<FirstPage> with AutomaticKeepAliveClientMixi
                                                         .all(Colors
                                                         .orange),
                                                     value:
-                                                    valueStatus,
+                                                    masterBedStatus,
                                                     onChanged:
                                                         (bool value) {
                                                       setState(() {
-                                                        valueStatus =
+                                                        masterBedStatus =
                                                             value;
+                                                        if(masterBedStatus == true){
+                                                          statusInt = 1;
+                                                        }
+                                                        else{
+                                                          statusInt = 0;
+                                                        }
+
+                                                        toggleButton(index, statusInt);
                                                       });
                                                     })
                                               ],
@@ -2059,12 +2166,20 @@ class _FirstPageState extends State<FirstPage> with AutomaticKeepAliveClientMixi
                                                         .all(Colors
                                                         .orange),
                                                     value:
-                                                    valueStatus,
+                                                    bedRoomStatus,
                                                     onChanged:
                                                         (bool value) {
                                                       setState(() {
-                                                        valueStatus =
+                                                        bedRoomStatus =
                                                             value;
+                                                        if(bedRoomStatus == true){
+                                                          statusInt = 1;
+                                                        }
+                                                        else{
+                                                          statusInt = 0;
+                                                        }
+
+                                                        toggleButton(index, statusInt);
                                                       });
                                                     })
                                               ],
@@ -2118,12 +2233,20 @@ class _FirstPageState extends State<FirstPage> with AutomaticKeepAliveClientMixi
                                                         .all(Colors
                                                         .orange),
                                                     value:
-                                                    valueStatus,
+                                                    outSideStatus,
                                                     onChanged:
                                                         (bool value) {
                                                       setState(() {
-                                                        valueStatus =
+                                                        outSideStatus =
                                                             value;
+                                                        if(outSideStatus == true){
+                                                          statusInt = 1;
+                                                        }
+                                                        else{
+                                                          statusInt = 0;
+                                                        }
+
+                                                        toggleButton(index, statusInt);
                                                       });
                                                     })
                                               ],
@@ -2177,12 +2300,20 @@ class _FirstPageState extends State<FirstPage> with AutomaticKeepAliveClientMixi
                                                         .all(Colors
                                                         .orange),
                                                     value:
-                                                    valueStatus,
+                                                    gardenStatus,
                                                     onChanged:
                                                         (bool value) {
                                                       setState(() {
-                                                        valueStatus =
+                                                        gardenStatus =
                                                             value;
+                                                        if(gardenStatus == true){
+                                                          statusInt = 1;
+                                                        }
+                                                        else{
+                                                          statusInt = 0;
+                                                        }
+
+                                                        toggleButton(index, statusInt);
                                                       });
                                                     })
                                               ],
@@ -2236,12 +2367,20 @@ class _FirstPageState extends State<FirstPage> with AutomaticKeepAliveClientMixi
                                                         .all(Colors
                                                         .orange),
                                                     value:
-                                                    valueStatus,
+                                                    parkingStatus,
                                                     onChanged:
                                                         (bool value) {
                                                       setState(() {
-                                                        valueStatus =
+                                                        parkingStatus =
                                                             value;
+                                                        if(parkingStatus == true){
+                                                          statusInt = 1;
+                                                        }
+                                                        else{
+                                                          statusInt = 0;
+                                                        }
+
+                                                        toggleButton(index, statusInt);
                                                       });
                                                     })
                                               ],
@@ -2295,12 +2434,20 @@ class _FirstPageState extends State<FirstPage> with AutomaticKeepAliveClientMixi
                                                         .all(Colors
                                                         .orange),
                                                     value:
-                                                    valueStatus,
+                                                    livingStatus,
                                                     onChanged:
                                                         (bool value) {
                                                       setState(() {
-                                                        valueStatus =
+                                                        livingStatus =
                                                             value;
+                                                        if(livingStatus == true){
+                                                          statusInt = 1;
+                                                        }
+                                                        else{
+                                                          statusInt = 0;
+                                                        }
+
+                                                        toggleButton(index, statusInt);
                                                       });
                                                     })
                                               ],
@@ -2354,12 +2501,20 @@ class _FirstPageState extends State<FirstPage> with AutomaticKeepAliveClientMixi
                                                         .all(Colors
                                                         .orange),
                                                     value:
-                                                    valueStatus,
+                                                    storeStatus,
                                                     onChanged:
                                                         (bool value) {
                                                       setState(() {
-                                                        valueStatus =
+                                                        storeStatus =
                                                             value;
+                                                        if(storeStatus == true){
+                                                          statusInt = 1;
+                                                        }
+                                                        else{
+                                                          statusInt = 0;
+                                                        }
+
+                                                        toggleButton(index, statusInt);
                                                       });
                                                     })
                                               ],
