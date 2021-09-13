@@ -25,14 +25,15 @@ class _GeoLocationPageState extends State<GeoLocationPage> {
   Timer timer;
   @override
   void initState() {
-    timer = Timer.periodic(
-        Duration(seconds: 1),
-        (Timer t)=>
-    _getCurrentLocation());
+    _getCurrentLocation();
+    // timer = Timer.periodic(
+    //     Duration(seconds: 1),
+    //     (Timer t)=>
+
   //   _getCurrentLocation();
     super.initState();
   }
-q
+
   @override
   Widget build(BuildContext context) {
     final height = MediaQuery
@@ -152,8 +153,8 @@ q
         print("wether json = ${j.body}");
          var json = jsonDecode(j.body) ;
 
-              temp = json["main"]["temp"];
-
+              double temp1 = json["main"]["temp"];
+              temp = temp1.round();
 
         print("${temp.round()} of the weather");
 
