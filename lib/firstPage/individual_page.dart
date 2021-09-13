@@ -706,7 +706,7 @@ class _PagesState extends State<Pages> with WidgetsBindingObserver {
                 ))),
       ));
     }
-    else if (data[i].toString().contains("Fan") &&
+    else if (data[i].toString().contains("Push") &&
         data[i].toString().contains(widget.room_name)) {
       buttonsList.add(Container(
           child: InkWell(

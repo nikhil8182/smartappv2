@@ -10,6 +10,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:http/http.dart' as http;
 import 'package:internet_connection_checker/internet_connection_checker.dart';
 import 'package:onwords_home/firstPage/individual_page.dart';
+import 'package:onwords_home/firstPage/weatherService.dart';
 import 'package:overlay_support/overlay_support.dart';
 import 'dart:async';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -291,7 +292,27 @@ class _FirstPageState extends State<FirstPage> with AutomaticKeepAliveClientMixi
       DeviceOrientation.portraitUp,
       DeviceOrientation.portraitDown,
     ]);
-    return SafeArea(
+    return WillPopScope(
+        onWillPop: () => showDialog<bool>(
+      context: context,
+      builder: (context) => AlertDialog(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12.0)),
+        backgroundColor: Colors.black.withOpacity(0.9),
+        title: Text('Warning',style: TextStyle(color: Colors.white60,fontWeight: FontWeight.bold),),
+        content: Text('Do you really want to exit',style: TextStyle(color: Colors.white60),),
+        actions: [
+          TextButton(
+            child: Text('Yes'),
+            onPressed: () => Navigator.pop(context, true),
+          ),
+          TextButton(
+            child: Text('No'),
+            onPressed: () => Navigator.pop(context, false),
+          ),
+        ],
+      ),
+    ),
+    child: SafeArea(
       child: Scaffold(
         key: _scaffoldKey,
         backgroundColor: Color.fromRGBO(26, 28, 30, 0.6),
@@ -333,74 +354,75 @@ class _FirstPageState extends State<FirstPage> with AutomaticKeepAliveClientMixi
                 ),
               ),
               SliverToBoxAdapter(
-                child: Container(
-                  // color: Color.fromRGBO(40, 36, 36, 1.0),
-                  color: Color.fromRGBO(26, 28, 30, 0.6),
-                  child: Padding(
-                    padding: EdgeInsets.all(18.0),
-                    child: Container(
-                      height: height * 0.10,
-                      width: width * 0.80,
-                      decoration: BoxDecoration(
-                        gradient: LinearGradient(
-                          begin: Alignment.bottomLeft,
-                          end: Alignment.topRight,
-                          colors: [
-                            Color.fromRGBO(247, 179, 28,1.0),
-                            Color.fromRGBO(255, 210, 112,1.0),
-                          ],
-                          stops: [0.1,0.7],
-                        ),
-                        borderRadius: BorderRadius.circular(20.0),
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.white38,
-                            offset: Offset(
-                              -2.5,
-                              -0.5,
-                            ),
-                            blurRadius: 6.0,
-                            spreadRadius: 1.0,
-                          ),
-                          BoxShadow(
-                            color: Colors.black,
-                            offset: Offset(
-                              2.5,
-                              2.5,
-                            ),
-                            blurRadius: 10.0,
-                            spreadRadius: 1.0,
-                          ),
-                        ],
-                      ),
-                      child: Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 15.0),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Column(
-                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                              children: [
-                                Text("Partially cloudy"),
-                                Text(
-                                  "32°C",
-                                  style: GoogleFonts.montserrat(
-                                    fontSize: height*0.045,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                )
-                              ],
-                            ),
-                            Image(
-                              image: AssetImage("images/cloud.png"),
-                              height: height * 0.085,
-                            )
-                          ],
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
+                // child: Container(
+                //   // color: Color.fromRGBO(40, 36, 36, 1.0),
+                //   color: Color.fromRGBO(26, 28, 30, 0.6),
+                //   child: Padding(
+                //     padding: EdgeInsets.all(18.0),
+                //     child: Container(
+                //       height: height * 0.10,
+                //       width: width * 0.80,
+                //       decoration: BoxDecoration(
+                //         gradient: LinearGradient(
+                //           begin: Alignment.bottomLeft,
+                //           end: Alignment.topRight,
+                //           colors: [
+                //             Color.fromRGBO(247, 179, 28,1.0),
+                //             Color.fromRGBO(255, 210, 112,1.0),
+                //           ],
+                //           stops: [0.1,0.7],
+                //         ),
+                //         borderRadius: BorderRadius.circular(20.0),
+                //         boxShadow: [
+                //           BoxShadow(
+                //             color: Colors.white38,
+                //             offset: Offset(
+                //               -2.5,
+                //               -0.5,
+                //             ),
+                //             blurRadius: 6.0,
+                //             spreadRadius: 1.0,
+                //           ),
+                //           BoxShadow(
+                //             color: Colors.black,
+                //             offset: Offset(
+                //               2.5,
+                //               2.5,
+                //             ),
+                //             blurRadius: 10.0,
+                //             spreadRadius: 1.0,
+                //           ),
+                //         ],
+                //       ),
+                //       child: Padding(
+                //         padding: EdgeInsets.symmetric(horizontal: 15.0),
+                //         child: Row(
+                //           mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                //           children: [
+                //             Column(
+                //               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                //               children: [
+                //                 Text("Partially cloudy"),
+                //                 Text(
+                //                   "32°C",
+                //                   style: GoogleFonts.montserrat(
+                //                     fontSize: height*0.045,
+                //                     fontWeight: FontWeight.bold,
+                //                   ),
+                //                 )
+                //               ],
+                //             ),
+                //             Image(
+                //               image: AssetImage("images/cloud.png"),
+                //               height: height * 0.085,
+                //             )
+                //           ],
+                //         ),
+                //       ),
+                //     ),
+                //   ),
+                // ),
+                child: GeoLocationPage(),
               ),
               SliverToBoxAdapter(
                 child: Container(
@@ -2540,6 +2562,7 @@ class _FirstPageState extends State<FirstPage> with AutomaticKeepAliveClientMixi
           ),
         ),
       ),
+    ),
     );
   }
 
