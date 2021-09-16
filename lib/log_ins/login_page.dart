@@ -249,12 +249,12 @@ class _LoginPageState extends State<LoginPage> {
                         ),
                         OutlinedButton(
                             onPressed: () async {
-                              print("$hasInternet inetrnet is available or not_____________________------------------");
+                              //print("$hasInternet inetrnet is available or not_____________________------------------");
 
                               hasInternet = await InternetConnectionChecker().hasConnection;
                               result = await Connectivity().checkConnectivity();
 
-                              print("$hasInternet inetrnet is after pressing the button  ++++++++++++++");
+                              //print("$hasInternet inetrnet is after pressing the button  ++++++++++++++");
 
                               if(hasInternet) {
                                 try {

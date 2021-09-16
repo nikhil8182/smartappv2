@@ -8,6 +8,7 @@ import 'package:google_fonts/google_fonts.dart';
 
 
 import 'package:http/http.dart'as http;
+import 'package:shared_preferences/shared_preferences.dart';
 
 
 
@@ -21,16 +22,28 @@ var url =  'http://api.openweathermap.org/data/2.5/weather?lat=$lat&lon=$lon&app
 class _GeoLocationPageState extends State<GeoLocationPage> {
   Position _currentPosition; //class to get the lat&log
   //String _currentAddress;
+  SharedPreferences loginData;
+  int weather = 0;
   int temp = 0;
   Timer timer;
+
+  void initial() async {
+    loginData = await SharedPreferences.getInstance();
+    setState(() {
+      weather = loginData.getInt('weather');
+       print("$weather  =============");
+    });
+
+  }
+
   @override
   void initState() {
+
     _getCurrentLocation();
+    initial();
     // timer = Timer.periodic(
     //     Duration(seconds: 1),
-    //     (Timer t)=>
-
-  //   _getCurrentLocation();
+    //     (Timer t)=> initial());
     super.initState();
   }
 
@@ -93,12 +106,39 @@ class _GeoLocationPageState extends State<GeoLocationPage> {
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
                     Text("Partially cloudy"),
-                    Text(
-                      temp.round().toString(),
-                      style: GoogleFonts.montserrat(
-                        fontSize: height * 0.045,
-                        fontWeight: FontWeight.bold,
-                      ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        // Text(
+                        //   "${weather.toString()}",
+                        //   // temp.toString(),
+                        //   style: GoogleFonts.montserrat(
+                        //     fontSize: height * 0.045,
+                        //     fontWeight: FontWeight.bold,
+                        //   ),
+                        // ),
+                        ((weather.toString())=="null")?CircularProgressIndicator(
+                          backgroundColor: Colors.grey[700],
+                          valueColor:
+                          new AlwaysStoppedAnimation<Color>(
+                              Colors.white),
+                        )
+                            :Text(
+                            "${weather.toString()}",
+                            // temp.toString(),
+                            style: GoogleFonts.montserrat(
+                              fontSize: height * 0.045,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        Text(
+                          "°C",
+                          style: GoogleFonts.montserrat(
+                            fontSize: height * 0.025,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ],
                     )
                   ],
                 ),
@@ -115,15 +155,17 @@ class _GeoLocationPageState extends State<GeoLocationPage> {
   }
 
   _getCurrentLocation() {
-    print("im inside the get location");
-    _getAddressFromLatLng();
+   //print("im inside the get location");
+    // _getAddressFromLatLng();
     Geolocator
         .getCurrentPosition(desiredAccuracy: LocationAccuracy.low,
         forceAndroidLocationManager: true)
         .then((Position position) {
-      setState(() {
+      setState((){
         _currentPosition = position;
         _getAddressFromLatLng();
+
+
       });
     }).catchError((e) {
       print(e);
@@ -131,38 +173,42 @@ class _GeoLocationPageState extends State<GeoLocationPage> {
   }
 
   _getAddressFromLatLng() async {
-    print("im inside the getAdderess location");
+    //print("im inside the getAdderess location");
     try {
       List<Placemark> placeMarks = await placemarkFromCoordinates(
           _currentPosition.latitude,
           _currentPosition.longitude
-
       );
 
       Placemark place = placeMarks[0];
-      print("i am running curretly%&%^%*&^&%^&%^(%*&^%&^%(&^%*(^&%*^(%*^");
-      setState(() async {
+      //print("i am running curretly%&%^%*&^&%^&%^(%*&^%&^%(&^%*(^&%*^(%*^");
 
+
+     setState(() async {
         lat = _currentPosition.latitude;
         lon = _currentPosition.longitude;
 
-        print("$_currentPosition  ======================");
-
-        print("url = $url");
+        //print("$_currentPosition  ======================");
+        //print("url = $url");
         var j = await http.get(Uri.parse(url));
         print("wether json = ${j.body}");
          var json = jsonDecode(j.body) ;
 
               double temp1 = json["main"]["temp"];
               temp = temp1.round();
+        //print("${temp.round()} of the weather");
+        loginData = await SharedPreferences.getInstance();
+        loginData.setInt('weather', temp);
+
 
         print("${temp.round()} of the weather");
-
-        print("city = ${json["name"]}");
-        print("weather = ${json["main"]["temp"]}");
-
+        //weather = loginData.getInt('weather');
+        //print("$weather ---------");
+        // print("city = ${json["name"]}");
+        // print("weather = ${json["main"]["temp"]}");
       });
-    } catch (e) {
+    }
+    catch (e) {
       print(e);
     }
   }

@@ -28,8 +28,9 @@ class FirstPage extends StatefulWidget {
 }
 
 class _FirstPageState extends State<FirstPage> with AutomaticKeepAliveClientMixin {
-
+  String ip_local;
   SharedPreferences logindata;
+  String ip;
   String username;
   bool notifier = false;
   bool mobNotifier = false;
@@ -49,33 +50,31 @@ class _FirstPageState extends State<FirstPage> with AutomaticKeepAliveClientMixi
     });
   }
 
-
+  SharedPreferences loginData;
   String userName = " ";
   String ipAddress;
 
   Future <String> getData(){
 
-    databaseReference.child(auth.currentUser.uid).once().then((DataSnapshot snapshot) {
+    databaseReference.child(auth.currentUser.uid).once().then((DataSnapshot snapshot) async {
 
       // print('Data : ${snapshot.value}');
       // print("iam going to map ");
-      var dataJson=snapshot.value;
+      var dataJson = snapshot.value;
       // print("dataJson = $dataJson");
       // print(dataJson["name"]);
+      // userName = dataJson["name"];
+      // ipAddress= dataJson["ip"];
+
       setState(() {
 
         userName = dataJson["name"];
         ipAddress= dataJson["ip"];
 
+        // ip_local = loginData.setString('ip', ipAddress) as String ;
         // print("$ipAddress --------");
       });
 
-
-
-      // if(data == null){
-      //   print("inside the data values is $data");
-      //   showAnotherAlertDialog(context);
-      // }
 
       if(result == ConnectivityResult.wifi) {
         //print("wifi =============_________(((((((((()))))))");
@@ -107,6 +106,7 @@ class _FirstPageState extends State<FirstPage> with AutomaticKeepAliveClientMixi
 
     });
   }
+
   bool adminStatus = false;
   bool kitchenStatus = false;
   bool hallStatus = false;
@@ -140,6 +140,7 @@ class _FirstPageState extends State<FirstPage> with AutomaticKeepAliveClientMixi
       while(intValue < 2){
         // print(toggleValues[i]);
         // print("$ipAddress =======");
+        // ip = loginData.getString('ip');
         await http.get(Uri.parse('http://$ipAddress/${toggleValues[i]}/$sts'));
         intValue++;
         print(intValue);
@@ -168,6 +169,8 @@ class _FirstPageState extends State<FirstPage> with AutomaticKeepAliveClientMixi
 
     var fetchdata = jsonDecode(response.body);
     if (response.statusCode == 200) {
+     // data = fetchdata;
+
       setState(() {
         data = fetchdata;
 
@@ -238,11 +241,14 @@ class _FirstPageState extends State<FirstPage> with AutomaticKeepAliveClientMixi
       }
     }
 
+    // name = name.toSet().toList();
+    // pg = pg.toSet().toList();
     setState(() {
       name = name.toSet().toList();
       pg = pg.toSet().toList();
-      print(name);
+      //print(name);
     });
+
     return "success";
   }
 
@@ -258,6 +264,7 @@ class _FirstPageState extends State<FirstPage> with AutomaticKeepAliveClientMixi
 
   @override
   void initState() {
+
     initial();
     timer = Timer.periodic(Duration(seconds: 1), (Timer t) {
       getData();
@@ -472,7 +479,7 @@ class _FirstPageState extends State<FirstPage> with AutomaticKeepAliveClientMixi
                     return Container(
                       color: Color.fromRGBO(26, 28, 30, 0.6),
                       child: Padding(
-                        padding: EdgeInsets.all(12.0),
+                        padding: EdgeInsets.all(10.0),
                         child: GestureDetector(
                           onTap: (){
                             Navigator.push(context, MaterialPageRoute(builder: (context)=>Button(name[index].toString(),index,ipAddress,g1,)));
@@ -509,7 +516,7 @@ class _FirstPageState extends State<FirstPage> with AutomaticKeepAliveClientMixi
                                 height: height * 0.20,
                                 width: width * 0.80,
                                 decoration: BoxDecoration(
-                                  color: Colors.white,
+                                  color: Colors.black,
                                   borderRadius: BorderRadius.circular(10.0),
                                   image: DecorationImage(
                                     fit: BoxFit.cover,
@@ -519,86 +526,94 @@ class _FirstPageState extends State<FirstPage> with AutomaticKeepAliveClientMixi
                                         .toString()
                                         .contains("Hall")
                                         ? AssetImage(
-                                      "images/fur.jpg",
+                                      "images/room/hall.png",
                                     )
                                         : name[index]
                                         .toString()
                                         .contains("Admin")
                                         ? AssetImage(
-                                      "images/fur.jpg",
+                                      "images/room/admin room.png",
                                     )
                                         : name[index]
                                         .toString()
                                         .contains(
                                         "Garage")
                                         ? AssetImage(
-                                      "images/guest.png",
+                                      "images/room/garage.png",
                                     )
                                         : name[index]
                                         .toString()
                                         .contains(
                                         "Kitchen")
                                         ? AssetImage(
-                                      "images/kitchen.png",
+                                      "images/room/kitchen.png",
                                     )
                                         : name[index]
                                         .toString()
                                         .contains(
-                                        "Bathroom")
+                                        "Bathroom 1")
                                         ? AssetImage(
-                                      "images/bathroom.png",
+                                      "images/room/bathroom 1.png",
+                                    ): name[index]
+                                        .toString()
+                                        .contains(
+                                        "Bathroom 2")
+                                        ? AssetImage(
+                                      "images/room/bathroom 2.png",
                                     )
                                         : name[index]
                                         .toString()
                                         .contains(
                                         "Bedroom_1")
                                         ? AssetImage(
-                                      "images/bedroom.png",
+                                      "images/room/bedroom 1.png",
                                     )
                                         : name[index].toString().contains("Bedroom_2")
                                         ? AssetImage(
-                                      "images/bedroom.png",
-                                    )
-                                        : name[index].toString().contains("Master_Bedroom")
+                                      "images/room/bedroom 2.png",
+                                    ): name[index].toString().contains("Kids_Room")
                                         ? AssetImage(
-                                      "images/bedroom.png",
+                                      "images/room/kids bedroom.png",
+                                    ): name[index].toString().contains("Master_Bedroom")
+                                        ? AssetImage(
+                                      "images/room/master bedroom.png",
                                     )
                                         : name[index].toString().contains("Bedroom")
                                         ? AssetImage(
-                                      "images/bedroom.png",
+                                      "images/room/bedroom 2.png",
                                     )
                                         : name[index].toString().contains("Outside")
                                         ? AssetImage(
-                                      "images/fur.jpg",
+                                      "images/room/outside.png",
                                     )
                                         : name[index].toString().contains("Garden")
                                         ? AssetImage(
-                                      "images/fur.jpg",
+                                      "images/room/garden.png",
                                     )
                                         : name[index].toString().contains("Parking")
                                         ? AssetImage(
-                                      "images/fur.jpg",
+                                      "images/room/parking.png",
                                     )
                                         : name[index].toString().contains("Living_Room")
                                         ? AssetImage(
-                                      "images/fur.jpg",
+                                      "images/room/living room.png",
 
                                     )
                                         : name[index].toString().contains("Store_Room")
                                         ? AssetImage(
-                                      "images/fur.jpg",
+                                      "images/room/store room.png",
                                     )
                                         : AssetImage(""),
                                   ),
                                 ),
                                 child: Padding(
-                                  padding: EdgeInsets.all(2.0),
+                                  padding: EdgeInsets.all(4.0),
                                   child: Row(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    crossAxisAlignment: CrossAxisAlignment.end,
                                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                     children: [
                                       Column(
-                                        mainAxisAlignment: MainAxisAlignment.center,
+                                        mainAxisAlignment: MainAxisAlignment.end,
                                         crossAxisAlignment: CrossAxisAlignment.start,
                                         children: [
                                           Container(
@@ -607,121 +622,123 @@ class _FirstPageState extends State<FirstPage> with AutomaticKeepAliveClientMixi
                                                 .toString()
                                                 .contains("Hall")
                                                 ? Row(
-                                              crossAxisAlignment:
-                                              CrossAxisAlignment
-                                                  .start,
-                                              mainAxisAlignment:
-                                              MainAxisAlignment
-                                                  .spaceBetween,
-                                              children: [
-                                                Column(
-                                                  mainAxisAlignment:
-                                                  MainAxisAlignment
-                                                      .center,
-                                                  crossAxisAlignment:
-                                                  CrossAxisAlignment
-                                                      .start,
+                                                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                                                   children: [
-                                                    Image.asset(
-                                                      "images/chair.png",
-                                                      width:
-                                                      width * 0.2,
-                                                      height: height *
-                                                          0.1,
+                                                    Column(
+                                                      mainAxisAlignment:
+                                                      MainAxisAlignment
+                                                          .end,
+                                                      crossAxisAlignment:
+                                                      CrossAxisAlignment
+                                                          .start,
+                                                      children: [
+                                                        Text("${name[index].toString().replaceAll("_"," ")}",
+                                                          style: TextStyle(color: Colors.white,fontSize: height*0.013,fontWeight: FontWeight.w900),),
+                                                        // Text(
+                                                        //   "6 devices",
+                                                        //   style: TextStyle(
+                                                        //       color: Colors
+                                                        //           .black,
+                                                        //       fontWeight:
+                                                        //       FontWeight
+                                                        //           .w900,
+                                                        //       fontSize:
+                                                        //       height *
+                                                        //           0.012),
+                                                        // )
+                                                      ],
                                                     ),
-                                                    Text(name[index].toString()),
+                                                    ((name[index].toString().length)>13)?SizedBox(width: width*0.030,):
+                                                    ((name[index].toString().length)>=9)?SizedBox(width: width*0.060,):
+                                                    ((name[index].toString().length)<=4)? SizedBox(width: width*0.20,)
+                                                        :((name[index].toString().length)<=8)? SizedBox(width: width*0.14,)
+                                                        :SizedBox(width: width*0.20),
+                                                    Transform.scale(
+                                                      scale: 1.2,
+                                                      child: Switch(
+                                                          activeColor:
+                                                          Colors.orange,
+                                                          thumbColor:
+                                                          MaterialStateProperty
+                                                              .all(Colors
+                                                              .orange),
+                                                          value:
+                                                          hallStatus,
+                                                          onChanged:
+                                                              (bool value) {
+                                                            setState(() {
+                                                              hallStatus =
+                                                                  value;
+                                                              if(hallStatus == true){
+                                                                statusInt = 1;
+                                                              }
+                                                              else{
+                                                                statusInt = 0;
+                                                              }
 
-                                                    Text(
-                                                      "6 devices",
-                                                      style: TextStyle(
-                                                          color: Colors
-                                                              .black,
-                                                          fontWeight:
-                                                          FontWeight
-                                                              .w900,
-                                                          fontSize:
-                                                          height *
-                                                              0.012),
-                                                    )
+                                                              toggleButton(index, statusInt);
+                                                            }
+                                                            );
+                                                          }
+                                                          ),
+                                                    ),
                                                   ],
-                                                ),SizedBox(width: width*0.080,),
-                                                Switch(
-                                                    activeColor:
-                                                    Colors.orange,
-                                                    thumbColor:
-                                                    MaterialStateProperty
-                                                        .all(Colors
-                                                        .orange),
-                                                    value:
-                                                    valueStatus,
-                                                    onChanged:
-                                                        (bool value) {
-                                                      setState(() {
-                                                        valueStatus =
-                                                            value;
-                                                      });
-                                                    })
-                                              ],
-                                            )
+                                                )
                                                 : name[index]
                                                 .toString()
                                                 .contains("Admin")
                                                 ? Row(
-                                              crossAxisAlignment:
-                                              CrossAxisAlignment
-                                                  .start,
-                                              mainAxisAlignment:
-                                              MainAxisAlignment
-                                                  .spaceBetween,
+                                                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                                               children: [
                                                 Column(
-                                                  crossAxisAlignment:
-                                                  CrossAxisAlignment
-                                                      .start,
+                                                mainAxisAlignment:
+                                                MainAxisAlignment
+                                                .end,
+                                                crossAxisAlignment:
+                                                CrossAxisAlignment
+                                                    .start,
                                                   children: [
-                                                    Image.asset(
-                                                      "images/chair.png",
-                                                      width:
-                                                      width *
-                                                          0.2,
-                                                      height:
-                                                      height *
-                                                          0.1,
-                                                    ),
-                                                    AutoSizeText(name[index].toString(),style: TextStyle(fontSize: height*0.013),),
-                                                    Text(
-                                                      "6 devices",
-                                                      style: TextStyle(
-                                                          color: Colors
-                                                              .black,
-                                                          fontWeight:
-                                                          FontWeight
-                                                              .w900,
-                                                          fontSize:
-                                                          height *
-                                                              0.012),
-                                                    )
+                                                    Text("${name[index].toString().replaceAll("_"," ")}",
+                                                      style: TextStyle(color: Colors.white,fontSize: height*0.013,fontWeight: FontWeight.w900),),
+
                                                   ],
                                                 ),
-                                                SizedBox(width: width*0.080,),
-                                                Switch(
-                                                    activeColor:
-                                                    Colors
-                                                        .orange,
-                                                    thumbColor:
-                                                    MaterialStateProperty.all(
-                                                        Colors
-                                                            .orange),
-                                                    value:
-                                                    valueStatus,
-                                                    onChanged: (bool
-                                                    value) {
-                                                      setState(
-                                                              () {
-                                                            valueStatus =
-                                                                value;
-                                                          });
-                                                    })
+                                                ((name[index].toString().length)>13)?SizedBox(width: width*0.030,):
+                                                ((name[index].toString().length)>=9)?SizedBox(width: width*0.060,):
+                                                ((name[index].toString().length)<=4)? SizedBox(width: width*0.20,)
+                                                    :((name[index].toString().length)<=8)? SizedBox(width: width*0.14,)
+                                                    :SizedBox(width: width*0.20),
+                                                // ((name[index].toString().length)>9)?SizedBox(width: width*0.060,):SizedBox(width: width*0.13,),
+                                            Transform.scale(
+                                                scale: 1.2,
+                                                  child: Switch(
+                                                      activeColor:
+                                                      Colors
+                                                          .orange,
+                                                      thumbColor:
+                                                      MaterialStateProperty.all(
+                                                          Colors
+                                                              .orange),
+                                                      value:
+                                                      adminStatus,
+                                                      onChanged:
+                                                          (bool value) {
+                                                        setState(() {
+                                                          adminStatus =
+                                                              value;
+                                                          if(adminStatus == true){
+                                                            statusInt = 1;
+                                                          }
+                                                          else{
+                                                            statusInt = 0;
+                                                          }
+
+                                                          toggleButton(index, statusInt);
+                                                        }
+                                                        );
+                                                      }
+                                                      ),
+                                                )
                                               ],
                                             )
                                                 : name[index]
@@ -729,45 +746,30 @@ class _FirstPageState extends State<FirstPage> with AutomaticKeepAliveClientMixi
                                                 .contains(
                                                 "Garage")
                                                 ? Row(
-                                              crossAxisAlignment:
-                                              CrossAxisAlignment
-                                                  .start,
-                                              mainAxisAlignment:
-                                              MainAxisAlignment
-                                                  .spaceBetween,
+                                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                                               children: [
                                                 Column(
                                                   mainAxisAlignment:
                                                   MainAxisAlignment
-                                                      .center,
+                                                      .end,
                                                   crossAxisAlignment:
                                                   CrossAxisAlignment
                                                       .start,
                                                   children: [
-                                                    Image.asset(
-                                                      "images/chair.png",
-                                                      width:
-                                                      width * 0.2,
-                                                      height: height *
-                                                          0.1,
-                                                    ),
-                                                    Text(name[index].toString()),
-                                                    Text(
-                                                      "6 devices",
-                                                      style: TextStyle(
-                                                          color: Colors
-                                                              .black,
-                                                          fontWeight:
-                                                          FontWeight
-                                                              .w900,
-                                                          fontSize:
-                                                          height *
-                                                              0.012),
-                                                    )
+                                                    Text("${name[index].toString().replaceAll("_"," ")}",
+                                                      style: TextStyle(color: Colors.white,fontSize: height*0.013,fontWeight: FontWeight.w900),),
+
                                                   ],
                                                 ),
-                                                SizedBox(width: width*0.080,),
-                                                Switch(
+                                                ((name[index].toString().length)>13)?SizedBox(width: width*0.030,):
+                                                ((name[index].toString().length)>=9)?SizedBox(width: width*0.060,):
+                                                ((name[index].toString().length)<=4)? SizedBox(width: width*0.20,)
+                                                    :((name[index].toString().length)<=8)? SizedBox(width: width*0.14,)
+                                                    :SizedBox(width: width*0.20),
+                                                //((name[index].toString().length)>9)?SizedBox(width: width*0.030,):SizedBox(width: width*0.13,),
+                                           Transform.scale(
+                                                scale: 1.2,
+                                                    child: Switch(
                                                     activeColor:
                                                     Colors.orange,
                                                     thumbColor:
@@ -775,14 +777,24 @@ class _FirstPageState extends State<FirstPage> with AutomaticKeepAliveClientMixi
                                                         .all(Colors
                                                         .orange),
                                                     value:
-                                                    valueStatus,
-                                                    onChanged:
-                                                        (bool value) {
-                                                      setState(() {
-                                                        valueStatus =
-                                                            value;
-                                                      });
-                                                    })
+                                                    garageStatus,
+                                                        onChanged:
+                                                            (bool value) {
+                                                          setState(() {
+                                                            garageStatus =
+                                                                value;
+                                                            if( garageStatus == true){
+                                                              statusInt = 1;
+                                                            }
+                                                            else{
+                                                              statusInt = 0;
+                                                            }
+
+                                                            toggleButton(index, statusInt);
+                                                          }
+                                                          );
+                                                        }
+                                                    ),),
                                               ],
                                             )
                                                 : name[index]
@@ -790,59 +802,55 @@ class _FirstPageState extends State<FirstPage> with AutomaticKeepAliveClientMixi
                                                 .contains(
                                                 "Kitchen")
                                                 ? Row(
-                                              crossAxisAlignment:
-                                              CrossAxisAlignment
-                                                  .start,
-                                              mainAxisAlignment:
-                                              MainAxisAlignment
-                                                  .spaceBetween,
+                                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                                               children: [
                                                 Column(
                                                   mainAxisAlignment:
                                                   MainAxisAlignment
-                                                      .center,
+                                                      .end,
                                                   crossAxisAlignment:
                                                   CrossAxisAlignment
                                                       .start,
                                                   children: [
-                                                    Image.asset(
-                                                      "images/chair.png",
-                                                      width:
-                                                      width * 0.2,
-                                                      height: height *
-                                                          0.1,
-                                                    ),
-                                                    Text(name[index].toString()),
-                                                    Text(
-                                                      "6 devices",
-                                                      style: TextStyle(
-                                                          color: Colors
-                                                              .black,
-                                                          fontWeight:
-                                                          FontWeight
-                                                              .w900,
-                                                          fontSize:
-                                                          height *
-                                                              0.012),
-                                                    )
+                                                    Text("${name[index].toString().replaceAll("_"," ")}",
+                                                        style: TextStyle(color: Colors.white,fontSize: height*0.013,fontWeight: FontWeight.w900)),
+
                                                   ],
-                                                ),SizedBox(width: width*0.080,),
-                                                Switch(
-                                                    activeColor:
-                                                    Colors.orange,
-                                                    thumbColor:
-                                                    MaterialStateProperty
-                                                        .all(Colors
-                                                        .orange),
-                                                    value:
-                                                    valueStatus,
-                                                    onChanged:
-                                                        (bool value) {
-                                                      setState(() {
-                                                        valueStatus =
-                                                            value;
-                                                      });
-                                                    })
+                                                ),
+                                                ((name[index].toString().length)>13)?SizedBox(width: width*0.030,):
+                                                ((name[index].toString().length)>=9)?SizedBox(width: width*0.060,):
+                                                ((name[index].toString().length)<=4)? SizedBox(width: width*0.20,)
+                                                    :((name[index].toString().length)<=8)? SizedBox(width: width*0.14,)
+                                                    :SizedBox(width: width*0.20),
+                                                //((name[index].toString().length)>10)?SizedBox(width: width*0.030,):SizedBox(width: width*0.13,),
+                                                Transform.scale(
+                                                  scale: 1.2,
+                                                  child: Switch(
+                                                      activeColor:
+                                                      Colors.orange,
+                                                      thumbColor:
+                                                      MaterialStateProperty
+                                                          .all(Colors
+                                                          .orange),
+                                                      value:
+                                                      kitchenStatus,
+                                                      onChanged:
+                                                          (bool value) {
+                                                        setState(() {
+                                                          kitchenStatus =
+                                                              value;
+                                                          if(  kitchenStatus == true){
+                                                            statusInt = 1;
+                                                          }
+                                                          else{
+                                                            statusInt = 0;
+                                                          }
+
+                                                          toggleButton(index, statusInt);
+                                                        }
+                                                        );
+                                                      }),
+                                                )
                                               ],
                                             )
                                                 : name[index]
@@ -850,59 +858,54 @@ class _FirstPageState extends State<FirstPage> with AutomaticKeepAliveClientMixi
                                                 .contains(
                                                 "Bathroom")
                                                 ? Row(
-                                              crossAxisAlignment:
-                                              CrossAxisAlignment
-                                                  .start,
-                                              mainAxisAlignment:
-                                              MainAxisAlignment
-                                                  .spaceBetween,
+                                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                                               children: [
                                                 Column(
                                                   mainAxisAlignment:
                                                   MainAxisAlignment
-                                                      .center,
+                                                      .end,
                                                   crossAxisAlignment:
                                                   CrossAxisAlignment
                                                       .start,
                                                   children: [
-                                                    Image.asset(
-                                                      "images/chair.png",
-                                                      width:
-                                                      width * 0.2,
-                                                      height: height *
-                                                          0.1,
-                                                    ),
-                                                    Text(name[index].toString()),
-                                                    Text(
-                                                      "6 devices",
-                                                      style: TextStyle(
-                                                          color: Colors
-                                                              .black,
-                                                          fontWeight:
-                                                          FontWeight
-                                                              .w900,
-                                                          fontSize:
-                                                          height *
-                                                              0.012),
-                                                    )
+                                                    Text("${name[index].toString().replaceAll("_"," ")}",
+                                                        style: TextStyle(color: Colors.white,fontSize: height*0.013,fontWeight: FontWeight.w900)),
                                                   ],
-                                                ),SizedBox(width: width*0.080,),
-                                                Switch(
-                                                    activeColor:
-                                                    Colors.orange,
-                                                    thumbColor:
-                                                    MaterialStateProperty
-                                                        .all(Colors
-                                                        .orange),
-                                                    value:
-                                                    valueStatus,
-                                                    onChanged:
-                                                        (bool value) {
-                                                      setState(() {
-                                                        valueStatus =
-                                                            value;
-                                                      });
-                                                    })
+                                                ),
+                                                ((name[index].toString().length)>13)?SizedBox(width: width*0.030,):
+                                                ((name[index].toString().length)>=9)?SizedBox(width: width*0.060,):
+                                                ((name[index].toString().length)<=4)? SizedBox(width: width*0.20,)
+                                                    :((name[index].toString().length)<=8)? SizedBox(width: width*0.14,)
+                                                    :SizedBox(width: width*0.20),
+                                                //((name[index].toString().length)>10)?SizedBox(width: width*0.030,):SizedBox(width: width*0.13,),
+                                                Transform.scale(
+                                                    scale: 1.2,
+                                                  child: Switch(
+                                                      activeColor:
+                                                      Colors.orange,
+                                                      thumbColor:
+                                                      MaterialStateProperty
+                                                          .all(Colors
+                                                          .orange),
+                                                      value:
+                                                      bathRoomStatus,
+                                                      onChanged:
+                                                          (bool value) {
+                                                        setState(() {
+                                                          bathRoomStatus =
+                                                              value;
+                                                          if(  bathRoomStatus == true){
+                                                            statusInt = 1;
+                                                          }
+                                                          else{
+                                                            statusInt = 0;
+                                                          }
+
+                                                          toggleButton(index, statusInt);
+                                                        }
+                                                        );
+                                                      }),
+                                                )
                                               ],
                                             )
                                                 : name[index]
@@ -910,515 +913,480 @@ class _FirstPageState extends State<FirstPage> with AutomaticKeepAliveClientMixi
                                                 .contains(
                                                 "Bedroom_1")
                                                 ? Row(
-                                              crossAxisAlignment:
-                                              CrossAxisAlignment
-                                                  .start,
-                                              mainAxisAlignment:
-                                              MainAxisAlignment
-                                                  .spaceBetween,
+                                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                                               children: [
                                                 Column(
                                                   mainAxisAlignment:
                                                   MainAxisAlignment
-                                                      .center,
+                                                      .end,
                                                   crossAxisAlignment:
                                                   CrossAxisAlignment
                                                       .start,
                                                   children: [
-                                                    Image.asset(
-                                                      "images/chair.png",
-                                                      width:
-                                                      width * 0.2,
-                                                      height: height *
-                                                          0.1,
+                                                    Text("${name[index].toString().replaceAll("_"," ")}",
+                                                        style: TextStyle(color: Colors.white,fontSize: height*0.013,fontWeight: FontWeight.w900)
                                                     ),
-                                                    Text(name[index].toString()),
-                                                    Text(
-                                                      "6 devices",
-                                                      style: TextStyle(
-                                                          color: Colors
-                                                              .black,
-                                                          fontWeight:
-                                                          FontWeight
-                                                              .w900,
-                                                          fontSize:
-                                                          height *
-                                                              0.012),
-                                                    )
+
                                                   ],
-                                                ),SizedBox(width: width*0.080,),
-                                                Switch(
-                                                    activeColor:
-                                                    Colors.orange,
-                                                    thumbColor:
-                                                    MaterialStateProperty
-                                                        .all(Colors
-                                                        .orange),
-                                                    value:
-                                                    valueStatus,
-                                                    onChanged:
-                                                        (bool value) {
-                                                      setState(() {
-                                                        valueStatus =
-                                                            value;
-                                                      });
-                                                    })
+                                                ),
+                                                ((name[index].toString().length)>13)?SizedBox(width: width*0.030,):
+                                                ((name[index].toString().length)>=9)?SizedBox(width: width*0.060,):
+                                                ((name[index].toString().length)<=4)? SizedBox(width: width*0.20,)
+                                                    :((name[index].toString().length)<=8)? SizedBox(width: width*0.14,)
+                                                    :SizedBox(width: width*0.20),
+                                                //((name[index].toString().length)>10)?SizedBox(width: width*0.030,):SizedBox(width: width*0.13,),
+                                                Transform.scale(
+                                                  scale: 1.2,
+                                                  child: Switch(
+                                                      activeColor:
+                                                      Colors.orange,
+                                                      thumbColor:
+                                                      MaterialStateProperty
+                                                          .all(Colors
+                                                          .orange),
+                                                      value:
+                                                      bedRoom1Status,
+                                                      onChanged:
+                                                          (bool value) {
+                                                        setState(() {
+                                                          bedRoom1Status =
+                                                              value;
+                                                          if(  bedRoom1Status == true){
+                                                            statusInt = 1;
+                                                          }
+                                                          else{
+                                                            statusInt = 0;
+                                                          }
+
+                                                          toggleButton(index, statusInt);
+                                                        }
+                                                        );
+                                                      }),
+                                                )
                                               ],
                                             )
                                                 : name[index].toString().contains("Bedroom_2")
                                                 ? Row(
-                                              crossAxisAlignment:
-                                              CrossAxisAlignment
-                                                  .start,
-                                              mainAxisAlignment:
-                                              MainAxisAlignment
-                                                  .spaceBetween,
+                                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                                               children: [
                                                 Column(
                                                   mainAxisAlignment:
                                                   MainAxisAlignment
-                                                      .center,
+                                                      .end,
                                                   crossAxisAlignment:
                                                   CrossAxisAlignment
                                                       .start,
                                                   children: [
-                                                    Image.asset(
-                                                      "images/chair.png",
-                                                      width:
-                                                      width * 0.2,
-                                                      height: height *
-                                                          0.1,
+
+                                                    Text("${name[index].toString().replaceAll("_"," ")}",
+                                                        style: TextStyle(color: Colors.white,fontSize: height*0.013,fontWeight: FontWeight.w900)
                                                     ),
-                                                    Text(name[index].toString()),
-                                                    Text(
-                                                      "6 devices",
-                                                      style: TextStyle(
-                                                          color: Colors
-                                                              .black,
-                                                          fontWeight:
-                                                          FontWeight
-                                                              .w900,
-                                                          fontSize:
-                                                          height *
-                                                              0.012),
-                                                    )
                                                   ],
-                                                ),SizedBox(width: width*0.080,),
-                                                Switch(
-                                                    activeColor:
-                                                    Colors.orange,
-                                                    thumbColor:
-                                                    MaterialStateProperty
-                                                        .all(Colors
-                                                        .orange),
-                                                    value:
-                                                    valueStatus,
-                                                    onChanged:
-                                                        (bool value) {
-                                                      setState(() {
-                                                        valueStatus =
-                                                            value;
-                                                      });
-                                                    })
+                                                ),
+                                                ((name[index].toString().length)>13)?SizedBox(width: width*0.030,):
+                                                ((name[index].toString().length)>=9)?SizedBox(width: width*0.060,):
+                                                ((name[index].toString().length)<=4)? SizedBox(width: width*0.20,)
+                                                    :((name[index].toString().length)<=8)? SizedBox(width: width*0.14,)
+                                                    :SizedBox(width: width*0.20),
+                                                //((name[index].toString().length)>10)?SizedBox(width: width*0.030,):SizedBox(width: width*0.13,),
+                                                Transform.scale(
+                                                  scale: 1.2,
+                                                  child: Switch(
+                                                      activeColor:
+                                                      Colors.orange,
+                                                      thumbColor:
+                                                      MaterialStateProperty
+                                                          .all(Colors
+                                                          .orange),
+                                                      value:
+                                                     bedRoom2Status,
+                                                      onChanged:
+                                                          (bool value) {
+                                                        setState(() {
+                                                          bedRoom2Status =
+                                                              value;
+                                                          if(  bedRoom2Status == true){
+                                                            statusInt = 1;
+                                                          }
+                                                          else{
+                                                            statusInt = 0;
+                                                          }
+
+                                                          toggleButton(index, statusInt);
+                                                        }
+                                                        );
+                                                      }),
+                                                )
                                               ],
                                             )
                                                 : name[index].toString().contains("Master_Bedroom")
                                                 ? Row(
-                                              crossAxisAlignment:
-                                              CrossAxisAlignment
-                                                  .start,
-                                              mainAxisAlignment:
-                                              MainAxisAlignment
-                                                  .spaceBetween,
+                                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                                               children: [
                                                 Column(
                                                   mainAxisAlignment:
                                                   MainAxisAlignment
-                                                      .center,
+                                                      .end,
                                                   crossAxisAlignment:
                                                   CrossAxisAlignment
                                                       .start,
                                                   children: [
-                                                    Image.asset(
-                                                      "images/chair.png",
-                                                      width:
-                                                      width * 0.2,
-                                                      height: height *
-                                                          0.1,
-                                                    ),
-                                                    AutoSizeText(name[index].toString(),style: TextStyle(fontSize: height*0.013),),
-                                                    Text(
-                                                      "6 devices",
-                                                      style: TextStyle(
-                                                          color: Colors
-                                                              .black,
-                                                          fontWeight:
-                                                          FontWeight
-                                                              .w900,
-                                                          fontSize:
-                                                          height *
-                                                              0.012),
-                                                    )
+
+                                                    Text("${name[index].toString().replaceAll("_"," ")}",
+                                                      style: TextStyle(color: Colors.white,fontSize: height*0.013,fontWeight: FontWeight.w900),),
                                                   ],
-                                                ),SizedBox(width: width*0.030,),
-                                                Switch(
-                                                    activeColor:
-                                                    Colors.orange,
-                                                    thumbColor:
-                                                    MaterialStateProperty
-                                                        .all(Colors
-                                                        .orange),
-                                                    value:
-                                                    valueStatus,
-                                                    onChanged:
-                                                        (bool value) {
-                                                      setState(() {
-                                                        valueStatus =
-                                                            value;
-                                                      });
-                                                    })
+                                                ),
+                                                ((name[index].toString().length)>13)?SizedBox(width: width*0.030,):
+                                                ((name[index].toString().length)>=9)?SizedBox(width: width*0.060,):
+                                                ((name[index].toString().length)<=4)? SizedBox(width: width*0.20,)
+                                                    :((name[index].toString().length)<=8)? SizedBox(width: width*0.14,)
+                                                    :SizedBox(width: width*0.20),
+                                                //((name[index].toString().length)>10)?SizedBox(width: width*0.030,):SizedBox(width: width*0.13,),
+                                                Transform.scale(
+                                                  scale: 1.2,
+                                                  child: Switch(
+                                                      activeColor:
+                                                      Colors.orange,
+                                                      thumbColor:
+                                                      MaterialStateProperty
+                                                          .all(Colors
+                                                          .orange),
+                                                      value:
+                                                      masterBedStatus,
+                                                      onChanged:
+                                                          (bool value) {
+                                                        setState(() {
+                                                          masterBedStatus =
+                                                              value;
+                                                          if(  masterBedStatus == true){
+                                                            statusInt = 1;
+                                                          }
+                                                          else{
+                                                            statusInt = 0;
+                                                          }
+
+                                                          toggleButton(index, statusInt);
+                                                        }
+                                                        );
+                                                      }),
+                                                )
                                               ],
                                             )
                                                 : name[index].toString().contains("Bedroom")
                                                 ? Row(
-                                              crossAxisAlignment:
-                                              CrossAxisAlignment
-                                                  .start,
-                                              mainAxisAlignment:
-                                              MainAxisAlignment
-                                                  .spaceBetween,
+                                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                                               children: [
                                                 Column(
                                                   mainAxisAlignment:
                                                   MainAxisAlignment
-                                                      .center,
+                                                      .end,
                                                   crossAxisAlignment:
                                                   CrossAxisAlignment
                                                       .start,
                                                   children: [
-                                                    Image.asset(
-                                                      "images/chair.png",
-                                                      width:
-                                                      width * 0.2,
-                                                      height: height *
-                                                          0.1,
-                                                    ),
-                                                    Text(name[index].toString()),
-                                                    Text(
-                                                      "6 devices",
-                                                      style: TextStyle(
-                                                          color: Colors
-                                                              .black,
-                                                          fontWeight:
-                                                          FontWeight
-                                                              .w900,
-                                                          fontSize:
-                                                          height *
-                                                              0.012),
-                                                    )
+                                                    Text("${name[index].toString().replaceAll("_"," ")}",
+                                                      style: TextStyle(color: Colors.white,fontSize: height*0.013,fontWeight: FontWeight.w900),),
+
                                                   ],
-                                                ),SizedBox(width: width*0.080,),
-                                                Switch(
-                                                    activeColor:
-                                                    Colors.orange,
-                                                    thumbColor:
-                                                    MaterialStateProperty
-                                                        .all(Colors
-                                                        .orange),
-                                                    value:
-                                                    valueStatus,
-                                                    onChanged:
-                                                        (bool value) {
-                                                      setState(() {
-                                                        valueStatus =
-                                                            value;
-                                                      });
-                                                    })
+                                                ),
+                                                ((name[index].toString().length)>13)?SizedBox(width: width*0.030,):
+                                                ((name[index].toString().length)>=9)?SizedBox(width: width*0.060,):
+                                                ((name[index].toString().length)<=4)? SizedBox(width: width*0.20,)
+                                                    :((name[index].toString().length)<=8)? SizedBox(width: width*0.14,)
+                                                    :SizedBox(width: width*0.20),
+                                                //((name[index].toString().length)>10)?SizedBox(width: width*0.030,):SizedBox(width: width*0.13,),
+                                                Transform.scale(
+                                                  scale: 1.2,
+                                                  child: Switch(
+                                                      activeColor:
+                                                      Colors.orange,
+                                                      thumbColor:
+                                                      MaterialStateProperty
+                                                          .all(Colors
+                                                          .orange),
+                                                      value:
+                                                      bedRoomStatus,
+                                                      onChanged:
+                                                          (bool value) {
+                                                        setState(() {
+                                                          bedRoomStatus =
+                                                              value;
+                                                          if(  bedRoomStatus == true){
+                                                            statusInt = 1;
+                                                          }
+                                                          else{
+                                                            statusInt = 0;
+                                                          }
+
+                                                          toggleButton(index, statusInt);
+                                                        }
+                                                        );
+                                                      }),
+                                                )
                                               ],
                                             )
                                                 : name[index].toString().contains("Outside")
                                                 ? Row(
-                                              crossAxisAlignment:
-                                              CrossAxisAlignment
-                                                  .start,
-                                              mainAxisAlignment:
-                                              MainAxisAlignment
-                                                  .spaceBetween,
+                                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                                               children: [
                                                 Column(
                                                   mainAxisAlignment:
                                                   MainAxisAlignment
-                                                      .center,
+                                                      .end,
                                                   crossAxisAlignment:
                                                   CrossAxisAlignment
                                                       .start,
                                                   children: [
-                                                    Image.asset(
-                                                      "images/chair.png",
-                                                      width:
-                                                      width * 0.2,
-                                                      height: height *
-                                                          0.1,
-                                                    ),
-                                                    Text(name[index].toString()),
-                                                    Text(
-                                                      "6 devices",
-                                                      style: TextStyle(
-                                                          color: Colors
-                                                              .black,
-                                                          fontWeight:
-                                                          FontWeight
-                                                              .w900,
-                                                          fontSize:
-                                                          height *
-                                                              0.012),
-                                                    )
+                                                    Text("${name[index].toString().replaceAll("_"," ")}",
+                                                      style: TextStyle(color: Colors.white,fontSize: height*0.013,fontWeight: FontWeight.w900),),
                                                   ],
-                                                ),SizedBox(width: width*0.080,),
-                                                Switch(
-                                                    activeColor:
-                                                    Colors.orange,
-                                                    thumbColor:
-                                                    MaterialStateProperty
-                                                        .all(Colors
-                                                        .orange),
-                                                    value:
-                                                    valueStatus,
-                                                    onChanged:
-                                                        (bool value) {
-                                                      setState(() {
-                                                        valueStatus =
-                                                            value;
-                                                      });
-                                                    })
+                                                ),
+                                                ((name[index].toString().length)>13)?SizedBox(width: width*0.030,):
+                                                ((name[index].toString().length)>=9)?SizedBox(width: width*0.060,):
+                                                ((name[index].toString().length)<=4)? SizedBox(width: width*0.20,)
+                                                    :((name[index].toString().length)<=8)? SizedBox(width: width*0.14,)
+                                                    :SizedBox(width: width*0.20),
+                                                //((name[index].toString().length)>10)?SizedBox(width: width*0.030,):SizedBox(width: width*0.13,),
+                                                Transform.scale(
+                                                  scale: 1.2,
+                                                  child: Switch(
+                                                      activeColor:
+                                                      Colors.orange,
+                                                      thumbColor:
+                                                      MaterialStateProperty
+                                                          .all(Colors
+                                                          .orange),
+                                                      value:
+                                                      outSideStatus,
+                                                      onChanged:
+                                                          (bool value) {
+                                                        setState(() {
+                                                          outSideStatus =
+                                                              value;
+                                                          if(  outSideStatus == true){
+                                                            statusInt = 1;
+                                                          }
+                                                          else{
+                                                            statusInt = 0;
+                                                          }
+
+                                                          toggleButton(index, statusInt);
+                                                        }
+                                                        );
+                                                      }),
+                                                )
                                               ],
                                             )
                                                 : name[index].toString().contains("Garden")
                                                 ? Row(
-                                              crossAxisAlignment:
-                                              CrossAxisAlignment
-                                                  .start,
-                                              mainAxisAlignment:
-                                              MainAxisAlignment
-                                                  .spaceBetween,
+                                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                                               children: [
                                                 Column(
                                                   mainAxisAlignment:
                                                   MainAxisAlignment
-                                                      .center,
+                                                      .end,
                                                   crossAxisAlignment:
                                                   CrossAxisAlignment
                                                       .start,
                                                   children: [
-                                                    Image.asset(
-                                                      "images/chair.png",
-                                                      width:
-                                                      width * 0.2,
-                                                      height: height *
-                                                          0.1,
-                                                    ),
-                                                    Text(name[index].toString()),
-                                                    Text(
-                                                      "6 devices",
-                                                      style: TextStyle(
-                                                          color: Colors
-                                                              .black,
-                                                          fontWeight:
-                                                          FontWeight
-                                                              .w900,
-                                                          fontSize:
-                                                          height *
-                                                              0.012),
-                                                    )
+
+                                                    Text("${name[index].toString().replaceAll("_"," ")}",
+                                                      style: TextStyle(color: Colors.white,fontSize: height*0.013,fontWeight: FontWeight.w900),),
                                                   ],
-                                                ),SizedBox(width: width*0.080,),
-                                                Switch(
-                                                    activeColor:
-                                                    Colors.orange,
-                                                    thumbColor:
-                                                    MaterialStateProperty
-                                                        .all(Colors
-                                                        .orange),
-                                                    value:
-                                                    valueStatus,
-                                                    onChanged:
-                                                        (bool value) {
-                                                      setState(() {
-                                                        valueStatus =
-                                                            value;
-                                                      });
-                                                    })
+                                                ),
+                                                ((name[index].toString().length)>13)?SizedBox(width: width*0.030,):
+                                                ((name[index].toString().length)>=9)?SizedBox(width: width*0.060,):
+                                                ((name[index].toString().length)<=4)? SizedBox(width: width*0.20,)
+                                                    :((name[index].toString().length)<=8)? SizedBox(width: width*0.14,)
+                                                    :SizedBox(width: width*0.20),
+                                                //((name[index].toString().length)>10)?SizedBox(width: width*0.030,):SizedBox(width: width*0.13,),
+                                                Transform.scale(
+                                                  scale: 1.2,
+                                                  child: Switch(
+                                                      activeColor:
+                                                      Colors.orange,
+                                                      thumbColor:
+                                                      MaterialStateProperty
+                                                          .all(Colors
+                                                          .orange),
+                                                      value:
+                                                      gardenStatus,
+                                                      onChanged:
+                                                          (bool value) {
+                                                        setState(() {
+                                                          gardenStatus =
+                                                              value;
+                                                          if(  gardenStatus == true){
+                                                            statusInt = 1;
+                                                          }
+                                                          else{
+                                                            statusInt = 0;
+                                                          }
+
+                                                          toggleButton(index, statusInt);
+                                                        }
+                                                        );
+                                                      }),
+                                                )
                                               ],
                                             )
                                                 : name[index].toString().contains("Parking")
                                                 ? Row(
-                                              crossAxisAlignment:
-                                              CrossAxisAlignment
-                                                  .start,
-                                              mainAxisAlignment:
-                                              MainAxisAlignment
-                                                  .spaceBetween,
+                                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                                               children: [
                                                 Column(
                                                   mainAxisAlignment:
                                                   MainAxisAlignment
-                                                      .center,
+                                                      .end,
                                                   crossAxisAlignment:
                                                   CrossAxisAlignment
                                                       .start,
                                                   children: [
-                                                    Image.asset(
-                                                      "images/chair.png",
-                                                      width:
-                                                      width * 0.2,
-                                                      height: height *
-                                                          0.1,
-                                                    ),
-                                                    Text(name[index].toString()),
-                                                    Text(
-                                                      "6 devices",
-                                                      style: TextStyle(
-                                                          color: Colors
-                                                              .black,
-                                                          fontWeight:
-                                                          FontWeight
-                                                              .w900,
-                                                          fontSize:
-                                                          height *
-                                                              0.012),
-                                                    )
+                                                    Text("${name[index].toString().replaceAll("_"," ")}",
+                                                      style: TextStyle(color: Colors.white,fontSize: height*0.013,fontWeight: FontWeight.w900),),
                                                   ],
-                                                ),SizedBox(width: width*0.080,),
-                                                Switch(
-                                                    activeColor:
-                                                    Colors.orange,
-                                                    thumbColor:
-                                                    MaterialStateProperty
-                                                        .all(Colors
-                                                        .orange),
-                                                    value:
-                                                    valueStatus,
-                                                    onChanged:
-                                                        (bool value) {
-                                                      setState(() {
-                                                        valueStatus =
-                                                            value;
-                                                      });
-                                                    })
+                                                ),
+                                                ((name[index].toString().length)>13)?SizedBox(width: width*0.030,):
+                                                ((name[index].toString().length)>=9)?SizedBox(width: width*0.060,):
+                                                ((name[index].toString().length)<=4)? SizedBox(width: width*0.20,)
+                                                    :((name[index].toString().length)<=8)? SizedBox(width: width*0.14,)
+                                                    :SizedBox(width: width*0.20),
+                                                //((name[index].toString().length)>10)?SizedBox(width: width*0.030,):SizedBox(width: width*0.13,),
+                                                Transform.scale(scale: 1.2,
+                                                  child: Switch(
+                                                      activeColor:
+                                                      Colors.orange,
+                                                      thumbColor:
+                                                      MaterialStateProperty
+                                                          .all(Colors
+                                                          .orange),
+                                                      value:
+                                                      parkingStatus,
+                                                      onChanged:
+                                                          (bool value) {
+                                                        setState(() {
+                                                          parkingStatus =
+                                                              value;
+                                                          if(  parkingStatus == true){
+                                                            statusInt = 1;
+                                                          }
+                                                          else{
+                                                            statusInt = 0;
+                                                          }
+
+                                                          toggleButton(index, statusInt);
+                                                        }
+                                                        );
+                                                      }),
+                                                )
                                               ],
                                             )
                                                 : name[index].toString().contains("Living_Room")
                                                 ? Row(
-                                              crossAxisAlignment:
-                                              CrossAxisAlignment
-                                                  .start,
-                                              mainAxisAlignment:
-                                              MainAxisAlignment
-                                                  .spaceBetween,
+                                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                                               children: [
                                                 Column(
                                                   mainAxisAlignment:
                                                   MainAxisAlignment
-                                                      .center,
+                                                      .end,
                                                   crossAxisAlignment:
                                                   CrossAxisAlignment
                                                       .start,
                                                   children: [
-                                                    Image.asset(
-                                                      "images/chair.png",
-                                                      width:
-                                                      width * 0.2,
-                                                      height: height *
-                                                          0.1,
-                                                    ),
-                                                    Text(name[index].toString()),
-                                                    Text(
-                                                      "6 devices",
-                                                      style: TextStyle(
-                                                          color: Colors
-                                                              .black,
-                                                          fontWeight:
-                                                          FontWeight
-                                                              .w900,
-                                                          fontSize:
-                                                          height *
-                                                              0.012),
-                                                    )
+
+                                                    Text("${name[index].toString().replaceAll("_"," ")}",
+                                                      style: TextStyle(color: Colors.white,fontSize: height*0.013,fontWeight: FontWeight.w900),),
+
                                                   ],
-                                                ),SizedBox(width: width*0.080,),
-                                                Switch(
-                                                    activeColor:
-                                                    Colors.orange,
-                                                    thumbColor:
-                                                    MaterialStateProperty
-                                                        .all(Colors
-                                                        .orange),
-                                                    value:
-                                                    valueStatus,
-                                                    onChanged:
-                                                        (bool value) {
-                                                      setState(() {
-                                                        valueStatus =
-                                                            value;
-                                                      });
-                                                    })
+                                                ),
+                                                ((name[index].toString().length)>13)?SizedBox(width: width*0.030,):
+                                                ((name[index].toString().length)>=9)?SizedBox(width: width*0.060,):
+                                                ((name[index].toString().length)<=4)? SizedBox(width: width*0.20,)
+                                                    :((name[index].toString().length)<=8)? SizedBox(width: width*0.14,)
+                                                    :SizedBox(width: width*0.20),
+                                                //((name[index].toString().length)>10)?SizedBox(width: width*0.030,):SizedBox(width: width*0.13,),
+                                                Transform.scale(
+                                                  scale: 1.2,
+                                                  child: Switch(
+                                                      activeColor:
+                                                      Colors.orange,
+                                                      thumbColor:
+                                                      MaterialStateProperty
+                                                          .all(Colors
+                                                          .orange),
+                                                      value:
+                                                      livingStatus,
+                                                      onChanged:
+                                                          (bool value) {
+                                                        setState(() {
+                                                          livingStatus =
+                                                              value;
+                                                          if(  livingStatus == true){
+                                                            statusInt = 1;
+                                                          }
+                                                          else{
+                                                            statusInt = 0;
+                                                          }
+
+                                                          toggleButton(index, statusInt);
+                                                        }
+                                                        );
+                                                      }),
+                                                )
                                               ],
                                             )
                                                 : name[index].toString().contains("Store_Room")
                                                 ? Row(
-                                              crossAxisAlignment:
-                                              CrossAxisAlignment
-                                                  .start,
-                                              mainAxisAlignment:
-                                              MainAxisAlignment
-                                                  .spaceBetween,
+                                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                                               children: [
                                                 Column(
                                                   mainAxisAlignment:
                                                   MainAxisAlignment
-                                                      .center,
+                                                      .end,
                                                   crossAxisAlignment:
                                                   CrossAxisAlignment
                                                       .start,
                                                   children: [
-                                                    Image.asset(
-                                                      "images/chair.png",
-                                                      width:
-                                                      width * 0.2,
-                                                      height: height *
-                                                          0.1,
-                                                    ),
-                                                    Text(name[index].toString()),
-                                                    Text(
-                                                      "6 devices",
-                                                      style: TextStyle(
-                                                          color: Colors
-                                                              .black,
-                                                          fontWeight:
-                                                          FontWeight
-                                                              .w900,
-                                                          fontSize:
-                                                          height *
-                                                              0.012),
-                                                    )
+
+                                                    Text("${name[index].toString().replaceAll("_"," ")}",
+                                                        style: TextStyle(color: Colors.white,fontSize: height*0.013,fontWeight: FontWeight.w900)),
+
                                                   ],
-                                                ),SizedBox(width: width*0.080,),
-                                                Switch(
-                                                    activeColor:
-                                                    Colors.orange,
-                                                    thumbColor:
-                                                    MaterialStateProperty
-                                                        .all(Colors
-                                                        .orange),
-                                                    value:
-                                                    valueStatus,
-                                                    onChanged:
-                                                        (bool value) {
-                                                      setState(() {
-                                                        valueStatus =
-                                                            value;
-                                                      });
-                                                    })
+                                                ),
+                                                ((name[index].toString().length)>13)?SizedBox(width: width*0.030,):
+                                                ((name[index].toString().length)>=9)?SizedBox(width: width*0.060,):
+                                                ((name[index].toString().length)<=4)? SizedBox(width: width*0.20,)
+                                                    :((name[index].toString().length)<=8)? SizedBox(width: width*0.14,)
+                                                    :SizedBox(width: width*0.20),
+                                                //((name[index].toString().length)>10)?SizedBox(width: width*0.030,):SizedBox(width: width*0.13,),
+                                                Transform.scale(
+                                                  scale: 1.2,
+                                                  child: Switch(
+                                                      activeColor:
+                                                      Colors.orange,
+                                                      thumbColor:
+                                                      MaterialStateProperty
+                                                          .all(Colors
+                                                          .orange),
+                                                      value:
+                                                      storeStatus,
+                                                      onChanged:
+                                                          (bool value) {
+                                                        setState(() {
+                                                          storeStatus =
+                                                              value;
+                                                          if( storeStatus == true){
+                                                            statusInt = 1;
+                                                          }
+                                                          else{
+                                                            statusInt = 0;
+                                                          }
+
+                                                          toggleButton(index, statusInt);
+                                                        }
+                                                        );
+                                                      }),
+                                                )
                                               ],
                                             )
                                                 : Container(),
@@ -1438,7 +1406,7 @@ class _FirstPageState extends State<FirstPage> with AutomaticKeepAliveClientMixi
                   childCount: name.length,
                 ),
                 gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
-                  maxCrossAxisExtent: 400.0,
+                  maxCrossAxisExtent: height * 0.40,
                   mainAxisSpacing: 0.0,
                   crossAxisSpacing: 0.0,
                   childAspectRatio: 1.0,
@@ -1486,7 +1454,7 @@ class _FirstPageState extends State<FirstPage> with AutomaticKeepAliveClientMixi
                                 height: height * 0.20,
                                 width: width * 0.80,
                                 decoration: BoxDecoration(
-                                  color: Colors.white,
+                                  color: Colors.black26,
                                   borderRadius: BorderRadius.circular(10.0),
                                   image: DecorationImage(
                                     fit: BoxFit.cover,
@@ -1496,232 +1464,208 @@ class _FirstPageState extends State<FirstPage> with AutomaticKeepAliveClientMixi
                                         .toString()
                                         .contains("Hall")
                                         ? AssetImage(
-                                      "images/fur.jpg",
+                                      "images/room/hall.png",
                                     )
                                         : name[index]
                                         .toString()
                                         .contains("Admin")
                                         ? AssetImage(
-                                      "images/fur.jpg",
+                                      "images/room/admin room.png",
                                     )
                                         : name[index]
                                         .toString()
                                         .contains(
                                         "Garage")
                                         ? AssetImage(
-                                      "images/guest.png",
+                                      "images/room/garage.png",
                                     )
                                         : name[index]
                                         .toString()
                                         .contains(
                                         "Kitchen")
                                         ? AssetImage(
-                                      "images/kitchen.png",
+                                      "images/room/kitchen.png",
                                     )
                                         : name[index]
                                         .toString()
                                         .contains(
-                                        "Bathroom")
+                                        "Bathroom 1")
                                         ? AssetImage(
-                                      "images/bathroom.png",
+                                      "images/room/bathroom 1.png",
+                                    ): name[index]
+                                        .toString()
+                                        .contains(
+                                        "Bathroom 2")
+                                        ? AssetImage(
+                                      "images/room/bathroom 2.png",
                                     )
                                         : name[index]
                                         .toString()
                                         .contains(
                                         "Bedroom_1")
                                         ? AssetImage(
-                                      "images/bedroom.png",
+                                      "images/room/bedroom 1.png",
                                     )
                                         : name[index].toString().contains("Bedroom_2")
                                         ? AssetImage(
-                                      "images/bedroom.png",
-                                    )
-                                        : name[index].toString().contains("Master_Bedroom")
+                                      "images/room/bedroom 2.png",
+                                    ): name[index].toString().contains("Kids_Room")
                                         ? AssetImage(
-                                      "images/bedroom.png",
+                                      "images/room/kids bedroom.png",
+                                    ): name[index].toString().contains("Master_Bedroom")
+                                        ? AssetImage(
+                                      "images/room/master bedroom.png",
                                     )
                                         : name[index].toString().contains("Bedroom")
                                         ? AssetImage(
-                                      "images/bedroom.png",
+                                      "images/room/bedroom 2.png",
                                     )
                                         : name[index].toString().contains("Outside")
                                         ? AssetImage(
-                                      "images/fur.jpg",
+                                      "images/room/outside.png",
                                     )
                                         : name[index].toString().contains("Garden")
                                         ? AssetImage(
-                                      "images/fur.jpg",
+                                      "images/room/garden.png",
                                     )
                                         : name[index].toString().contains("Parking")
                                         ? AssetImage(
-                                      "images/fur.jpg",
+                                      "images/room/parking.png",
                                     )
                                         : name[index].toString().contains("Living_Room")
                                         ? AssetImage(
-                                      "images/fur.jpg",
+                                      "images/room/living room.png",
 
                                     )
                                         : name[index].toString().contains("Store_Room")
                                         ? AssetImage(
-                                      "images/fur.jpg",
+                                      "images/room/store room.png",
                                     )
                                         : AssetImage(""),
                                   ),
                                 ),
                                 child: Padding(
-                                  padding: EdgeInsets.all(1.0),
+                                  padding: EdgeInsets.symmetric(horizontal: 1.0),
                                   child: Row(
                                     crossAxisAlignment: CrossAxisAlignment.start,
                                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                                     children: [
                                       Column(
-                                        mainAxisAlignment: MainAxisAlignment.center,
+                                        mainAxisAlignment: MainAxisAlignment.end,
                                         crossAxisAlignment: CrossAxisAlignment.start,
                                         children: [
                                           Container(
-                                            padding: EdgeInsets.all(1),
+                                            padding: EdgeInsets.symmetric(horizontal: 4.0),
                                             child: name[index]
                                                 .toString()
                                                 .contains("Hall")
                                                 ? Row(
-                                              crossAxisAlignment:
-                                              CrossAxisAlignment
-                                                  .start,
-                                              mainAxisAlignment:
-                                              MainAxisAlignment
-                                                  .spaceBetween,
+                                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                                               children: [
                                                 Column(
                                                   mainAxisAlignment:
                                                   MainAxisAlignment
-                                                      .center,
+                                                      .end,
                                                   crossAxisAlignment:
                                                   CrossAxisAlignment
                                                       .start,
                                                   children: [
-                                                    Image.asset(
-                                                      "images/chair.png",
-                                                      width:
-                                                      width * 0.2,
-                                                      height: height *
-                                                          0.1,
-                                                    ),
-                                                    AutoSizeText(name[index].toString(),),
+
+                                                    Text("${name[index].toString().replaceAll("_"," ")}",
+                                                      style: TextStyle(fontSize: height*0.025,fontWeight: FontWeight.w900,color: Colors.white),),
                                                     // Text(name[index].toString()),
-                                                    Text(
-                                                      "6 devices",
-                                                      style: TextStyle(
-                                                          color: Colors
-                                                              .black,
-                                                          fontWeight:
-                                                          FontWeight
-                                                              .w900,
-                                                          fontSize:
-                                                          height *
-                                                              0.012),
-                                                    ),
                                                   ],
                                                 ),
-                                                SizedBox(
-                                                  width: width*0.50,
-                                                ),
-                                                Switch(
-                                                    activeColor:
-                                                    Colors.orange,
-                                                    thumbColor:
-                                                    MaterialStateProperty
-                                                        .all(Colors
-                                                        .orange),
-                                                    value:
-                                                    hallStatus,
-                                                    onChanged:
-                                                        (bool value) {
-                                                      setState(() {
-                                                        hallStatus =
-                                                            value;
-                                                        if(hallStatus == true){
-                                                          statusInt = 1;
-                                                        }
-                                                        else{
-                                                          statusInt = 0;
-                                                        }
+                                                ((name[index].toString().length)>13)?SizedBox(width: width*0.15,):
+                                                ((name[index].toString().length)>=9)?SizedBox(width: width*0.25,):
+                                                ((name[index].toString().length)<=4)? SizedBox(width: width*0.450,)
+                                                    :((name[index].toString().length)<=8)? SizedBox(width: width*0.35,)
+                                                    :SizedBox(width: width*0.20),
+                                                // SizedBox(
+                                                //   width: width*0.50,
+                                            Transform.scale(
+                                                scale: 1.2,
+                                                  child: Switch(
+                                                      activeColor:
+                                                      Colors.orange,
+                                                      thumbColor:
+                                                      MaterialStateProperty
+                                                          .all(Colors
+                                                          .orange),
+                                                      value:
+                                                      hallStatus,
+                                                      onChanged:
+                                                          (bool value) {
+                                                        setState(() {
+                                                          hallStatus =
+                                                              value;
+                                                          if(hallStatus == true){
+                                                            statusInt = 1;
+                                                          }
+                                                          else{
+                                                            statusInt = 0;
+                                                          }
 
-                                                        toggleButton(index, statusInt);
+                                                          toggleButton(index, statusInt);
+                                                        }
+                                                        );
                                                       }
-                                                      );
-                                                    })
+                                                      ),
+                                                )
                                               ],
                                             )
                                                 : name[index]
                                                 .toString()
                                                 .contains("Admin")
                                                 ? Row(
-                                              crossAxisAlignment:
-                                              CrossAxisAlignment
-                                                  .start,
-                                              mainAxisAlignment:
-                                              MainAxisAlignment
-                                                  .spaceBetween,
+                                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                                               children: [
                                                 Column(
+                                                  mainAxisAlignment:
+                                                  MainAxisAlignment
+                                                      .end,
                                                   crossAxisAlignment:
                                                   CrossAxisAlignment
                                                       .start,
                                                   children: [
-                                                    Image.asset(
-                                                      "images/chair.png",
-                                                      width:
-                                                      width *
-                                                          0.2,
-                                                      height:
-                                                      height *
-                                                          0.1,
-                                                    ),
-                                                    AutoSizeText(name[index].toString(),
-                                                    ),
-                                                    Text(
-                                                      "6 devices",
-                                                      style: TextStyle(
-                                                          color: Colors
-                                                              .black,
-                                                          fontWeight:
-                                                          FontWeight
-                                                              .w900,
-                                                          fontSize:
-                                                          height *
-                                                              0.012),
-                                                    )
+                                            Text("${name[index].toString().replaceAll("_"," ")}",
+                                               style: TextStyle(color: Colors.white,fontSize: height*0.025,fontWeight: FontWeight.w900),),
                                                   ],
                                                 ),
-                                                SizedBox(
-                                                  width: width*0.50,
-                                                ),
-                                                Switch(
-                                                    activeColor:
-                                                    Colors
-                                                        .orange,
-                                                    thumbColor:
-                                                    MaterialStateProperty.all(
-                                                        Colors
-                                                            .orange),
-                                                    value:
-                                                    adminStatus,
-                                                    onChanged: (bool value){
-                                                      setState(
-                                                              () {
-                                                            adminStatus =  value;
-                                                            if(adminStatus == true){
-                                                              statusInt = 1;
-                                                            }
-                                                            else{
-                                                              statusInt = 0;
-                                                            }
+                                                ((name[index].toString().length)>13)?SizedBox(width: width*0.15,):
+                                                ((name[index].toString().length)>=9)?SizedBox(width: width*0.25,):
+                                                ((name[index].toString().length)<=4)? SizedBox(width: width*0.50,)
+                                                    :((name[index].toString().length)<=8)? SizedBox(width: width*0.35,)
+                                                    :SizedBox(width: width*0.20),
+                                                Transform.scale(
+                                                  scale: 1.2,
+                                                  child: Switch(
+                                                      activeColor:
+                                                      Colors
+                                                          .orange,
+                                                      thumbColor:
+                                                      MaterialStateProperty.all(
+                                                          Colors
+                                                              .orange),
+                                                      value:
+                                                      adminStatus,
+                                                      onChanged: (bool value){
+                                                        setState(
+                                                                () {
+                                                              adminStatus =  value;
+                                                              if(adminStatus == true){
+                                                                statusInt = 1;
+                                                              }
+                                                              else{
+                                                                statusInt = 0;
+                                                              }
 
-                                                            toggleButton(index, statusInt);
-                                                          }
-                                                      );
+                                                              toggleButton(index, statusInt);
+                                                            }
+                                                        );
 
-                                                    })
+                                                      }),
+                                                )
                                               ],
                                             )
                                                 : name[index]
@@ -1729,69 +1673,54 @@ class _FirstPageState extends State<FirstPage> with AutomaticKeepAliveClientMixi
                                                 .contains(
                                                 "Garage")
                                                 ? Row(
-                                              crossAxisAlignment:
-                                              CrossAxisAlignment
-                                                  .start,
-                                              mainAxisAlignment:
-                                              MainAxisAlignment
-                                                  .spaceBetween,
+                                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                                               children: [
                                                 Column(
                                                   mainAxisAlignment:
                                                   MainAxisAlignment
-                                                      .center,
+                                                      .end,
                                                   crossAxisAlignment:
                                                   CrossAxisAlignment
                                                       .start,
                                                   children: [
-                                                    Image.asset(
-                                                      "images/chair.png",
-                                                      width:
-                                                      width * 0.2,
-                                                      height: height *
-                                                          0.1,
-                                                    ),
-                                                    Text(name[index].toString()),
-                                                    Text(
-                                                      "6 devices",
-                                                      style: TextStyle(
-                                                          color: Colors
-                                                              .black,
-                                                          fontWeight:
-                                                          FontWeight
-                                                              .w900,
-                                                          fontSize:
-                                                          height *
-                                                              0.012),
-                                                    )
-                                                  ],
-                                                ),SizedBox(
-                                                  width: width*0.50,
-                                                ),
-                                                Switch(
-                                                    activeColor:
-                                                    Colors.orange,
-                                                    thumbColor:
-                                                    MaterialStateProperty
-                                                        .all(Colors
-                                                        .orange),
-                                                    value:
-                                                    garageStatus,
-                                                    onChanged:
-                                                        (bool value) {
-                                                      setState(() {
-                                                        garageStatus =
-                                                            value;
-                                                        if(garageStatus == true){
-                                                          statusInt = 1;
-                                                        }
-                                                        else{
-                                                          statusInt = 0;
-                                                        }
 
-                                                        toggleButton(index, statusInt);
-                                                      });
-                                                    })
+                                                    Text("${name[index].toString().replaceAll("_"," ")}",
+                                                      style: TextStyle(color: Colors.white,fontSize: height*0.025,fontWeight: FontWeight.w900),),
+
+                                                  ],
+                                                ),
+                                                ((name[index].toString().length)>13)?SizedBox(width: width*0.15,):
+                                                ((name[index].toString().length)>=9)?SizedBox(width: width*0.25,):
+                                                ((name[index].toString().length)<=4)? SizedBox(width: width*0.50,)
+                                                    :((name[index].toString().length)<=8)? SizedBox(width: width*0.35,)
+                                                    :SizedBox(width: width*0.20),
+                                                Transform.scale(
+                                                  scale: 1.2,
+                                                  child: Switch(
+                                                      activeColor:
+                                                      Colors.orange,
+                                                      thumbColor:
+                                                      MaterialStateProperty
+                                                          .all(Colors
+                                                          .orange),
+                                                      value:
+                                                      garageStatus,
+                                                      onChanged:
+                                                          (bool value) {
+                                                        setState(() {
+                                                          garageStatus =
+                                                              value;
+                                                          if(garageStatus == true){
+                                                            statusInt = 1;
+                                                          }
+                                                          else{
+                                                            statusInt = 0;
+                                                          }
+
+                                                          toggleButton(index, statusInt);
+                                                        });
+                                                      }),
+                                                )
                                               ],
                                             )
                                                 : name[index]
@@ -1799,70 +1728,56 @@ class _FirstPageState extends State<FirstPage> with AutomaticKeepAliveClientMixi
                                                 .contains(
                                                 "Kitchen")
                                                 ? Row(
-                                              crossAxisAlignment:
-                                              CrossAxisAlignment
-                                                  .start,
-                                              mainAxisAlignment:
-                                              MainAxisAlignment
-                                                  .spaceBetween,
+                                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                                               children: [
                                                 Column(
                                                   mainAxisAlignment:
                                                   MainAxisAlignment
-                                                      .center,
+                                                      .end,
                                                   crossAxisAlignment:
                                                   CrossAxisAlignment
                                                       .start,
                                                   children: [
-                                                    Image.asset(
-                                                      "images/chair.png",
-                                                      width:
-                                                      width * 0.2,
-                                                      height: height *
-                                                          0.1,
-                                                    ),
-                                                    Text(name[index].toString()),
-                                                    Text(
-                                                      "6 devices",
-                                                      style: TextStyle(
-                                                          color: Colors
-                                                              .black,
-                                                          fontWeight:
-                                                          FontWeight
-                                                              .w900,
-                                                          fontSize:
-                                                          height *
-                                                              0.012),
-                                                    )
+
+                                                    Text("${name[index].toString().replaceAll("_"," ")}",
+                                                      style: TextStyle(color: Colors.white,fontSize: height*0.025,fontWeight: FontWeight.w900),),
+
+
                                                   ],
-                                                ),SizedBox(
-                                                  width: width*0.50,
                                                 ),
-                                                Switch(
-                                                    activeColor:
-                                                    Colors.orange,
-                                                    thumbColor:
-                                                    MaterialStateProperty
-                                                        .all(Colors
-                                                        .orange),
-                                                    value:
-                                                    kitchenStatus,
-                                                    onChanged:
-                                                        (bool value) {
-                                                      setState(() {
-                                                        kitchenStatus =
-                                                            value;
-                                                        if(kitchenStatus == true){
-                                                          statusInt = 1;
-                                                        }
-                                                        else{
-                                                          statusInt = 0;
-                                                        }
+                                                ((name[index].toString().length)>13)?SizedBox(width: width*0.15,):
+                                                ((name[index].toString().length)>=9)?SizedBox(width: width*0.25,):
+                                                ((name[index].toString().length)<=4)? SizedBox(width: width*0.50,)
+                                                    :((name[index].toString().length)<=8)? SizedBox(width: width*0.35,)
+                                                    :SizedBox(width: width*0.20),
+                                                Transform.scale(
+                                                  scale: 1.2,
+                                                  child: Switch(
+                                                      activeColor:
+                                                      Colors.orange,
+                                                      thumbColor:
+                                                      MaterialStateProperty
+                                                          .all(Colors
+                                                          .orange),
+                                                      value:
+                                                      kitchenStatus,
+                                                      onChanged:
+                                                          (bool value) {
+                                                        setState(() {
+                                                          kitchenStatus =
+                                                              value;
+                                                          if(kitchenStatus == true){
+                                                            statusInt = 1;
+                                                          }
+                                                          else{
+                                                            statusInt = 0;
+                                                          }
 
-                                                        toggleButton(index, statusInt);
+                                                          toggleButton(index, statusInt);
 
-                                                      });
-                                                    })
+                                                        });
+                                                      }),
+                                                )
                                               ],
                                             )
                                                 : name[index]
@@ -1870,69 +1785,54 @@ class _FirstPageState extends State<FirstPage> with AutomaticKeepAliveClientMixi
                                                 .contains(
                                                 "Bathroom")
                                                 ? Row(
-                                              crossAxisAlignment:
-                                              CrossAxisAlignment
-                                                  .start,
-                                              mainAxisAlignment:
-                                              MainAxisAlignment
-                                                  .spaceBetween,
+                                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                                               children: [
                                                 Column(
                                                   mainAxisAlignment:
                                                   MainAxisAlignment
-                                                      .center,
+                                                      .end,
                                                   crossAxisAlignment:
                                                   CrossAxisAlignment
                                                       .start,
                                                   children: [
-                                                    Image.asset(
-                                                      "images/chair.png",
-                                                      width:
-                                                      width * 0.2,
-                                                      height: height *
-                                                          0.1,
-                                                    ),
-                                                    Text(name[index].toString()),
-                                                    Text(
-                                                      "6 devices",
-                                                      style: TextStyle(
-                                                          color: Colors
-                                                              .black,
-                                                          fontWeight:
-                                                          FontWeight
-                                                              .w900,
-                                                          fontSize:
-                                                          height *
-                                                              0.012),
-                                                    )
-                                                  ],
-                                                ),SizedBox(
-                                                  width: width*0.50,
-                                                ),
-                                                Switch(
-                                                    activeColor:
-                                                    Colors.orange,
-                                                    thumbColor:
-                                                    MaterialStateProperty
-                                                        .all(Colors
-                                                        .orange),
-                                                    value:
-                                                    bathRoomStatus,
-                                                    onChanged:
-                                                        (bool value) {
-                                                      setState(() {
-                                                        bathRoomStatus =
-                                                            value;
-                                                        if(bathRoomStatus == true){
-                                                          statusInt = 1;
-                                                        }
-                                                        else{
-                                                          statusInt = 0;
-                                                        }
 
-                                                        toggleButton(index, statusInt);
-                                                      });
-                                                    })
+                                                    Text("${name[index].toString().replaceAll("_"," ")}",
+                                                      style: TextStyle(color: Colors.white,fontSize: height*0.025,fontWeight: FontWeight.w900),),
+
+                                                  ],
+                                                ),
+                                                ((name[index].toString().length)>13)?SizedBox(width: width*0.15,):
+                                                ((name[index].toString().length)>=9)?SizedBox(width: width*0.25,):
+                                                ((name[index].toString().length)<=4)? SizedBox(width: width*0.50,)
+                                                    :((name[index].toString().length)<=8)? SizedBox(width: width*0.35,)
+                                                    :SizedBox(width: width*0.20),
+                                                Transform.scale(
+                                                  scale: 1.2,
+                                                  child: Switch(
+                                                      activeColor:
+                                                      Colors.orange,
+                                                      thumbColor:
+                                                      MaterialStateProperty
+                                                          .all(Colors
+                                                          .orange),
+                                                      value:
+                                                      bathRoomStatus,
+                                                      onChanged:
+                                                          (bool value) {
+                                                        setState(() {
+                                                          bathRoomStatus =
+                                                              value;
+                                                          if(bathRoomStatus == true){
+                                                            statusInt = 1;
+                                                          }
+                                                          else{
+                                                            statusInt = 0;
+                                                          }
+
+                                                          toggleButton(index, statusInt);
+                                                        });
+                                                      }),
+                                                )
                                               ],
                                             )
                                                 : name[index]
@@ -1940,605 +1840,478 @@ class _FirstPageState extends State<FirstPage> with AutomaticKeepAliveClientMixi
                                                 .contains(
                                                 "Bedroom_1")
                                                 ? Row(
-                                              crossAxisAlignment:
-                                              CrossAxisAlignment
-                                                  .start,
-                                              mainAxisAlignment:
-                                              MainAxisAlignment
-                                                  .spaceBetween,
+                                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                                               children: [
                                                 Column(
                                                   mainAxisAlignment:
                                                   MainAxisAlignment
-                                                      .center,
+                                                      .end,
                                                   crossAxisAlignment:
                                                   CrossAxisAlignment
                                                       .start,
                                                   children: [
-                                                    Image.asset(
-                                                      "images/chair.png",
-                                                      width:
-                                                      width * 0.2,
-                                                      height: height *
-                                                          0.1,
-                                                    ),
-                                                    Text(name[index].toString()),
-                                                    Text(
-                                                      "6 devices",
-                                                      style: TextStyle(
-                                                          color: Colors
-                                                              .black,
-                                                          fontWeight:
-                                                          FontWeight
-                                                              .w900,
-                                                          fontSize:
-                                                          height *
-                                                              0.012),
-                                                    )
-                                                  ],
-                                                ),SizedBox(
-                                                  width: width*0.50,
-                                                ),
-                                                Switch(
-                                                    activeColor:
-                                                    Colors.orange,
-                                                    thumbColor:
-                                                    MaterialStateProperty
-                                                        .all(Colors
-                                                        .orange),
-                                                    value:
-                                                    bedRoom1Status,
-                                                    onChanged:
-                                                        (bool value) {
-                                                      setState(() {
-                                                        bedRoom1Status =
-                                                            value;
-                                                        if(bedRoom1Status == true){
-                                                          statusInt = 1;
-                                                        }
-                                                        else{
-                                                          statusInt = 0;
-                                                        }
+                                                    Text("${name[index].toString().replaceAll("_"," ")}",
+                                                      style: TextStyle(color: Colors.white,fontSize: height*0.025,fontWeight: FontWeight.w900),),
 
-                                                        toggleButton(index, statusInt);
-                                                      });
-                                                    })
+                                                  ],
+                                                ),
+                                                ((name[index].toString().length)>13)?SizedBox(width: width*0.15,):
+                                                ((name[index].toString().length)>=9)?SizedBox(width: width*0.25,):
+                                                ((name[index].toString().length)<=4)? SizedBox(width: width*0.50,)
+                                                    :((name[index].toString().length)<=8)? SizedBox(width: width*0.35,)
+                                                    :SizedBox(width: width*0.20),
+                                                Transform.scale(
+                                                  scale: 1.2,
+                                                  child: Switch(
+                                                      activeColor:
+                                                      Colors.orange,
+                                                      thumbColor:
+                                                      MaterialStateProperty
+                                                          .all(Colors
+                                                          .orange),
+                                                      value:
+                                                      bedRoom1Status,
+                                                      onChanged:
+                                                          (bool value) {
+                                                        setState(() {
+                                                          bedRoom1Status =
+                                                              value;
+                                                          if(bedRoom1Status == true){
+                                                            statusInt = 1;
+                                                          }
+                                                          else{
+                                                            statusInt = 0;
+                                                          }
+
+                                                          toggleButton(index, statusInt);
+                                                        });
+                                                      }),
+                                                )
                                               ],
                                             )
                                                 : name[index].toString().contains("Bedroom_2")
                                                 ? Row(
-                                              crossAxisAlignment:
-                                              CrossAxisAlignment
-                                                  .start,
-                                              mainAxisAlignment:
-                                              MainAxisAlignment
-                                                  .spaceBetween,
+                                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                                               children: [
                                                 Column(
                                                   mainAxisAlignment:
                                                   MainAxisAlignment
-                                                      .center,
+                                                      .end,
                                                   crossAxisAlignment:
                                                   CrossAxisAlignment
                                                       .start,
                                                   children: [
-                                                    Image.asset(
-                                                      "images/chair.png",
-                                                      width:
-                                                      width * 0.2,
-                                                      height: height *
-                                                          0.1,
-                                                    ),
-                                                    Text(name[index].toString()),
-                                                    Text(
-                                                      "6 devices",
-                                                      style: TextStyle(
-                                                          color: Colors
-                                                              .black,
-                                                          fontWeight:
-                                                          FontWeight
-                                                              .w900,
-                                                          fontSize:
-                                                          height *
-                                                              0.012),
-                                                    )
-                                                  ],
-                                                ),SizedBox(
-                                                  width: width*0.50,
-                                                ),
-                                                Switch(
-                                                    activeColor:
-                                                    Colors.orange,
-                                                    thumbColor:
-                                                    MaterialStateProperty
-                                                        .all(Colors
-                                                        .orange),
-                                                    value:
-                                                    bedRoom2Status,
-                                                    onChanged:
-                                                        (bool value) {
-                                                      setState(() {
-                                                        bedRoom2Status =
-                                                            value;
-                                                        if(bedRoom2Status == true){
-                                                          statusInt = 1;
-                                                        }
-                                                        else{
-                                                          statusInt = 0;
-                                                        }
 
-                                                        toggleButton(index, statusInt);
-                                                      });
-                                                    })
+                                                    Text("${name[index].toString().replaceAll("_"," ")}",
+                                                      style: TextStyle(color: Colors.white,fontSize: height*0.025,fontWeight: FontWeight.w900),),
+
+                                                  ],
+                                                ),
+                                                ((name[index].toString().length)>13)?SizedBox(width: width*0.15,):
+                                                ((name[index].toString().length)>=9)?SizedBox(width: width*0.25,):
+                                                ((name[index].toString().length)<=4)? SizedBox(width: width*0.50,)
+                                                    :((name[index].toString().length)<=8)? SizedBox(width: width*0.35,)
+                                                    :SizedBox(width: width*0.20),
+                                                Transform.scale(
+                                                  scale: 1.2,
+                                                  child: Switch(
+                                                      activeColor:
+                                                      Colors.orange,
+                                                      thumbColor:
+                                                      MaterialStateProperty
+                                                          .all(Colors
+                                                          .orange),
+                                                      value:
+                                                      bedRoom2Status,
+                                                      onChanged:
+                                                          (bool value) {
+                                                        setState(() {
+                                                          bedRoom2Status =
+                                                              value;
+                                                          if(bedRoom2Status == true){
+                                                            statusInt = 1;
+                                                          }
+                                                          else{
+                                                            statusInt = 0;
+                                                          }
+
+                                                          toggleButton(index, statusInt);
+                                                        });
+                                                      }),
+                                                )
                                               ],
                                             )
                                                 : name[index].toString().contains("Master_Bedroom")
                                                 ? Row(
-                                              crossAxisAlignment:
-                                              CrossAxisAlignment
-                                                  .start,
-                                              mainAxisAlignment:
-                                              MainAxisAlignment
-                                                  .spaceBetween,
+                                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                                               children: [
                                                 Column(
                                                   mainAxisAlignment:
                                                   MainAxisAlignment
-                                                      .center,
+                                                      .end,
                                                   crossAxisAlignment:
                                                   CrossAxisAlignment
                                                       .start,
                                                   children: [
-                                                    Image.asset(
-                                                      "images/chair.png",
-                                                      width:
-                                                      width * 0.2,
-                                                      height: height *
-                                                          0.1,
-                                                    ),
-                                                    Text(name[index].toString()),
-                                                    Text(
-                                                      "6 devices",
-                                                      style: TextStyle(
-                                                          color: Colors
-                                                              .black,
-                                                          fontWeight:
-                                                          FontWeight
-                                                              .w900,
-                                                          fontSize:
-                                                          height *
-                                                              0.012),
-                                                    )
-                                                  ],
-                                                ),SizedBox(
-                                                  width: width*0.40,
-                                                ),
-                                                Switch(
-                                                    activeColor:
-                                                    Colors.orange,
-                                                    thumbColor:
-                                                    MaterialStateProperty
-                                                        .all(Colors
-                                                        .orange),
-                                                    value:
-                                                    masterBedStatus,
-                                                    onChanged:
-                                                        (bool value) {
-                                                      setState(() {
-                                                        masterBedStatus =
-                                                            value;
-                                                        if(masterBedStatus == true){
-                                                          statusInt = 1;
-                                                        }
-                                                        else{
-                                                          statusInt = 0;
-                                                        }
 
-                                                        toggleButton(index, statusInt);
-                                                      });
-                                                    })
+                                                    Text("${name[index].toString().replaceAll("_"," ")}",
+                                                      style: TextStyle(color: Colors.white,fontSize: height*0.025,fontWeight: FontWeight.w900),),
+
+                                                  ],
+                                                ),
+                                                ((name[index].toString().length)>13)?SizedBox(width: width*0.15,):
+                                                ((name[index].toString().length)>=9)?SizedBox(width: width*0.25,):
+                                                ((name[index].toString().length)<=4)? SizedBox(width: width*0.50,)
+                                                    :((name[index].toString().length)<=8)? SizedBox(width: width*0.35,)
+                                                    :SizedBox(width: width*0.20),
+                                                Transform.scale(
+                                                  scale: 1.2,
+                                                  child: Switch(
+                                                      activeColor:
+                                                      Colors.orange,
+                                                      thumbColor:
+                                                      MaterialStateProperty
+                                                          .all(Colors
+                                                          .orange),
+                                                      value:
+                                                      masterBedStatus,
+                                                      onChanged:
+                                                          (bool value) {
+                                                        setState(() {
+                                                          masterBedStatus =
+                                                              value;
+                                                          if(masterBedStatus == true){
+                                                            statusInt = 1;
+                                                          }
+                                                          else{
+                                                            statusInt = 0;
+                                                          }
+
+                                                          toggleButton(index, statusInt);
+                                                        });
+                                                      }),
+                                                )
                                               ],
                                             )
                                                 : name[index].toString().contains("Bedroom")
                                                 ? Row(
-                                              crossAxisAlignment:
-                                              CrossAxisAlignment
-                                                  .start,
-                                              mainAxisAlignment:
-                                              MainAxisAlignment
-                                                  .spaceBetween,
+                                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                                               children: [
                                                 Column(
                                                   mainAxisAlignment:
                                                   MainAxisAlignment
-                                                      .center,
+                                                      .end,
                                                   crossAxisAlignment:
                                                   CrossAxisAlignment
                                                       .start,
                                                   children: [
-                                                    Image.asset(
-                                                      "images/chair.png",
-                                                      width:
-                                                      width * 0.2,
-                                                      height: height *
-                                                          0.1,
-                                                    ),
-                                                    Text(name[index].toString()),
-                                                    Text(
-                                                      "6 devices",
-                                                      style: TextStyle(
-                                                          color: Colors
-                                                              .black,
-                                                          fontWeight:
-                                                          FontWeight
-                                                              .w900,
-                                                          fontSize:
-                                                          height *
-                                                              0.012),
-                                                    )
-                                                  ],
-                                                ),SizedBox(
-                                                  width: width*0.50,
-                                                ),
-                                                Switch(
-                                                    activeColor:
-                                                    Colors.orange,
-                                                    thumbColor:
-                                                    MaterialStateProperty
-                                                        .all(Colors
-                                                        .orange),
-                                                    value:
-                                                    bedRoomStatus,
-                                                    onChanged:
-                                                        (bool value) {
-                                                      setState(() {
-                                                        bedRoomStatus =
-                                                            value;
-                                                        if(bedRoomStatus == true){
-                                                          statusInt = 1;
-                                                        }
-                                                        else{
-                                                          statusInt = 0;
-                                                        }
 
-                                                        toggleButton(index, statusInt);
-                                                      });
-                                                    })
+                                                    Text("${name[index].toString().replaceAll("_"," ")}",
+                                                      style: TextStyle(color: Colors.white,fontSize: height*0.025,fontWeight: FontWeight.w900),),
+
+
+                                                  ],
+                                                ),
+                                                ((name[index].toString().length)>13)?SizedBox(width: width*0.15,):
+                                                ((name[index].toString().length)>=9)?SizedBox(width: width*0.25,):
+                                                ((name[index].toString().length)<=4)? SizedBox(width: width*0.450,)
+                                                    :((name[index].toString().length)<=8)? SizedBox(width: width*0.32,)
+                                                    :SizedBox(width: width*0.20),
+                                                Transform.scale(
+                                                  scale: 1.2,
+                                                  child: Switch(
+                                                      activeColor:
+                                                      Colors.orange,
+                                                      thumbColor:
+                                                      MaterialStateProperty
+                                                          .all(Colors
+                                                          .orange),
+                                                      value:
+                                                      bedRoomStatus,
+                                                      onChanged:
+                                                          (bool value) {
+                                                        setState(() {
+                                                          bedRoomStatus =
+                                                              value;
+                                                          if(bedRoomStatus == true){
+                                                            statusInt = 1;
+                                                          }
+                                                          else{
+                                                            statusInt = 0;
+                                                          }
+
+                                                          toggleButton(index, statusInt);
+                                                        });
+                                                      }),
+                                                )
                                               ],
                                             )
                                                 : name[index].toString().contains("Outside")
                                                 ? Row(
-                                              crossAxisAlignment:
-                                              CrossAxisAlignment
-                                                  .start,
-                                              mainAxisAlignment:
-                                              MainAxisAlignment
-                                                  .spaceBetween,
+                                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                                               children: [
                                                 Column(
                                                   mainAxisAlignment:
                                                   MainAxisAlignment
-                                                      .center,
+                                                      .end,
                                                   crossAxisAlignment:
                                                   CrossAxisAlignment
                                                       .start,
                                                   children: [
-                                                    Image.asset(
-                                                      "images/chair.png",
-                                                      width:
-                                                      width * 0.2,
-                                                      height: height *
-                                                          0.1,
-                                                    ),
-                                                    Text(name[index].toString()),
-                                                    Text(
-                                                      "6 devices",
-                                                      style: TextStyle(
-                                                          color: Colors
-                                                              .black,
-                                                          fontWeight:
-                                                          FontWeight
-                                                              .w900,
-                                                          fontSize:
-                                                          height *
-                                                              0.012),
-                                                    )
-                                                  ],
-                                                ),SizedBox(
-                                                  width: width*0.50,
-                                                ),
-                                                Switch(
-                                                    activeColor:
-                                                    Colors.orange,
-                                                    thumbColor:
-                                                    MaterialStateProperty
-                                                        .all(Colors
-                                                        .orange),
-                                                    value:
-                                                    outSideStatus,
-                                                    onChanged:
-                                                        (bool value) {
-                                                      setState(() {
-                                                        outSideStatus =
-                                                            value;
-                                                        if(outSideStatus == true){
-                                                          statusInt = 1;
-                                                        }
-                                                        else{
-                                                          statusInt = 0;
-                                                        }
 
-                                                        toggleButton(index, statusInt);
-                                                      });
-                                                    })
+                                                    Text("${name[index].toString().replaceAll("_"," ")}",
+                                                      style: TextStyle(color: Colors.white,fontSize: height*0.025,fontWeight: FontWeight.w900),),
+
+
+                                                  ],
+                                                ),
+                                                ((name[index].toString().length)>13)?SizedBox(width: width*0.15,):
+                                                ((name[index].toString().length)>=9)?SizedBox(width: width*0.25,):
+                                                ((name[index].toString().length)<=4)? SizedBox(width: width*0.450,)
+                                                    :((name[index].toString().length)<=8)? SizedBox(width: width*0.32,)
+                                                    :SizedBox(width: width*0.20),
+                                                Transform.scale(
+                                                  scale: 1.2,
+                                                  child: Switch(
+                                                      activeColor:
+                                                      Colors.orange,
+                                                      thumbColor:
+                                                      MaterialStateProperty
+                                                          .all(Colors
+                                                          .orange),
+                                                      value:
+                                                      outSideStatus,
+                                                      onChanged:
+                                                          (bool value) {
+                                                        setState(() {
+                                                          outSideStatus =
+                                                              value;
+                                                          if(outSideStatus == true){
+                                                            statusInt = 1;
+                                                          }
+                                                          else{
+                                                            statusInt = 0;
+                                                          }
+
+                                                          toggleButton(index, statusInt);
+                                                        });
+                                                      }),
+                                                )
                                               ],
                                             )
                                                 : name[index].toString().contains("Garden")
                                                 ? Row(
-                                              crossAxisAlignment:
-                                              CrossAxisAlignment
-                                                  .start,
-                                              mainAxisAlignment:
-                                              MainAxisAlignment
-                                                  .spaceBetween,
+                                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                                               children: [
                                                 Column(
                                                   mainAxisAlignment:
                                                   MainAxisAlignment
-                                                      .center,
+                                                      .end,
                                                   crossAxisAlignment:
                                                   CrossAxisAlignment
                                                       .start,
                                                   children: [
-                                                    Image.asset(
-                                                      "images/chair.png",
-                                                      width:
-                                                      width * 0.2,
-                                                      height: height *
-                                                          0.1,
-                                                    ),
-                                                    Text(name[index].toString()),
-                                                    Text(
-                                                      "6 devices",
-                                                      style: TextStyle(
-                                                          color: Colors
-                                                              .black,
-                                                          fontWeight:
-                                                          FontWeight
-                                                              .w900,
-                                                          fontSize:
-                                                          height *
-                                                              0.012),
-                                                    )
-                                                  ],
-                                                ),SizedBox(
-                                                  width: width*0.50,
-                                                ),
-                                                Switch(
-                                                    activeColor:
-                                                    Colors.orange,
-                                                    thumbColor:
-                                                    MaterialStateProperty
-                                                        .all(Colors
-                                                        .orange),
-                                                    value:
-                                                    gardenStatus,
-                                                    onChanged:
-                                                        (bool value) {
-                                                      setState(() {
-                                                        gardenStatus =
-                                                            value;
-                                                        if(gardenStatus == true){
-                                                          statusInt = 1;
-                                                        }
-                                                        else{
-                                                          statusInt = 0;
-                                                        }
 
-                                                        toggleButton(index, statusInt);
-                                                      });
-                                                    })
+
+                                                    Text("${name[index].toString().replaceAll("_"," ")}",
+                                                      style: TextStyle(color: Colors.white,fontSize: height*0.025,fontWeight: FontWeight.w900),),
+
+
+
+                                                  ],
+                                                ),
+                                                ((name[index].toString().length)>13)?SizedBox(width: width*0.15,):
+                                                ((name[index].toString().length)>=9)?SizedBox(width: width*0.25,):
+                                                ((name[index].toString().length)<=4)? SizedBox(width: width*0.450,)
+                                                    :((name[index].toString().length)<=8)? SizedBox(width: width*0.32,)
+                                                    :SizedBox(width: width*0.20),
+                                                Transform.scale(
+                                                  scale: 1.2,
+                                                  child: Switch(
+                                                      activeColor:
+                                                      Colors.orange,
+                                                      thumbColor:
+                                                      MaterialStateProperty
+                                                          .all(Colors
+                                                          .orange),
+                                                      value:
+                                                      gardenStatus,
+                                                      onChanged:
+                                                          (bool value) {
+                                                        setState(() {
+                                                          gardenStatus =
+                                                              value;
+                                                          if(gardenStatus == true){
+                                                            statusInt = 1;
+                                                          }
+                                                          else{
+                                                            statusInt = 0;
+                                                          }
+
+                                                          toggleButton(index, statusInt);
+                                                        });
+                                                      }),
+                                                )
                                               ],
                                             )
                                                 : name[index].toString().contains("Parking")
                                                 ? Row(
-                                              crossAxisAlignment:
-                                              CrossAxisAlignment
-                                                  .start,
-                                              mainAxisAlignment:
-                                              MainAxisAlignment
-                                                  .spaceBetween,
+                                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                                               children: [
                                                 Column(
                                                   mainAxisAlignment:
                                                   MainAxisAlignment
-                                                      .center,
+                                                      .end,
                                                   crossAxisAlignment:
                                                   CrossAxisAlignment
                                                       .start,
                                                   children: [
-                                                    Image.asset(
-                                                      "images/chair.png",
-                                                      width:
-                                                      width * 0.2,
-                                                      height: height *
-                                                          0.1,
-                                                    ),
-                                                    Text(name[index].toString()),
-                                                    Text(
-                                                      "6 devices",
-                                                      style: TextStyle(
-                                                          color: Colors
-                                                              .black,
-                                                          fontWeight:
-                                                          FontWeight
-                                                              .w900,
-                                                          fontSize:
-                                                          height *
-                                                              0.012),
-                                                    )
-                                                  ],
-                                                ),SizedBox(
-                                                  width: width*0.50,
-                                                ),
-                                                Switch(
-                                                    activeColor:
-                                                    Colors.orange,
-                                                    thumbColor:
-                                                    MaterialStateProperty
-                                                        .all(Colors
-                                                        .orange),
-                                                    value:
-                                                    parkingStatus,
-                                                    onChanged:
-                                                        (bool value) {
-                                                      setState(() {
-                                                        parkingStatus =
-                                                            value;
-                                                        if(parkingStatus == true){
-                                                          statusInt = 1;
-                                                        }
-                                                        else{
-                                                          statusInt = 0;
-                                                        }
 
-                                                        toggleButton(index, statusInt);
-                                                      });
-                                                    })
+
+                                                    Text("${name[index].toString().replaceAll("_"," ")}",
+                                                      style: TextStyle(color: Colors.white,fontSize: height*0.025,fontWeight: FontWeight.w900),),
+
+
+                                                  ],
+                                                ),
+                                                ((name[index].toString().length)>13)?SizedBox(width: width*0.15,):
+                                                ((name[index].toString().length)>=9)?SizedBox(width: width*0.25,):
+                                                ((name[index].toString().length)<=4)? SizedBox(width: width*0.450,)
+                                                    :((name[index].toString().length)<=8)? SizedBox(width: width*0.32,)
+                                                    :SizedBox(width: width*0.20),
+                                                Transform.scale(
+                                                    scale: 1.2,
+                                                  child: Switch(
+                                                      activeColor:
+                                                      Colors.orange,
+                                                      thumbColor:
+                                                      MaterialStateProperty
+                                                          .all(Colors
+                                                          .orange),
+                                                      value:
+                                                      parkingStatus,
+                                                      onChanged:
+                                                          (bool value) {
+                                                        setState(() {
+                                                          parkingStatus =
+                                                              value;
+                                                          if(parkingStatus == true){
+                                                            statusInt = 1;
+                                                          }
+                                                          else{
+                                                            statusInt = 0;
+                                                          }
+
+                                                          toggleButton(index, statusInt);
+                                                        });
+                                                      }),
+                                                )
                                               ],
                                             )
                                                 : name[index].toString().contains("Living_Room")
                                                 ? Row(
-                                              crossAxisAlignment:
-                                              CrossAxisAlignment
-                                                  .start,
-                                              mainAxisAlignment:
-                                              MainAxisAlignment
-                                                  .spaceBetween,
+                                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                                               children: [
                                                 Column(
                                                   mainAxisAlignment:
                                                   MainAxisAlignment
-                                                      .center,
+                                                      .end,
                                                   crossAxisAlignment:
                                                   CrossAxisAlignment
                                                       .start,
                                                   children: [
-                                                    Image.asset(
-                                                      "images/chair.png",
-                                                      width:
-                                                      width * 0.2,
-                                                      height: height *
-                                                          0.1,
-                                                    ),
-                                                    Text(name[index].toString()),
-                                                    Text(
-                                                      "6 devices",
-                                                      style: TextStyle(
-                                                          color: Colors
-                                                              .black,
-                                                          fontWeight:
-                                                          FontWeight
-                                                              .w900,
-                                                          fontSize:
-                                                          height *
-                                                              0.012),
-                                                    )
-                                                  ],
-                                                ),SizedBox(
-                                                  width: width*0.50,
-                                                ),
-                                                Switch(
-                                                    activeColor:
-                                                    Colors.orange,
-                                                    thumbColor:
-                                                    MaterialStateProperty
-                                                        .all(Colors
-                                                        .orange),
-                                                    value:
-                                                    livingStatus,
-                                                    onChanged:
-                                                        (bool value) {
-                                                      setState(() {
-                                                        livingStatus =
-                                                            value;
-                                                        if(livingStatus == true){
-                                                          statusInt = 1;
-                                                        }
-                                                        else{
-                                                          statusInt = 0;
-                                                        }
 
-                                                        toggleButton(index, statusInt);
-                                                      });
-                                                    })
+                                                    Text("${name[index].toString().replaceAll("_"," ")}",
+                                                      style: TextStyle(color: Colors.white,fontSize: height*0.025,fontWeight: FontWeight.w900),),
+
+
+                                                  ],
+                                                ),
+                                                ((name[index].toString().length)>13)?SizedBox(width: width*0.15,):
+                                                ((name[index].toString().length)>=9)?SizedBox(width: width*0.25,):
+                                                ((name[index].toString().length)<=4)? SizedBox(width: width*0.45,)
+                                                    :((name[index].toString().length)<=8)? SizedBox(width: width*0.32,)
+                                                    :SizedBox(width: width*0.20),
+                                                Transform.scale(
+                                                  scale: 1.2,
+                                                  child: Switch(
+                                                      activeColor:
+                                                      Colors.orange,
+                                                      thumbColor:
+                                                      MaterialStateProperty
+                                                          .all(Colors
+                                                          .orange),
+                                                      value:
+                                                      livingStatus,
+                                                      onChanged:
+                                                          (bool value) {
+                                                        setState(() {
+                                                          livingStatus =
+                                                              value;
+                                                          if(livingStatus == true){
+                                                            statusInt = 1;
+                                                          }
+                                                          else{
+                                                            statusInt = 0;
+                                                          }
+
+                                                          toggleButton(index, statusInt);
+                                                        });
+                                                      }),
+                                                )
                                               ],
                                             )
                                                 : name[index].toString().contains("Store_Room")
                                                 ? Row(
-                                              crossAxisAlignment:
-                                              CrossAxisAlignment
-                                                  .start,
-                                              mainAxisAlignment:
-                                              MainAxisAlignment
-                                                  .spaceBetween,
+                                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                                               children: [
                                                 Column(
                                                   mainAxisAlignment:
                                                   MainAxisAlignment
-                                                      .center,
+                                                      .end,
                                                   crossAxisAlignment:
                                                   CrossAxisAlignment
                                                       .start,
                                                   children: [
-                                                    Image.asset(
-                                                      "images/chair.png",
-                                                      width:
-                                                      width * 0.2,
-                                                      height: height *
-                                                          0.1,
-                                                    ),
-                                                    Text(name[index].toString()),
-                                                    Text(
-                                                      "6 devices",
-                                                      style: TextStyle(
-                                                          color: Colors
-                                                              .black,
-                                                          fontWeight:
-                                                          FontWeight
-                                                              .w900,
-                                                          fontSize:
-                                                          height *
-                                                              0.012),
-                                                    )
-                                                  ],
-                                                ),SizedBox(
-                                                  width: width*0.50,
-                                                ),
-                                                Switch(
-                                                    activeColor:
-                                                    Colors.orange,
-                                                    thumbColor:
-                                                    MaterialStateProperty
-                                                        .all(Colors
-                                                        .orange),
-                                                    value:
-                                                    storeStatus,
-                                                    onChanged:
-                                                        (bool value) {
-                                                      setState(() {
-                                                        storeStatus =
-                                                            value;
-                                                        if(storeStatus == true){
-                                                          statusInt = 1;
-                                                        }
-                                                        else{
-                                                          statusInt = 0;
-                                                        }
 
-                                                        toggleButton(index, statusInt);
-                                                      });
-                                                    })
+                                                    Text("${name[index].toString().replaceAll("_"," ")}",
+                                                      style: TextStyle(color: Colors.white,fontSize: height*0.025,fontWeight: FontWeight.w900),),
+
+
+                                                  ],
+                                                ),
+                                                ((name[index].toString().length)>13)?SizedBox(width: width*0.15,):
+                                                ((name[index].toString().length)>=9)?SizedBox(width: width*0.25,):
+                                                ((name[index].toString().length)<=4)? SizedBox(width: width*0.45,)
+                                                    :((name[index].toString().length)<=8)? SizedBox(width: width*0.32,)
+                                                    :SizedBox(width: width*0.20),
+                                                Transform.scale(
+                                                  scale: 1.2,
+                                                  child: Switch(
+                                                      activeColor:
+                                                      Colors.orange,
+                                                      thumbColor:
+                                                      MaterialStateProperty
+                                                          .all(Colors
+                                                          .orange),
+                                                      value:
+                                                      storeStatus,
+                                                      onChanged:
+                                                          (bool value) {
+                                                        setState(() {
+                                                          storeStatus =
+                                                              value;
+                                                          if(storeStatus == true){
+                                                            statusInt = 1;
+                                                          }
+                                                          else{
+                                                            statusInt = 0;
+                                                          }
+
+                                                          toggleButton(index, statusInt);
+                                                        });
+                                                      }),
+                                                )
                                               ],
                                             )
                                                 : Container(),

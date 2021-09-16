@@ -450,10 +450,26 @@ class _ButtonState extends State<Button> {
   List pg = [];
   bool check;
   String local_ip;
+  String ip;
+
+  SharedPreferences loginData;
+
 
   Future get_name() async {
+    loginData = await SharedPreferences.getInstance();
+    local_ip = widget.ipAddress;
+    print("$local_ip ========");
 
-    final response = await http.get(Uri.http('192.168.1.18:8000', "/key"));
+    loginData.setString('ip', local_ip);
+
+      setState(() {
+        ip = loginData.getString('ip');
+        print("$ip --------------");
+      }
+      );
+
+
+    final response = await http.get(Uri.http('$ip', "/key"));
 
     var fetchdata = jsonDecode(response.body);
     if (response.statusCode == 200) {
@@ -553,11 +569,11 @@ class _ButtonState extends State<Button> {
             itemCount: pg.length,
             itemBuilder: (context, index) {
               if (index == 0) {
-                return Pages(name[widget.ind].toString(), widget.g1,widget.ind);
+                return Pages(name[widget.ind].toString(), widget.g1,widget.ind,ip);
               } else if (index == widget.ind) {
-                return Pages(name[0].toString(), widget.g1,widget.ind);
+                return Pages(name[0].toString(), widget.g1,widget.ind,ip);
               } else {
-                return Pages(name[index].toString(), widget.g1,widget.ind);
+                return Pages(name[index].toString(), widget.g1,widget.ind,ip);
               }
             }),
       ),
@@ -569,7 +585,8 @@ class Pages extends StatefulWidget {
   String room_name;
   int index;
   Gradient g1;
-  Pages(this.room_name, this.g1,this.index);
+  String local_ip;
+  Pages(this.room_name, this.g1,this.index,this.local_ip);
   @override
   _PagesState createState() => _PagesState();
 }
@@ -1038,19 +1055,28 @@ class _PagesState extends State<Pages> with WidgetsBindingObserver {
                   )))));
     }
   }
+  SharedPreferences loginData;
+  String ip;
+
+
+  void initial() async {
+    local_ip = widget.local_ip;
+    loginData = await SharedPreferences.getInstance();
+    setState(() {
+      loginData.setString('ip', local_ip);
+      ip = loginData.getString('ip');
+    });
+  }
+
 
   Future<http.Response> update_value(button, button_value, i) async {
-    String ip;
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    setState(() {
-      ip = prefs.get('ip');
-    });
+
     final response =
-    await http.get(Uri.http("192.168.1.18:8000", "/$button/$button_value"));
+    await http.get(Uri.http("$ip", "/$button/$button_value"));
     if (response.statusCode == 200) {
       result = true;
       // print("response 1 : ${response.body}");
-      if (response.body != "success") ;
+      if (response.body != "success");
       // _showScaffold("Update Failed, Please check server or internet connection and retry");
     } else {
       if ((data_value[0][i] == 0) || (data_value[0][i] == "0")) {
@@ -1073,12 +1099,8 @@ class _PagesState extends State<Pages> with WidgetsBindingObserver {
   }
 
   Future<http.Response> call() async {
-    String ip;
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    setState(() {
-      ip = prefs.get('ip');
-    });
-    final response = await http.get(Uri.http("192.168.1.18:8000", "/key"));
+
+    final response = await http.get(Uri.http("$ip", "/key"));
     if (response.statusCode == 200) {
       // print("response: ${response.statusCode}");
       setState(() {
@@ -1103,13 +1125,9 @@ class _PagesState extends State<Pages> with WidgetsBindingObserver {
   }
 
   Future<bool> call_value() async {
-    String ip;
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    setState(() {
-      ip = prefs.get('ip');
-    });
 
-    final response = await http.get(Uri.http("192.168.1.18:8000", "/value"));
+
+    final response = await http.get(Uri.http("$ip", "/value"));
 
     if (response.statusCode == 200) {
       // print("response: ${response.statusCode}");
@@ -1165,15 +1183,11 @@ class _PagesState extends State<Pages> with WidgetsBindingObserver {
   List pg = [];
   String button_name;
   String local_ip;
-  Future get_name() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    setState(() {
-      local_ip = prefs.get('ip');
-    });
 
+  Future get_name() async {
     //final response = await http.get('http://34.83.46.202.xip.io/cyberhome/home.php?username=${widget.email}&query=table');
     //final response = await http.get('http://$local_ip/key/');
-    final response = await http.get(Uri.http("192.168.1.18:8000", "/key"));
+    final response = await http.get(Uri.http("$ip", "/key"));
 
     var fetchdata = jsonDecode(response.body);
     if (response.statusCode == 200) {
@@ -1265,6 +1279,7 @@ class _PagesState extends State<Pages> with WidgetsBindingObserver {
 
   @override
   void initState() {
+    initial();
     get_name();
     // print("mood check ${widget.isDark}");
     check().then((intenet) {
@@ -1460,7 +1475,7 @@ class _PagesState extends State<Pages> with WidgetsBindingObserver {
                           0.9
                         ])),
                 child: Container(
-                  height: height * 0.55,
+                  height: height * 0.54,
                   width: width * 1.0,
                   decoration: BoxDecoration(
                       image: DecorationImage(
@@ -1469,67 +1484,75 @@ class _PagesState extends State<Pages> with WidgetsBindingObserver {
                               BlendMode.dstATop),
                           image: ((widget.room_name.toString().replaceAll("_", " ") == "Hall"))
                               ? AssetImage(
-                            "images/fur.jpg",
+                            "images/room/hall.png",
                           )
                               : ((widget.room_name.toString().replaceAll("_", " ") == "Admin Room"))
                               ? AssetImage(
-                            "images/fur.jpg",
+                            "images/room/admin room.png",
                           ) : ((widget.room_name.toString().replaceAll("_", " ") == "Garage"))
                               ? AssetImage(
-                            "images/guest.png",
+                            "images/room/garage.png",
                           )
                               : ((widget.room_name.toString().replaceAll("_", " ") == "Kitchen"))
                               ? AssetImage(
-                            "images/kitchen.png",
+                            "images/room/kitchen.png",
                           )
-                              : ((widget.room_name.toString().replaceAll("_", " ") == "Bathroom"))
+                              : ((widget.room_name.toString().replaceAll("_", " ") == "Bathroom 1"))
                               ? AssetImage(
-                            "images/bathroom.png",
+                            "images/room/bathroom 1.png",
+                          ): ((widget.room_name.toString().replaceAll("_", " ") == "Bathroom 2"))
+                              ? AssetImage(
+                            "images/room/bathroom 2.png",
                           )
                               : ((widget.room_name.toString().replaceAll("_", " ") ==  "Bedroom_1"))
                               ? AssetImage(
-                            "images/bedroom.png",
+                            "images/room/bedroom 1.png",
                           )
                               : ((widget.room_name.toString().replaceAll("_", " ") ==  "Bedroom_2"))
                               ? AssetImage(
-                            "images/bedroom.png",
+                            "images/room/bedroom 2.png",
                           )
                               : ((widget.room_name.toString().replaceAll("_", " ") ==  "Master Bedroom"))
                               ? AssetImage(
-                            "images/bedroom.png",
+                            "images/room/master bedroom.png",
                           )
                               : ((widget.room_name.toString().replaceAll("_", " ") ==  "Bedroom"))
                               ? AssetImage(
-                            "images/bedroom.png",
+                            "images/room/bedroom 2.png",
+                          )
+                              : ((widget.room_name.toString().replaceAll("_", " ") ==  "Kids_Room"))
+                              ? AssetImage(
+                            "images/room/kids bedroom.png",
                           )
                               : ((widget.room_name.toString().replaceAll("_", " ") ==  "Outside"))
                               ? AssetImage(
-                            "images/fur.jpg",
+                            "images/room/outside.png",
                           )
                               : ((widget.room_name.toString().replaceAll("_", " ") ==  "Garden"))
                               ? AssetImage(
-                            "images/fur.jpg",
+                            "images/room/garden.png",
                           )
                               : ((widget.room_name.toString().replaceAll("_", " ") ==  "Parking"))
                               ? AssetImage(
-                            "images/fur.jpg",
+                            "images/room/parking.png",
                           )
                               : ((widget.room_name.toString().replaceAll("_", " ") ==  "Living_Room"))
                               ? AssetImage(
-                            "images/fur.jpg",
+                            "images/room/living room.png",
 
                           )
                               : ((widget.room_name.toString().replaceAll("_", " ") ==  "Store_Room"))
                               ? AssetImage(
-                            "images/fur.jpg",
+                            "images/room/store room.png",
                           )
                               : AssetImage(""),
-                          fit: BoxFit.fill)),
+                          fit: BoxFit.fill)
+                  ),
                 ),
               ),
               Container(
                 padding: EdgeInsets.symmetric(horizontal: 40.0),
-                height: height * 0.4175,
+                height: height * 0.428,
                 width: width * 1.0,
                 decoration: BoxDecoration(
                     gradient: LinearGradient(
@@ -1566,7 +1589,7 @@ class _PagesState extends State<Pages> with WidgetsBindingObserver {
                   ),
 
                   Container(
-                    padding: EdgeInsets.symmetric(horizontal: 20.0),
+                    padding: EdgeInsets.symmetric(horizontal: 10.0),
                     height: height * 1.0,
                     width: width * 1.0,
                     color: Colors.transparent,
