@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
+// import 'package:onwords_home/demo/demo_home_page.dart';
 import 'package:onwords_home/log_ins/installation_page.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../home_page.dart';
@@ -310,9 +311,44 @@ class _LoginPageState extends State<LoginPage> {
                   height: height * 0.030,
                 ),
                 GestureDetector(
-                  onTap: () {
-                    Navigator.push(context,
-                        MaterialPageRoute(builder: (context) => HomePage()));
+                  onTap: () async {
+                    //print("$hasInternet inetrnet is available or not_____________________------------------");
+
+                    hasInternet = await InternetConnectionChecker().hasConnection;
+                    result = await Connectivity().checkConnectivity();
+
+                    //print("$hasInternet inetrnet is after pressing the button  ++++++++++++++");
+
+                    if(hasInternet) {
+                      try {
+                        await auth.signInWithEmailAndPassword(email: "demo@onwords.in",password: "123456");
+                        setState(() {
+                          loginData.setBool('login', false);
+                          loginData.setString('username', email.text);
+
+                          Navigator.pushReplacement(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) =>
+                                      InstallationPage()));
+                          // loginState = "logedin succesfully";
+                          // print(
+                          //     "curent user = ${Firebase.auth.UserProfile}");
+                        });
+                      } catch (e) {
+                        setState(() {
+                          loginState = "Acess denied";
+                        });
+                      }
+                    }
+                    else{
+                      showSimpleNotification(
+                        Text("No Network",
+                          style: TextStyle(color: Colors.white),),
+                        background: Colors.red,
+                      );
+                    }
+
                   },
                   child: Container(
                     height: height * 0.070,

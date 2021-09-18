@@ -42,7 +42,7 @@ class _FirstPageState extends State<FirstPage> with AutomaticKeepAliveClientMixi
         Colors.grey[800],
       ]);
 
-
+  var dataJson;
   void initial() async {
     logindata = await SharedPreferences.getInstance();
     setState(() {
@@ -60,19 +60,20 @@ class _FirstPageState extends State<FirstPage> with AutomaticKeepAliveClientMixi
 
       // print('Data : ${snapshot.value}');
       // print("iam going to map ");
-      var dataJson = snapshot.value;
+
       // print("dataJson = $dataJson");
       // print(dataJson["name"]);
       // userName = dataJson["name"];
       // ipAddress= dataJson["ip"];
 
       setState(() {
-
+        dataJson = snapshot.value;
+        print(dataJson);
         userName = dataJson["name"];
-        ipAddress= dataJson["ip"];
+        ipAddress= dataJson["ip"].toString();
 
         // ip_local = loginData.setString('ip', ipAddress) as String ;
-        // print("$ipAddress --------");
+        print("$ipAddress --------");
       });
 
 
@@ -164,15 +165,95 @@ class _FirstPageState extends State<FirstPage> with AutomaticKeepAliveClientMixi
   bool first;
 
   Future get_name() async {
+    print("iam inside getname");
+    print(ipAddress);
+    if(ipAddress.toString().toLowerCase() != "false"){
+      print("iam using online json");
+      final response = await http.get(Uri.parse("http://$ipAddress/key",));
 
-    final response = await http.get(Uri.parse("http://$ipAddress/key",));
+      var fetchdata = jsonDecode(response.body);
+      if (response.statusCode == 200) {
+        // data = fetchdata;
 
-    var fetchdata = jsonDecode(response.body);
-    if (response.statusCode == 200) {
-     // data = fetchdata;
+        setState(() {
+          data = fetchdata;
 
+        });}
+
+
+      for (int i = 0; i < data.length; i++) {
+        if (data[i].toString().contains("_Admin_Room") &&
+            (!name.contains(data[i].toString().contains("Admin_Room")))) {
+          name.add("Admin_Room");
+          pg.add("Admin_Room");
+        } else if (data[i].toString().contains("_Hall") &&
+            (!name.contains(data[i].toString().contains("Hall")))) {
+          name.add("Hall");
+          pg.add("Hall");
+        } else if (data[i].toString().contains("Living_Room") &&
+            (!name.contains(data[i].toString().contains("Living_Room")))) {
+          name.add("Living_Room");
+          pg.add("Living_Room");
+        } else if (data[i].toString().contains("_Garage") &&
+            (!name.contains(data[i].toString().contains("Garage")))) {
+          name.add("Garage");
+          pg.add("Garage");
+        } else if (data[i].toString().contains("_Kitchen") &&
+            (!name.contains(data[i].toString().contains("Kitchen")))) {
+          name.add("Kitchen");
+          pg.add("Kitchen");
+        } else if (data[i].toString().contains("_Bathroom") &&
+            (!name.contains(data[i].toString().contains("Bathroom")))) {
+          name.add("Bathroom");
+          pg.add("Bathroom");
+        } else if (data[i].toString().contains("Master_Bedroom") &&
+            (!name.contains(data[i].toString().contains("Master_Bedroom")))) {
+          name.add("Master_Bedroom");
+          pg.add("Master_Bedroom");
+        } else if (data[i].toString().contains("_Bedroom") &&
+            (!name.contains(data[i].toString().contains("Bedroom")))) {
+          name.add("Bedroom");
+          pg.add("Bedroom");
+        } else if (data[i].toString().contains("_Bedroom1") &&
+            (!name.contains(data[i].toString().contains("Bedroom_1")))) {
+          name.add("Bedroom_1");
+          pg.add("Bedroom_1");
+        } else if (data[i].toString().contains("_Bedroom2") &&
+            (!name.contains(data[i].toString().contains("Bedroom_2")))) {
+          name.add("Bedroom_2");
+          pg.add("Bedroom_2");
+        } else if (data[i].toString().contains("_Store_Room") &&
+            (!name.contains(data[i].toString().contains("Store_Room")))) {
+          name.add("Store_Room");
+          pg.add("Store_Room");
+        } else if (data[i].toString().contains("_Outside") &&
+            (!name.contains(data[i].toString().contains("Outside")))) {
+          name.add("Outside");
+          pg.add("Outside");
+        } else if (data[i].toString().contains("_Parking") &&
+            (!name.contains(data[i].toString().contains("Parking")))) {
+          name.add("Parking");
+          pg.add("Parking");
+        } else if (data[i].toString().contains("_Outside") &&
+            (!name.contains(data[i].toString().contains("Outside")))) {
+          name.add("Outside");
+          pg.add("Outside");
+        } else if (data[i].toString().contains("_Garden") &&
+            (!name.contains(data[i].toString().contains("Garden")))) {
+          name.add("Garden");
+          pg.add("Garden");
+        }
+      }
+    }
+    else if(ipAddress.toLowerCase().toString() == "false"){
+      print("iam using online json");
       setState(() {
-        data = fetchdata;
+        // print(dataJson);
+        //data = jsonDecode(dataJson);
+        //
+        // data = dataJson;
+        data = dataJson.keys.toList();
+        print(data);
 
       });
 
@@ -239,6 +320,9 @@ class _FirstPageState extends State<FirstPage> with AutomaticKeepAliveClientMixi
           pg.add("Garden");
         }
       }
+    }
+    else{
+      print("iam stuck inside else");
     }
 
     // name = name.toSet().toList();
@@ -352,7 +436,7 @@ class _FirstPageState extends State<FirstPage> with AutomaticKeepAliveClientMixi
                             fontWeight: FontWeight.w900),
                       ),
                       Text(
-                        " Nikhil ",
+                        userName,
                         style: GoogleFonts.inter(
                             fontWeight: FontWeight.w300, color: Colors.white),
                       ),
