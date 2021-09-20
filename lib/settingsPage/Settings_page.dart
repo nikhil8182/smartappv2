@@ -244,6 +244,10 @@ class _DummySettingsPageState extends State<DummySettingsPage> {
                   ),
                 ),
               ),
+              SizedBox(
+                // height: 20.0,
+                height: height * 0.15,
+              ),
             ],
           ),
         ),

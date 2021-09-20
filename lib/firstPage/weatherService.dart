@@ -11,7 +11,6 @@ import 'package:http/http.dart'as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
 
-
 class GeoLocationPage extends StatefulWidget {
   @override
   _GeoLocationPageState createState() => _GeoLocationPageState();

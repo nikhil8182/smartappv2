@@ -420,6 +420,8 @@
 import 'dart:async';
 import 'dart:convert';
 import 'package:connectivity_plus/connectivity_plus.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -428,7 +430,9 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 
 
-
+FirebaseAuth auth = FirebaseAuth.instance;
+final databaseReference = FirebaseDatabase.instance.reference();
+var dataJson;
 
 class Button extends StatefulWidget {
 
@@ -456,25 +460,113 @@ class _ButtonState extends State<Button> {
 
 
   Future get_name() async {
+
+
+
     loginData = await SharedPreferences.getInstance();
     local_ip = widget.ipAddress;
     print("$local_ip ========");
 
     loginData.setString('ip', local_ip);
+    setState(() {
+      ip = loginData.getString('ip');
+      print("$ip --------------");
+    }
+    );
 
-      setState(() {
-        ip = loginData.getString('ip');
-        print("$ip --------------");
+    if (local_ip.toString().toLowerCase() != "false") {
+      print("iam using online json");
+
+      final response = await http.get(Uri.http('$ip', "/key"));
+
+      var fetchdata = jsonDecode(response.body);
+      if (response.statusCode == 200) {
+        setState(() {
+          data = fetchdata;
+        });
+
+        for (int i = 0; i < data.length; i++) {
+          if (data[i].toString().contains("_Admin_Room") &&
+              (!name.contains(data[i].toString().contains("Admin_Room")))) {
+            name.add("Admin_Room");
+            pg.add("Admin_Room");
+          } else if (data[i].toString().contains("_Hall") &&
+              (!name.contains(data[i].toString().contains("Hall")))) {
+            name.add("Hall");
+            pg.add("Hall");
+          } else if (data[i].toString().contains("Living_Room") &&
+              (!name.contains(data[i].toString().contains("Living_Room")))) {
+            name.add("Living_Room");
+            pg.add("Living_Room");
+          } else if (data[i].toString().contains("_Garage") &&
+              (!name.contains(data[i].toString().contains("Garage")))) {
+            name.add("Garage");
+            pg.add("Garage");
+          } else if (data[i].toString().contains("_Kitchen") &&
+              (!name.contains(data[i].toString().contains("Kitchen")))) {
+            name.add("Kitchen");
+            pg.add("Kitchen");
+          } else if (data[i].toString().contains("_Bathroom") &&
+              (!name.contains(data[i].toString().contains("Bathroom")))) {
+            name.add("Bathroom");
+            pg.add("Bathroom");
+          } else if (data[i].toString().contains("Master_Bedroom") &&
+              (!name.contains(data[i].toString().contains("Master_Bedroom")))) {
+            name.add("Master_Bedroom");
+            pg.add("Master_Bedroom");
+          } else if (data[i].toString().contains("_Bedroom") &&
+              (!name.contains(data[i].toString().contains("Bedroom")))) {
+            name.add("Bedroom");
+            pg.add("Bedroom");
+          } else if (data[i].toString().contains("_Bedroom1") &&
+              (!name.contains(data[i].toString().contains("Bedroom_1")))) {
+            name.add("Bedroom_1");
+            pg.add("Bedroom_1");
+          } else if (data[i].toString().contains("_Bedroom2") &&
+              (!name.contains(data[i].toString().contains("Bedroom_2")))) {
+            name.add("Bedroom_2");
+            pg.add("Bedroom_2");
+          } else if (data[i].toString().contains("_Store_Room") &&
+              (!name.contains(data[i].toString().contains("Store_Room")))) {
+            name.add("Store_Room");
+            pg.add("Store_Room");
+          } else if (data[i].toString().contains("_Outside") &&
+              (!name.contains(data[i].toString().contains("Outside")))) {
+            name.add("Outside");
+            pg.add("Outside");
+          } else if (data[i].toString().contains("_Parking") &&
+              (!name.contains(data[i].toString().contains("Parking")))) {
+            name.add("Parking");
+            pg.add("Parking");
+          } else if (data[i].toString().contains("_Outside") &&
+              (!name.contains(data[i].toString().contains("Outside")))) {
+            name.add("Outside");
+            pg.add("Outside");
+          } else if (data[i].toString().contains("_Garden") &&
+              (!name.contains(data[i].toString().contains("Garden")))) {
+            name.add("Garden");
+            pg.add("Garden");
+          }
+        }
       }
-      );
-
-
-    final response = await http.get(Uri.http('$ip', "/key"));
-
-    var fetchdata = jsonDecode(response.body);
-    if (response.statusCode == 200) {
+    }
+    else if(local_ip.toLowerCase().toString() == "false"){
+      print("iam using online json");
+      databaseReference.child(auth.currentUser.uid).once().then((DataSnapshot snapshot) async {
+        setState(() {
+          dataJson = snapshot.value;
+          //print(dataJson);
+        });
+      });
+      print("$dataJson");
       setState(() {
-        data = fetchdata;
+        // print(dataJson);
+        //data = jsonDecode(dataJson);
+        //
+        // data = dataJson;
+        data = dataJson.keys.toList();
+        print(data);
+
       });
 
       for (int i = 0; i < data.length; i++) {
@@ -498,11 +590,15 @@ class _ButtonState extends State<Button> {
             (!name.contains(data[i].toString().contains("Kitchen")))) {
           name.add("Kitchen");
           pg.add("Kitchen");
-        } else if (data[i].toString().contains("_Bathroom") &&
-            (!name.contains(data[i].toString().contains("Bathroom")))) {
-          name.add("Bathroom");
-          pg.add("Bathroom");
-        } else if (data[i].toString().contains("Master_Bedroom") &&
+        } else if (data[i].toString().contains("_Bathroom1") &&
+            (!name.contains(data[i].toString().contains("Bathroom1")))) {
+          name.add("Bathroom1");
+          pg.add("Bathroom1");
+        } else if (data[i].toString().contains("_Bathroom2") &&
+            (!name.contains(data[i].toString().contains("Bathroom2")))) {
+          name.add("Bathroom2");
+          pg.add("Bathroom2");
+        }else if (data[i].toString().contains("Master_Bedroom") &&
             (!name.contains(data[i].toString().contains("Master_Bedroom")))) {
           name.add("Master_Bedroom");
           pg.add("Master_Bedroom");
@@ -510,7 +606,7 @@ class _ButtonState extends State<Button> {
             (!name.contains(data[i].toString().contains("Bedroom")))) {
           name.add("Bedroom");
           pg.add("Bedroom");
-        } else if (data[i].toString().contains("_Bedroom1") &&
+        } else if (data[i].toString().contains("_Bedroom_1") &&
             (!name.contains(data[i].toString().contains("Bedroom_1")))) {
           name.add("Bedroom_1");
           pg.add("Bedroom_1");
@@ -541,13 +637,17 @@ class _ButtonState extends State<Button> {
         }
       }
     }
-    setState(() {
-      name = name.toSet().toList();
-      pg = pg.toSet().toList();
-      // print(name);
-    });
-    return "success";
-  }
+    else{
+      print("iam stuck inside else");
+    }
+      setState(() {
+        name = name.toSet().toList();
+        pg = pg.toSet().toList();
+        // print(name);
+      });
+      return "success";
+    }
+
 
   @override
   void initState() {
@@ -560,8 +660,8 @@ class _ButtonState extends State<Button> {
 
   @override
   Widget build(BuildContext context) {
-    final height = MediaQuery.of(context).size.height;
-    final width = MediaQuery.of(context).size.width;
+    //final height = MediaQuery.of(context).size.height;
+    //final width = MediaQuery.of(context).size.width;
     return SafeArea(
       child: Scaffold(
         backgroundColor: Colors.grey[900],
@@ -592,6 +692,7 @@ class Pages extends StatefulWidget {
 }
 
 class _PagesState extends State<Pages> with WidgetsBindingObserver {
+
   List<Widget> _buildButtonsWithNames() {
     buttonsList.clear();
     for (int i = 0; i < data.length; i++) {
@@ -1071,8 +1172,7 @@ class _PagesState extends State<Pages> with WidgetsBindingObserver {
 
   Future<http.Response> update_value(button, button_value, i) async {
 
-    final response =
-    await http.get(Uri.http("$ip", "/$button/$button_value"));
+    final response = await http.get(Uri.http("$ip", "/$button/$button_value"));
     if (response.statusCode == 200) {
       result = true;
       // print("response 1 : ${response.body}");
@@ -1187,12 +1287,99 @@ class _PagesState extends State<Pages> with WidgetsBindingObserver {
   Future get_name() async {
     //final response = await http.get('http://34.83.46.202.xip.io/cyberhome/home.php?username=${widget.email}&query=table');
     //final response = await http.get('http://$local_ip/key/');
-    final response = await http.get(Uri.http("$ip", "/key"));
 
-    var fetchdata = jsonDecode(response.body);
-    if (response.statusCode == 200) {
+    print("$ip ip inside the getname");
+    if(ip.toString().toLowerCase() != "false") {
+      print("iam using online json");
+
+      final response = await http.get(Uri.http("$ip", "/key"));
+      var fetchdata = jsonDecode(response.body);
+      if (response.statusCode == 200) {
+        setState(() {
+          data = fetchdata;
+        });
+
+
+        for (int i = 0; i < data.length; i++) {
+          if (data[i].toString().contains("_Admin_Room") &&
+              (!name.contains(data[i].toString().contains("Admin_Room")))) {
+            name.add("Admin_Room");
+            pg.add("Admin_Room");
+          } else if (data[i].toString().contains("_Hall") &&
+              (!name.contains(data[i].toString().contains("Hall")))) {
+            name.add("Hall");
+            pg.add("Hall");
+          } else if (data[i].toString().contains("Living_Room") &&
+              (!name.contains(data[i].toString().contains("Living_Room")))) {
+            name.add("Living_Room");
+            pg.add("Living_Room");
+          } else if (data[i].toString().contains("_Garage") &&
+              (!name.contains(data[i].toString().contains("Garage")))) {
+            name.add("Garage");
+            pg.add("Garage");
+          } else if (data[i].toString().contains("_Kitchen") &&
+              (!name.contains(data[i].toString().contains("Kitchen")))) {
+            name.add("Kitchen");
+            pg.add("Kitchen");
+          } else if (data[i].toString().contains("_Bathroom") &&
+              (!name.contains(data[i].toString().contains("Bathroom")))) {
+            name.add("Bathroom");
+            pg.add("Bathroom");
+          } else if (data[i].toString().contains("Master_Bedroom") &&
+              (!name.contains(data[i].toString().contains("Master_Bedroom")))) {
+            name.add("Master_Bedroom");
+            pg.add("Master_Bedroom");
+          } else if (data[i].toString().contains("_Bedroom") &&
+              (!name.contains(data[i].toString().contains("Bedroom")))) {
+            name.add("Bedroom");
+            pg.add("Bedroom");
+          } else if (data[i].toString().contains("_Bedroom1") &&
+              (!name.contains(data[i].toString().contains("Bedroom_1")))) {
+            name.add("Bedroom_1");
+            pg.add("Bedroom_1");
+          } else if (data[i].toString().contains("_Bedroom2") &&
+              (!name.contains(data[i].toString().contains("Bedroom_2")))) {
+            name.add("Bedroom_2");
+            pg.add("Bedroom_2");
+          } else if (data[i].toString().contains("_Store_Room") &&
+              (!name.contains(data[i].toString().contains("Store_Room")))) {
+            name.add("Store_Room");
+            pg.add("Store_Room");
+          } else if (data[i].toString().contains("_Outside") &&
+              (!name.contains(data[i].toString().contains("Outside")))) {
+            name.add("Outside");
+            pg.add("Outside");
+          } else if (data[i].toString().contains("_Parking") &&
+              (!name.contains(data[i].toString().contains("Parking")))) {
+            name.add("Parking");
+            pg.add("Parking");
+          } else if (data[i].toString().contains("_Outside") &&
+              (!name.contains(data[i].toString().contains("Outside")))) {
+            name.add("Outside");
+            pg.add("Outside");
+          } else if (data[i].toString().contains("_Garden") &&
+              (!name.contains(data[i].toString().contains("Garden")))) {
+            name.add("Garden");
+            pg.add("Garden");
+          }
+        }
+      }
+    }
+    else if(ip.toLowerCase().toString() == "false"){
+      print("iam using online json");
+      databaseReference.child(auth.currentUser.uid).once().then((DataSnapshot snapshot) async {
+
+        setState(() {
+          dataJson = snapshot.value;
+          //print(dataJson);
+        });
+      });
+
       setState(() {
-        data = fetchdata;
+        
+        data = dataJson.keys.toList();
+        //print(data);
+
       });
 
       for (int i = 0; i < data.length; i++) {
@@ -1216,11 +1403,15 @@ class _PagesState extends State<Pages> with WidgetsBindingObserver {
             (!name.contains(data[i].toString().contains("Kitchen")))) {
           name.add("Kitchen");
           pg.add("Kitchen");
-        } else if (data[i].toString().contains("_Bathroom") &&
-            (!name.contains(data[i].toString().contains("Bathroom")))) {
-          name.add("Bathroom");
-          pg.add("Bathroom");
-        } else if (data[i].toString().contains("Master_Bedroom") &&
+        } else if (data[i].toString().contains("_Bathroom1") &&
+            (!name.contains(data[i].toString().contains("Bathroom1")))) {
+          name.add("Bathroom1");
+          pg.add("Bathroom1");
+        } else if (data[i].toString().contains("_Bathroom2") &&
+            (!name.contains(data[i].toString().contains("Bathroom2")))) {
+          name.add("Bathroom2");
+          pg.add("Bathroom2");
+        }else if (data[i].toString().contains("Master_Bedroom") &&
             (!name.contains(data[i].toString().contains("Master_Bedroom")))) {
           name.add("Master_Bedroom");
           pg.add("Master_Bedroom");
@@ -1228,7 +1419,7 @@ class _PagesState extends State<Pages> with WidgetsBindingObserver {
             (!name.contains(data[i].toString().contains("Bedroom")))) {
           name.add("Bedroom");
           pg.add("Bedroom");
-        } else if (data[i].toString().contains("_Bedroom1") &&
+        } else if (data[i].toString().contains("_Bedroom_1") &&
             (!name.contains(data[i].toString().contains("Bedroom_1")))) {
           name.add("Bedroom_1");
           pg.add("Bedroom_1");
@@ -1259,10 +1450,13 @@ class _PagesState extends State<Pages> with WidgetsBindingObserver {
         }
       }
     }
+    else{
+      print("iam stuck inside else");
+    }
     setState(() {
       name = name.toSet().toList();
       pg = pg.toSet().toList();
-      // print(name);
+      print("$name  of the individual page");
     });
     return "success";
   }
@@ -1552,7 +1746,8 @@ class _PagesState extends State<Pages> with WidgetsBindingObserver {
               ),
               Container(
                 padding: EdgeInsets.symmetric(horizontal: 40.0),
-                height: height * 0.428,
+                height: height * 0.3724,
+                // height: height * 0.42,
                 width: width * 1.0,
                 decoration: BoxDecoration(
                     gradient: LinearGradient(
