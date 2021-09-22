@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:onwords_home/log_ins/login_page.dart';
+import 'package:onwords_home/splashScreen.dart';
 import 'package:overlay_support/overlay_support.dart';
 import 'package:provider/provider.dart';
 import 'Routine_Page/task_data.dart';
@@ -8,7 +9,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 
 //master version v3.1
-//last cloned  09-sep 5-32 pm
+//last cloned  16-sep 10-32 pm
 
 FirebaseAuth auth = FirebaseAuth.instance;
 
@@ -49,7 +50,7 @@ class MyApp extends StatelessWidget {
         //     .copyWith(scaffoldBackgroundColor: Color.fromARGB(255, 18, 32, 47)),
         debugShowCheckedModeBanner: false,
         home: Scaffold(
-          body:LoginPage(),
+          body:SplashScreen(),
         ),
         ),
       ),

@@ -694,9 +694,19 @@ class Pages extends StatefulWidget {
 class _PagesState extends State<Pages> with WidgetsBindingObserver {
 
   List<Widget> _buildButtonsWithNames() {
+    print(" im inside the buildbutton--------------===========");
     buttonsList.clear();
     for (int i = 0; i < data.length; i++) {
-      button(i);
+      print("im inside the build button");
+      if(ip.toLowerCase().toString() == 'false'){
+        print(" !!!!!!!!!!!!!!!!!!!!!!!!! im inside the button online!!!!!!!!!!!!!!!!!!!!1 ");
+        buttonOnline(i);
+      }
+      else{
+        print("----------------- im inside the  buttonoffline ------------");
+        buttonOffline(i);
+      }
+
     }
     setState(() {
       buttonsList = buttonsList.toSet().toList();
@@ -705,16 +715,354 @@ class _PagesState extends State<Pages> with WidgetsBindingObserver {
   }
 
   String up;
-  void button(int i) {
+
+
+  void buttonOnline(int i){
+    print("${data[i]}");
     if (data[i].toString().contains("Button") &&
         data[i].toString().contains(widget.room_name)) {
+      print("im inside the button above button list container");
+      print("$buttonsList ");
       buttonsList.add(Container(
         child: InkWell(
             onTap: () {
+
+            },
+            child: Container(
+                height: MediaQuery.of(context).size.height * 0.17,
+                width: MediaQuery.of(context).size.width * 0.37,
+                padding: const EdgeInsets.all(10),
+                margin: EdgeInsets.all(10),
+                decoration: BoxDecoration(
+                    color: (data_value[i] == true) || (data_value[0][i] == "true")? Colors.grey[900]:Colors.orange,
+                    borderRadius: BorderRadius.circular(20.0),
+                    boxShadow: [
+                      BoxShadow(
+                          offset: Offset(0, 0),
+                          color: Colors.grey[700],
+                          blurRadius: 1,
+                          spreadRadius: 1),
+                      BoxShadow(
+                          offset: Offset(1, 1),
+                          color: Colors.black87,
+                          blurRadius: 1,
+                          spreadRadius: 1)
+                    ]),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Container(
+                      height: MediaQuery.of(context).size.height * 0.08,
+                      width: MediaQuery.of(context).size.width * 0.25,
+                      child:
+                      SvgPicture.asset(
+                        "images/light.svg",
+                        height: MediaQuery.of(context).size.height * 0.010,
+                      ),
+                    ),
+                    SizedBox(
+                      height: MediaQuery.of(context).size.height * 0.015,
+                    ),
+                    Container(
+                      child: Column(
+                        children: [
+                          (data_value[i] == true) || (data_value[i] == "true")
+                              ? AutoSizeText(
+                            data[i]
+                                .toString()
+                                .split("Button")[0]
+                                .replaceAll("_", " ") +
+                                "",
+                            style: GoogleFonts.robotoSlab(
+                              /*fontSize: 12,*/ color: Colors.white),
+                            maxLines: 1,
+                            minFontSize: 7,
+                          )
+                              : AutoSizeText(
+                            data[i]
+                                .toString()
+                                .split("Button")[0]
+                                .replaceAll("_", " ") +
+                                "",
+                            style: GoogleFonts.robotoSlab(
+                              /*fontSize: 12,*/ color: Colors.white),
+                            maxLines: 1,
+                            minFontSize: 7,
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ))),
+      ));
+    }
+    else if (data[i].toString().contains("Push") &&
+        data[i].toString().contains(widget.room_name)) {
+      buttonsList.add(Container(
+          child: InkWell(
+              onTap: () {  },
+              child: Container(
+                // height: MediaQuery.of(context).size.height * 0.12,
+                // width: MediaQuery.of(context).size.width * 0.265,
+                  height: MediaQuery.of(context).size.height * 0.17,
+                  width: MediaQuery.of(context).size.width * 0.37,
+
+                  padding: const EdgeInsets.all(5),
+                  margin: EdgeInsets.all(10),
+                  decoration: BoxDecoration(
+                      color: (data_value[i] == true) || (data_value[i] == "true")? Colors.grey[900]:Colors.orange,
+                      borderRadius: BorderRadius.circular(20),
+                      boxShadow: [
+                        BoxShadow(
+                            offset: Offset(0, 0),
+                            color: Colors.grey[700],
+                            blurRadius: 1,
+                            spreadRadius: 1),
+                        BoxShadow(
+                            offset: Offset(1, 1),
+                            color: Colors.black87,
+                            blurRadius: 1,
+                            spreadRadius: 1)
+                      ]),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Container(
+                        height: MediaQuery.of(context).size.height * 0.04,
+                        width: MediaQuery.of(context).size.width * 0.2,
+                        margin: EdgeInsets.only(top: 10),
+                        child:
+                        SvgPicture.asset(
+                          "images/ac.svg",
+                          height: MediaQuery.of(context).size.height * 0.051,
+                        ),
+
+                      ),
+                      SizedBox(
+                        height: MediaQuery.of(context).size.height * 0.015,
+                      ),
+                      Container(
+                        child: Column(
+                          children: [
+                            (data_value[i] == true) || (data_value[i] == "true")
+                                ? AutoSizeText(
+                              data[i]
+                                  .toString()
+                                  .split("Fan")[0]
+                                  .replaceAll("_", " ") +
+                                  "",
+                              style: GoogleFonts.robotoSlab(
+                                color: Colors.white, /*fontSize: 12*/
+                              ),
+                              maxLines: 1,
+                              minFontSize: 10,
+                            )
+                                : AutoSizeText(
+                              data[i]
+                                  .toString()
+                                  .split("Fan")[0]
+                                  .replaceAll("_", " ") +
+                                  "",
+                              style: GoogleFonts.robotoSlab(
+                                /*fontSize: 12,*/ color: Colors.white),
+                              maxLines: 1,
+                              minFontSize: 10,
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  )))));
+    }
+    else if (data[i].toString().contains("Slide") &&
+        data[i].toString().contains(widget.room_name)) {
+      buttonsList.add(Container(
+        child: Container(
+            height: MediaQuery.of(context).size.height * 0.12,
+            // height: MediaQuery.of(context).size.height * 0.17,
+            // width: MediaQuery.of(context).size.width * 0.33,
+            margin: const EdgeInsets.all(10),
+            padding: const EdgeInsets.all(10),
+            decoration: BoxDecoration(
+                color: Colors.grey[900],
+                borderRadius: BorderRadius.circular(20),
+                boxShadow: [
+                  BoxShadow(
+                      offset: Offset(0, 0),
+                      color: Colors.grey[700],
+                      blurRadius: 1,
+                      spreadRadius: 1),
+                  BoxShadow(
+                      offset: Offset(1, 1),
+                      color: Colors.black87,
+                      blurRadius: 1,
+                      spreadRadius: 1)
+                ]),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: [
+                    /*Text(data[i].toString().split("Slide")[0].replaceAll("_", " "),
+                      style: GoogleFonts.robotoSlab(color: Colors.black)),*/
+                    Text(
+                        "Fan Speed  ${data_value[i].toString().substring(0, 1)}",
+                        style: GoogleFonts.robotoSlab(color: Colors.white)),
+                  ],
+                ),
+                Container(
+                  height: MediaQuery.of(context).size.height * 0.05,
+                  child: Slider(
+                    activeColor: Colors.yellowAccent,
+                    inactiveColor: Colors.grey[500],
+                    value: double.parse(data_value[i]),
+                    min: 0,
+                    max: 4,
+                    divisions: 4,
+                    label: data_value[i].toString().substring(0, 1),
+                    onChangeEnd: (double value) {
+                      check().then((intenet) {
+                        if (intenet) {
+                          // Internet Present Case
+
+                          setState(() {
+                            data_value[i] = value.toInt().toString();
+                            /*update_value(data[i], data_value[0][i], i);
+                          _buildButtonsWithNames();*/
+                          });
+                          //print("Connection: present");
+                        } else {
+                          showDialog(
+                              context: context,
+                              builder: (_) => AlertDialog(
+                                backgroundColor: Colors.black,
+                                title: Text(
+                                  "No Internet Connection",
+                                  style: TextStyle(color: Colors.white),
+                                ),
+                                content: Text(
+                                    "Please check your Internet Connection",
+                                    style: TextStyle(color: Colors.white)),
+                              ));
+                        }
+                        setState(() {
+                          update_value(data[i], data_value[i], i);
+                          _buildButtonsWithNames();
+                        });
+                      });
+                    },
+                    onChanged: (double value) {
+                      setState(() {
+                        data_value[i] = value.toString();
+                      });
+                    },
+                  ),
+                )
+              ],
+            )),
+      ));
+    }
+    else if (data[i].toString().contains("Switch") &&
+        data[i].toString().contains(widget.room_name)) {
+      buttonsList.add(Container(
+          child: InkWell(
+              onTap: () { },
+              child: Container(
+                // height: MediaQuery.of(context).size.height * 0.12,
+                // width: MediaQuery.of(context).size.width * 0.265,
+                  height: MediaQuery.of(context).size.height * 0.17,
+                  width: MediaQuery.of(context).size.width * 0.37,
+
+                  padding: const EdgeInsets.all(5),
+                  margin: EdgeInsets.all(10),
+                  decoration: BoxDecoration(
+                      color: (data_value[i] == true) || (data_value[i] == "true")? Colors.grey[900]:Colors.orange,
+                      borderRadius: BorderRadius.circular(20),
+                      boxShadow: [
+                        BoxShadow(
+                            offset: Offset(0, 0),
+                            color: Colors.grey[700],
+                            blurRadius: 1,
+                            spreadRadius: 1),
+                        BoxShadow(
+                            offset: Offset(1, 1),
+                            color: Colors.black87,
+                            blurRadius: 1,
+                            spreadRadius: 1)
+                      ]),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Container(
+                        height: MediaQuery.of(context).size.height * 0.04,
+                        width: MediaQuery.of(context).size.width * 0.2,
+                        margin: EdgeInsets.only(top: 10),
+                        child:
+                        SvgPicture.asset(
+                          "images/ac.svg",
+                          height: MediaQuery.of(context).size.height * 0.051,
+                        ),
+
+                      ),
+                      SizedBox(
+                        height: MediaQuery.of(context).size.height * 0.015,
+                      ),
+                      Container(
+                        child: Column(
+                          children: [
+                            (data_value[i] == true) || (data_value[i] == "true")
+                                ? AutoSizeText(
+                              data[i]
+                                  .toString()
+                                  .split("Switch")[0]
+                                  .replaceAll("_", " ") +
+                                  "",
+                              style: GoogleFonts.robotoSlab(
+                                color: Colors.white, /*fontSize: 12*/
+                              ),
+                              maxLines: 1,
+                              minFontSize: 10,
+                            )
+                                : AutoSizeText(
+                              data[i]
+                                  .toString()
+                                  .split("Switch")[0]
+                                  .replaceAll("_", " ") +
+                                  "",
+                              style: GoogleFonts.robotoSlab(
+                                /*fontSize: 12,*/ color: Colors.white),
+                              maxLines: 1,
+                              minFontSize: 10,
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  )))));
+    }
+  }
+
+  void buttonOffline(int i) {
+    print("${data[i]}");
+    if (data[i].toString().contains("Button") &&
+        data[i].toString().contains(widget.room_name)) {
+      print("im inside the button above button list container");
+      print("$buttonsList ");
+      buttonsList.add(Container(
+        child: InkWell(
+            onTap: () {
+              print("im inside the inkwell on Tap()");
               check().then((intenet) {
+                print("im inside the inkwell");
                 if (intenet) {
                   // Internet Present Case
+                  print("im inside the button above if ");
                   if ((data_value[0][i] == 1) || (data_value[0][i] == "1")) {
+                    print("im inside the if of inkwell ++++++++++");
                     setState(() {
                       data_value[0][i] = 0;
                       up = "False";
@@ -1156,22 +1504,25 @@ class _PagesState extends State<Pages> with WidgetsBindingObserver {
                   )))));
     }
   }
+
   SharedPreferences loginData;
   String ip;
 
 
   void initial() async {
     local_ip = widget.local_ip;
+    print("im inside the initial function $local_ip");
     loginData = await SharedPreferences.getInstance();
     setState(() {
       loginData.setString('ip', local_ip);
       ip = loginData.getString('ip');
+      print("im inside the setstate of initial $ip");
     });
   }
 
 
   Future<http.Response> update_value(button, button_value, i) async {
-
+   print("im inside the update value 0----0099898");
     final response = await http.get(Uri.http("$ip", "/$button/$button_value"));
     if (response.statusCode == 200) {
       result = true;
@@ -1199,72 +1550,133 @@ class _PagesState extends State<Pages> with WidgetsBindingObserver {
   }
 
   Future<http.Response> call() async {
-
-    final response = await http.get(Uri.http("$ip", "/key"));
-    if (response.statusCode == 200) {
-      // print("response: ${response.statusCode}");
+    print("im inside the calll 0----0099898");
+    databaseReference.child(auth.currentUser.uid).once().then((DataSnapshot snapshot) async {
       setState(() {
-        data = jsonDecode(response.body);
+        dataJson = snapshot.value;
+        //print(dataJson);
       });
+    });
+    if(ip.toLowerCase().toString() != 'false') {
+      print("im inside the if loop of call +++++++++++++++++ *********************");
+      final response = await http.get(Uri.http("$ip", "/key"));
+      if (response.statusCode == 200) {
+        // print("response: ${response.statusCode}");
+        setState(() {
+          data = jsonDecode(response.body);
+          print("$data inside the value of setstate in if case");
+        });
 
-      // print("values $data");
-      // print("response: ${response.body}");
-      result = true;
-      // If the server did return a 200 OK response,
-      // then parse the JSON.
-      //  return Album.fromJson(json.decode(response.body));
-    } else {
-      setState(() {
-        result = false;
-      });
-      // If the server did not return a 200 OK response,
-      // then throw an exception.
-      throw Exception('Failed to load album');
+        // print("values $data");
+        // print("response: ${response.body}");
+        result = true;
+        // If the server did return a 200 OK response,
+        // then parse the JSON.
+        //  return Album.fromJson(json.decode(response.body));
+      } else {
+        setState(() {
+          result = false;
+        });
+        // If the server did not return a 200 OK response,
+        // then throw an exception.
+        throw Exception('Failed to load album');
+      }
+
+      return response;
     }
-    return response;
+    else if(ip.toLowerCase().toString() == 'false'){
+    print("im inside the else if of call()");
+      setState(() {
+        data = dataJson.keys.toList();
+        print("----- $data --------");
+      });
+
+    result = true;
+    }
   }
 
   Future<bool> call_value() async {
 
-
-    final response = await http.get(Uri.http("$ip", "/value"));
-
-    if (response.statusCode == 200) {
-      // print("response: ${response.statusCode}");
+    print("im inside the call by 74873268768723657 value 0----0099898");
+    databaseReference.child(auth.currentUser.uid).once().then((DataSnapshot snapshot) async {
       setState(() {
-        data_value = jsonDecode(response.body);
+        dataJson = snapshot.value;
+        //print(dataJson);
       });
-      // print("response 2: ${response.body}");
+    });
+    if(ip.toLowerCase().toString() != 'false') {
+      print("im inside the if loop of call_value *********************");
+      final response = await http.get(Uri.http("$ip", "/value"));
+
+      if (response.statusCode == 200) {
+        // print("response: ${response.statusCode}");
+        setState(() {
+          data_value = jsonDecode(response.body);
+          print("-----$data_value  value of data_value-----");
+        });
+        // print("response 2: ${response.body}");
+        result2 = true;
+
+        Future.delayed(const Duration(seconds: 5), () {
+// Here you can write your code
+
+           print("im inside the if of future delay");
+          setState(() {
+            print("****************************we are checking the below line**********************************************");
+            // print("after");
+
+            for (int i = 0; i < data_value.length; i++) {
+              print("${data_value.length} the value inside the setstate of data_value");
+              data_value[0][i] = data_value[0][i];
+              print("${data_value[0][i]} the value of data_value");
+            }
+
+            // _buildButtonsWithNames();
+
+            // Here you can write your code for open new view
+          });
+        });
+        // If the server did return a 200 OK response,
+        // then parse the JSON.
+        //  return Album.fromJson(json.decode(response.body));
+      } else {
+        setState(() {
+          result2 = false;
+        });
+        // If the server did not return a 200 OK response,
+        // then throw an exception.
+        throw Exception('Failed to load album');
+      }
+      return true;
+    }
+    else if(ip.toLowerCase().toString() == 'false'){
+     print("im inside the else if of call_value()");
+      setState(() {
+        data_value = dataJson.values.toList();
+        print("$data_value the data value inside the call_by setsstate");
+      });
       result2 = true;
 
       Future.delayed(const Duration(seconds: 5), () {
 // Here you can write your code
+        print("im inside the future delay !!!!!!!!!!!!!!1111");
+        print(data_value);
+        print(data_value.length);
 
+        print("im inside the future delay !!!!!!!!!!!!!!1111");
         setState(() {
           // print("after");
-
-          for (int i = 0; i < data_value[0].length; i++) {
-            // print(data_value[0][i]);
-            data_value[0][i] = data_value[0][i];
+            print("${data_value.length} the length of data values indidde the call by setstate");
+          for (int i = 0; i < data_value.length; i++) {
+            print(data_value[i]);
+            //print(data_value[0][i]);
+            data_value[i] = data_value[i];
           }
-
           // _buildButtonsWithNames();
-
           // Here you can write your code for open new view
         });
       });
-      // If the server did return a 200 OK response,
-      // then parse the JSON.
-      //  return Album.fromJson(json.decode(response.body));
-    } else {
-      setState(() {
-        result2 = false;
-      });
-      // If the server did not return a 200 OK response,
-      // then throw an exception.
-      throw Exception('Failed to load album');
     }
-    return true;
   }
 
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
@@ -1287,10 +1699,17 @@ class _PagesState extends State<Pages> with WidgetsBindingObserver {
   Future get_name() async {
     //final response = await http.get('http://34.83.46.202.xip.io/cyberhome/home.php?username=${widget.email}&query=table');
     //final response = await http.get('http://$local_ip/key/');
+    loginData = await SharedPreferences.getInstance();
+    setState(() {
+      loginData.setString('ip', local_ip);
+      ip = loginData.getString('ip');
+      print("im inside the setstate of getname $ip");
+    });
 
+    print("${widget.local_ip} im inside the getname checking local local ip");
     print("$ip ip inside the getname");
     if(ip.toString().toLowerCase() != "false") {
-      print("iam using online json");
+      print("iam using offline json");
 
       final response = await http.get(Uri.http("$ip", "/key"));
       var fetchdata = jsonDecode(response.body);
@@ -1367,17 +1786,18 @@ class _PagesState extends State<Pages> with WidgetsBindingObserver {
     }
     else if(ip.toLowerCase().toString() == "false"){
       print("iam using online json");
-      databaseReference.child(auth.currentUser.uid).once().then((DataSnapshot snapshot) async {
-
-        setState(() {
-          dataJson = snapshot.value;
-          //print(dataJson);
-        });
-      });
+      // databaseReference.child(auth.currentUser.uid).once().then((DataSnapshot snapshot) async {
+      //
+      //   setState(() {
+      //     dataJson = snapshot.value;
+      //     print("$dataJson  im inside the datarefernce");
+      //   });
+      // });
 
       setState(() {
-        
+
         data = dataJson.keys.toList();
+        print("$data im inside the setstate of else if");
         //print(data);
 
       });
@@ -1746,8 +2166,9 @@ class _PagesState extends State<Pages> with WidgetsBindingObserver {
               ),
               Container(
                 padding: EdgeInsets.symmetric(horizontal: 40.0),
-                height: height * 0.3724,
-                // height: height * 0.42,
+                //height: height * 0.3724,
+                height: height * 0.427
+                ,
                 width: width * 1.0,
                 decoration: BoxDecoration(
                     gradient: LinearGradient(
