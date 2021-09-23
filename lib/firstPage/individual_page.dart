@@ -445,7 +445,7 @@ class Button extends StatefulWidget {
   @override
   _ButtonState createState() => _ButtonState();
 }
-int globalIndex ;
+//int globalIndex ;
 
 class _ButtonState extends State<Button> {
 
@@ -455,13 +455,22 @@ class _ButtonState extends State<Button> {
   bool check;
   String local_ip;
   String ip;
+  Timer timer;
+  int pageLoader ;
 
   SharedPreferences loginData;
 
 
   Future get_name() async {
-
-
+    pageLoader = 0;
+    databaseReference.child(auth.currentUser.uid).once().then((DataSnapshot snapshot) async {
+      setState(() {
+        pageLoader = 1;
+        print("${auth.currentUser.uid} the uid is !!!!!!!!!");
+        dataJson = snapshot.value;
+        //print(dataJson);
+      });
+    });
 
     loginData = await SharedPreferences.getInstance();
     local_ip = widget.ipAddress;
@@ -552,20 +561,14 @@ class _ButtonState extends State<Button> {
     }
     else if(local_ip.toLowerCase().toString() == "false"){
       print("iam using online json");
-      databaseReference.child(auth.currentUser.uid).once().then((DataSnapshot snapshot) async {
-        setState(() {
-          dataJson = snapshot.value;
-          //print(dataJson);
-        });
-      });
-      print("$dataJson");
+      print(" the value of dataJson is $dataJson");
       setState(() {
         // print(dataJson);
         //data = jsonDecode(dataJson);
         //
         // data = dataJson;
         data = dataJson.keys.toList();
-        print(data);
+        print(" the value of key data values $data");
 
       });
 
@@ -651,8 +654,9 @@ class _ButtonState extends State<Button> {
 
   @override
   void initState() {
-
-    get_name();
+    timer = Timer.periodic(Duration(seconds: 1), (Timer t) {
+      get_name();
+    });
     // print("email ${widget.email} place ${widget.place} ind ${widget.ind} ");
     super.initState();
     // print("final url check $check");
@@ -723,6 +727,7 @@ class _PagesState extends State<Pages> with WidgetsBindingObserver {
         data[i].toString().contains(widget.room_name)) {
       print("im inside the button above button list container");
       print("$buttonsList ");
+      print("--------  ${data_value[i]} --------");
       buttonsList.add(Container(
         child: InkWell(
             onTap: () {
@@ -734,7 +739,7 @@ class _PagesState extends State<Pages> with WidgetsBindingObserver {
                 padding: const EdgeInsets.all(10),
                 margin: EdgeInsets.all(10),
                 decoration: BoxDecoration(
-                    color: (data_value[i] == true) || (data_value[0][i] == "true")? Colors.grey[900]:Colors.orange,
+                    color: (data_value[i] == true) || (data_value[i] == "true") || (data_value[i] == "0")? Colors.grey[900]:Colors.orange,
                     borderRadius: BorderRadius.circular(20.0),
                     boxShadow: [
                       BoxShadow(
@@ -799,6 +804,7 @@ class _PagesState extends State<Pages> with WidgetsBindingObserver {
     }
     else if (data[i].toString().contains("Push") &&
         data[i].toString().contains(widget.room_name)) {
+      print("--------  ${data_value[i]} --------");
       buttonsList.add(Container(
           child: InkWell(
               onTap: () {  },
@@ -811,7 +817,7 @@ class _PagesState extends State<Pages> with WidgetsBindingObserver {
                   padding: const EdgeInsets.all(5),
                   margin: EdgeInsets.all(10),
                   decoration: BoxDecoration(
-                      color: (data_value[i] == true) || (data_value[i] == "true")? Colors.grey[900]:Colors.orange,
+                      color: (data_value[i] == true) || (data_value[i] == "true") || (data_value[i] == "0")? Colors.grey[900]:Colors.orange,
                       borderRadius: BorderRadius.circular(20),
                       boxShadow: [
                         BoxShadow(
@@ -878,6 +884,7 @@ class _PagesState extends State<Pages> with WidgetsBindingObserver {
     }
     else if (data[i].toString().contains("Slide") &&
         data[i].toString().contains(widget.room_name)) {
+      print("--------  ${data_value[i]} --------");
       buttonsList.add(Container(
         child: Container(
             height: MediaQuery.of(context).size.height * 0.12,
@@ -918,7 +925,7 @@ class _PagesState extends State<Pages> with WidgetsBindingObserver {
                   child: Slider(
                     activeColor: Colors.yellowAccent,
                     inactiveColor: Colors.grey[500],
-                    value: double.parse(data_value[i]),
+                    value: double.parse(data_value[i].toString()),
                     min: 0,
                     max: 4,
                     divisions: 4,
@@ -967,6 +974,7 @@ class _PagesState extends State<Pages> with WidgetsBindingObserver {
     }
     else if (data[i].toString().contains("Switch") &&
         data[i].toString().contains(widget.room_name)) {
+      print("--------  ${data_value[i]} --------");
       buttonsList.add(Container(
           child: InkWell(
               onTap: () { },
@@ -979,7 +987,7 @@ class _PagesState extends State<Pages> with WidgetsBindingObserver {
                   padding: const EdgeInsets.all(5),
                   margin: EdgeInsets.all(10),
                   decoration: BoxDecoration(
-                      color: (data_value[i] == true) || (data_value[i] == "true")? Colors.grey[900]:Colors.orange,
+                      color: (data_value[i] == true) || (data_value[i] == "true") || (data_value[i] == "0")? Colors.grey[900]:Colors.orange,
                       borderRadius: BorderRadius.circular(20),
                       boxShadow: [
                         BoxShadow(
@@ -2111,18 +2119,18 @@ class _PagesState extends State<Pages> with WidgetsBindingObserver {
                               ? AssetImage(
                             "images/room/kitchen.png",
                           )
-                              : ((widget.room_name.toString().replaceAll("_", " ") == "Bathroom 1"))
+                              : ((widget.room_name.toString().replaceAll("_", " ") == "Bathroom1"))
                               ? AssetImage(
                             "images/room/bathroom 1.png",
-                          ): ((widget.room_name.toString().replaceAll("_", " ") == "Bathroom 2"))
+                          ): ((widget.room_name.toString().replaceAll("_", " ") == "Bathroom2"))
                               ? AssetImage(
                             "images/room/bathroom 2.png",
                           )
-                              : ((widget.room_name.toString().replaceAll("_", " ") ==  "Bedroom_1"))
+                              : ((widget.room_name.toString().replaceAll("_", " ") ==  "Bedroom1"))
                               ? AssetImage(
                             "images/room/bedroom 1.png",
                           )
-                              : ((widget.room_name.toString().replaceAll("_", " ") ==  "Bedroom_2"))
+                              : ((widget.room_name.toString().replaceAll("_", " ") ==  "Bedroom2"))
                               ? AssetImage(
                             "images/room/bedroom 2.png",
                           )
@@ -2134,7 +2142,7 @@ class _PagesState extends State<Pages> with WidgetsBindingObserver {
                               ? AssetImage(
                             "images/room/bedroom 2.png",
                           )
-                              : ((widget.room_name.toString().replaceAll("_", " ") ==  "Kids_Room"))
+                              : ((widget.room_name.toString().replaceAll("_", " ") ==  "Kids Room"))
                               ? AssetImage(
                             "images/room/kids bedroom.png",
                           )
@@ -2150,12 +2158,12 @@ class _PagesState extends State<Pages> with WidgetsBindingObserver {
                               ? AssetImage(
                             "images/room/parking.png",
                           )
-                              : ((widget.room_name.toString().replaceAll("_", " ") ==  "Living_Room"))
+                              : ((widget.room_name.toString().replaceAll("_", " ") ==  "Living Room"))
                               ? AssetImage(
                             "images/room/living room.png",
 
                           )
-                              : ((widget.room_name.toString().replaceAll("_", " ") ==  "Store_Room"))
+                              : ((widget.room_name.toString().replaceAll("_", " ") ==  "Store Room"))
                               ? AssetImage(
                             "images/room/store room.png",
                           )

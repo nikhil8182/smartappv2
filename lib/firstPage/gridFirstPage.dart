@@ -212,13 +212,13 @@ class _FirstPageGridContainerState extends State<FirstPageGridContainer> {
           name.add("Bedroom");
           pg.add("Bedroom");
         } else if (data[i].toString().contains("_Bedroom1") &&
-            (!name.contains(data[i].toString().contains("Bedroom_1")))) {
-          name.add("Bedroom_1");
-          pg.add("Bedroom_1");
+            (!name.contains(data[i].toString().contains("Bedroom1")))) {
+          name.add("Bedroom1");
+          pg.add("Bedroom1");
         } else if (data[i].toString().contains("_Bedroom2") &&
-            (!name.contains(data[i].toString().contains("Bedroom_2")))) {
-          name.add("Bedroom_2");
-          pg.add("Bedroom_2");
+            (!name.contains(data[i].toString().contains("Bedroom2")))) {
+          name.add("Bedroom2");
+          pg.add("Bedroom2");
         } else if (data[i].toString().contains("_Store_Room") &&
             (!name.contains(data[i].toString().contains("Store_Room")))) {
           name.add("Store_Room");
@@ -291,14 +291,14 @@ class _FirstPageGridContainerState extends State<FirstPageGridContainer> {
             (!name.contains(data[i].toString().contains("Bedroom")))) {
           name.add("Bedroom");
           pg.add("Bedroom");
-        } else if (data[i].toString().contains("_Bedroom_1") &&
-            (!name.contains(data[i].toString().contains("Bedroom_1")))) {
-          name.add("Bedroom_1");
-          pg.add("Bedroom_1");
+        } else if (data[i].toString().contains("_Bedroom1") &&
+            (!name.contains(data[i].toString().contains("Bedroom1")))) {
+          name.add("Bedroom1");
+          pg.add("Bedroom1");
         } else if (data[i].toString().contains("_Bedroom2") &&
-            (!name.contains(data[i].toString().contains("Bedroom_2")))) {
-          name.add("Bedroom_2");
-          pg.add("Bedroom_2");
+            (!name.contains(data[i].toString().contains("Bedroom2")))) {
+          name.add("Bedroom2");
+          pg.add("Bedroom2");
         } else if (data[i].toString().contains("_Store_Room") &&
             (!name.contains(data[i].toString().contains("Store_Room")))) {
           name.add("Store_Room");
@@ -469,11 +469,11 @@ class _FirstPageGridContainerState extends State<FirstPageGridContainer> {
                               : name[index]
                               .toString()
                               .contains(
-                              "Bedroom_1")
+                              "Bedroom1")
                               ? AssetImage(
                             "images/room/bedroom 1.png",
                           )
-                              : name[index].toString().contains("Bedroom_2")
+                              : name[index].toString().contains("Bedroom2")
                               ? AssetImage(
                             "images/room/bedroom 2.png",
                           ): name[index].toString().contains("Kids_Room")
@@ -873,7 +873,7 @@ class _FirstPageGridContainerState extends State<FirstPageGridContainer> {
                                       : name[index]
                                       .toString()
                                       .contains(
-                                      "Bedroom_1")
+                                      "Bedroom1")
                                       ? Row(
                                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                                     children: [
@@ -927,7 +927,7 @@ class _FirstPageGridContainerState extends State<FirstPageGridContainer> {
                                       )
                                     ],
                                   )
-                                      : name[index].toString().contains("Bedroom_2")
+                                      : name[index].toString().contains("Bedroom2")
                                       ? Row(
                                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                                     children: [
