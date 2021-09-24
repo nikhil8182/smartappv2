@@ -80,7 +80,10 @@ class _FirstPageGridContainerState extends State<FirstPageGridContainer> {
       }
       else if((result == ConnectivityResult.mobile)&&(!mobNotifier)){
         //print("mobile ****************************");
-        if(!mobNotifier){
+        if((!mobNotifier) && (ipAddress.toString().toLowerCase() == 'false')) {
+          get_name();
+        }
+        else{
           showSimpleNotification(
             Text(" please switch on your wifi network ",
               style: TextStyle(color: Colors.white),), background: Colors.red,
@@ -163,7 +166,7 @@ class _FirstPageGridContainerState extends State<FirstPageGridContainer> {
 
   Future get_name() async {
     //print("iam inside getname");
-    print(ipAddress);
+    //print(ipAddress);
     if(ipAddress.toString().toLowerCase() != "false"){
       //print("iam using online json");
       final response = await http.get(Uri.parse("http://$ipAddress/key",));
@@ -287,18 +290,22 @@ class _FirstPageGridContainerState extends State<FirstPageGridContainer> {
             (!name.contains(data[i].toString().contains("Master_Bedroom")))) {
           name.add("Master_Bedroom");
           pg.add("Master_Bedroom");
+        } else if (data[i].toString().contains("_Bedroom1") &&
+            (!name.contains(data[i].toString().contains("Bedroom1")))) {
+          name.add("Bedroom1");
+          //print("----- bedroom1 $name name -------");
+          pg.add("Bedroom1");
+          //print("----- bedroom1 $pg pg -------");
+        } else if (data[i].toString().contains("_Bedroom2") &&
+            (!name.contains(data[i].toString().contains("Bedroom2")))) {
+          name.add("Bedroom2");
+          //print("----- bedroom1 $name name -------");
+          pg.add("Bedroom2");
+          //print("----- bedroom1 $pg pg -------");
         } else if (data[i].toString().contains("_Bedroom") &&
             (!name.contains(data[i].toString().contains("Bedroom")))) {
           name.add("Bedroom");
           pg.add("Bedroom");
-        } else if (data[i].toString().contains("_Bedroom1") &&
-            (!name.contains(data[i].toString().contains("Bedroom1")))) {
-          name.add("Bedroom1");
-          pg.add("Bedroom1");
-        } else if (data[i].toString().contains("_Bedroom2") &&
-            (!name.contains(data[i].toString().contains("Bedroom2")))) {
-          name.add("Bedroom2");
-          pg.add("Bedroom2");
         } else if (data[i].toString().contains("_Store_Room") &&
             (!name.contains(data[i].toString().contains("Store_Room")))) {
           name.add("Store_Room");

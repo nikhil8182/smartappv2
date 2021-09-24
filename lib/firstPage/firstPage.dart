@@ -91,11 +91,18 @@ class _FirstPageState extends State<FirstPage> with AutomaticKeepAliveClientMixi
       }
       else if((result == ConnectivityResult.mobile)&&(!mobNotifier)){
         //print("mobile ****************************");
-        if(!mobNotifier){
+        if((!mobNotifier) && (ipAddress.toString().toLowerCase() == 'false')){
+          showSimpleNotification(
+            Text(" your are on Mobile Data  ",
+              style: TextStyle(color: Colors.white),), background: Colors.green,
+          );
+        }
+        else{
           showSimpleNotification(
             Text(" please switch on your wifi network ",
               style: TextStyle(color: Colors.white),), background: Colors.red,
           );
+
         }
         mobNotifier = true;
       }

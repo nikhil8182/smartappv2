@@ -330,7 +330,7 @@ class _LoginPageState extends State<LoginPage> {
                               context,
                               MaterialPageRoute(
                                   builder: (context) =>
-                                      InstallationPage()));
+                                      HomePage()));
                           // loginState = "logedin succesfully";
                           // print(
                           //     "curent user = ${Firebase.auth.UserProfile}");

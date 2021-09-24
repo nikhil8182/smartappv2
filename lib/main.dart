@@ -9,7 +9,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 
 //master version v3.1
-//last cloned  16-sep 10-32 pm
+//last cloned  24-sep 2-30 pm
 
 FirebaseAuth auth = FirebaseAuth.instance;
 

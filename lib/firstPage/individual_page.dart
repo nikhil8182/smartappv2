@@ -466,7 +466,7 @@ class _ButtonState extends State<Button> {
     databaseReference.child(auth.currentUser.uid).once().then((DataSnapshot snapshot) async {
       setState(() {
         pageLoader = 1;
-        print("${auth.currentUser.uid} the uid is !!!!!!!!!");
+        //print("${auth.currentUser.uid} the uid is !!!!!!!!!");
         dataJson = snapshot.value;
         //print(dataJson);
       });
@@ -474,17 +474,17 @@ class _ButtonState extends State<Button> {
 
     loginData = await SharedPreferences.getInstance();
     local_ip = widget.ipAddress;
-    print("$local_ip ========");
+    //print("$local_ip ========");
 
     loginData.setString('ip', local_ip);
     setState(() {
       ip = loginData.getString('ip');
-      print("$ip --------------");
+      //print("$ip --------------");
     }
     );
 
     if (local_ip.toString().toLowerCase() != "false") {
-      print("iam using online json");
+      //print("iam using online json");
 
       final response = await http.get(Uri.http('$ip', "/key"));
 
@@ -523,18 +523,18 @@ class _ButtonState extends State<Button> {
               (!name.contains(data[i].toString().contains("Master_Bedroom")))) {
             name.add("Master_Bedroom");
             pg.add("Master_Bedroom");
+          } else if (data[i].toString().contains("_Bedroom1") &&
+              (!name.contains(data[i].toString().contains("Bedroom1")))) {
+            name.add("Bedroom1");
+            pg.add("Bedroom1");
+          } else if (data[i].toString().contains("_Bedroom2") &&
+              (!name.contains(data[i].toString().contains("Bedroom2")))) {
+            name.add("Bedroom2");
+            pg.add("Bedroom2");
           } else if (data[i].toString().contains("_Bedroom") &&
               (!name.contains(data[i].toString().contains("Bedroom")))) {
             name.add("Bedroom");
             pg.add("Bedroom");
-          } else if (data[i].toString().contains("_Bedroom1") &&
-              (!name.contains(data[i].toString().contains("Bedroom_1")))) {
-            name.add("Bedroom_1");
-            pg.add("Bedroom_1");
-          } else if (data[i].toString().contains("_Bedroom2") &&
-              (!name.contains(data[i].toString().contains("Bedroom_2")))) {
-            name.add("Bedroom_2");
-            pg.add("Bedroom_2");
           } else if (data[i].toString().contains("_Store_Room") &&
               (!name.contains(data[i].toString().contains("Store_Room")))) {
             name.add("Store_Room");
@@ -560,15 +560,15 @@ class _ButtonState extends State<Button> {
       }
     }
     else if(local_ip.toLowerCase().toString() == "false"){
-      print("iam using online json");
-      print(" the value of dataJson is $dataJson");
+      // print("iam using online json");
+      // print(" the value of dataJson is $dataJson");
       setState(() {
         // print(dataJson);
         //data = jsonDecode(dataJson);
         //
         // data = dataJson;
         data = dataJson.keys.toList();
-        print(" the value of key data values $data");
+        //print(" the value of key data values $data");
 
       });
 
@@ -605,18 +605,18 @@ class _ButtonState extends State<Button> {
             (!name.contains(data[i].toString().contains("Master_Bedroom")))) {
           name.add("Master_Bedroom");
           pg.add("Master_Bedroom");
-        } else if (data[i].toString().contains("_Bedroom") &&
+        }else if (data[i].toString().contains("_Bedroom1") &&
+            (!name.contains(data[i].toString().contains("Bedroom1")))) {
+          name.add("Bedroom1");
+          pg.add("Bedroom1");
+        } else if (data[i].toString().contains("_Bedroom2") &&
+            (!name.contains(data[i].toString().contains("Bedroom2")))) {
+          name.add("Bedroom2");
+          pg.add("Bedroom2");
+        }  else if (data[i].toString().contains("_Bedroom") &&
             (!name.contains(data[i].toString().contains("Bedroom")))) {
           name.add("Bedroom");
           pg.add("Bedroom");
-        } else if (data[i].toString().contains("_Bedroom_1") &&
-            (!name.contains(data[i].toString().contains("Bedroom_1")))) {
-          name.add("Bedroom_1");
-          pg.add("Bedroom_1");
-        } else if (data[i].toString().contains("_Bedroom2") &&
-            (!name.contains(data[i].toString().contains("Bedroom_2")))) {
-          name.add("Bedroom_2");
-          pg.add("Bedroom_2");
         } else if (data[i].toString().contains("_Store_Room") &&
             (!name.contains(data[i].toString().contains("Store_Room")))) {
           name.add("Store_Room");
@@ -698,16 +698,16 @@ class Pages extends StatefulWidget {
 class _PagesState extends State<Pages> with WidgetsBindingObserver {
 
   List<Widget> _buildButtonsWithNames() {
-    print(" im inside the buildbutton--------------===========");
+    //print(" im inside the buildbutton--------------===========");
     buttonsList.clear();
     for (int i = 0; i < data.length; i++) {
-      print("im inside the build button");
+      //print("im inside the build button");
       if(ip.toLowerCase().toString() == 'false'){
-        print(" !!!!!!!!!!!!!!!!!!!!!!!!! im inside the button online!!!!!!!!!!!!!!!!!!!!1 ");
+        //print(" !!!!!!!!!!!!!!!!!!!!!!!!! im inside the button online!!!!!!!!!!!!!!!!!!!!1 ");
         buttonOnline(i);
       }
       else{
-        print("----------------- im inside the  buttonoffline ------------");
+        //print("----------------- im inside the  buttonoffline ------------");
         buttonOffline(i);
       }
 
@@ -722,12 +722,12 @@ class _PagesState extends State<Pages> with WidgetsBindingObserver {
 
 
   void buttonOnline(int i){
-    print("${data[i]}");
+    //print("${data[i]}");
     if (data[i].toString().contains("Button") &&
         data[i].toString().contains(widget.room_name)) {
-      print("im inside the button above button list container");
-      print("$buttonsList ");
-      print("--------  ${data_value[i]} --------");
+      // print("im inside the button above button list container");
+      // print("$buttonsList ");
+      // print("--------  ${data_value[i]} --------");
       buttonsList.add(Container(
         child: InkWell(
             onTap: () {
@@ -804,7 +804,7 @@ class _PagesState extends State<Pages> with WidgetsBindingObserver {
     }
     else if (data[i].toString().contains("Push") &&
         data[i].toString().contains(widget.room_name)) {
-      print("--------  ${data_value[i]} --------");
+      //print("--------  ${data_value[i]} --------");
       buttonsList.add(Container(
           child: InkWell(
               onTap: () {  },
@@ -884,7 +884,7 @@ class _PagesState extends State<Pages> with WidgetsBindingObserver {
     }
     else if (data[i].toString().contains("Slide") &&
         data[i].toString().contains(widget.room_name)) {
-      print("--------  ${data_value[i]} --------");
+      //print("--------  ${data_value[i]} --------");
       buttonsList.add(Container(
         child: Container(
             height: MediaQuery.of(context).size.height * 0.12,
@@ -974,7 +974,7 @@ class _PagesState extends State<Pages> with WidgetsBindingObserver {
     }
     else if (data[i].toString().contains("Switch") &&
         data[i].toString().contains(widget.room_name)) {
-      print("--------  ${data_value[i]} --------");
+      //print("--------  ${data_value[i]} --------");
       buttonsList.add(Container(
           child: InkWell(
               onTap: () { },
@@ -1055,22 +1055,22 @@ class _PagesState extends State<Pages> with WidgetsBindingObserver {
   }
 
   void buttonOffline(int i) {
-    print("${data[i]}");
+    //print("${data[i]}");
     if (data[i].toString().contains("Button") &&
         data[i].toString().contains(widget.room_name)) {
-      print("im inside the button above button list container");
-      print("$buttonsList ");
+      // print("im inside the button above button list container");
+      // print("$buttonsList ");
       buttonsList.add(Container(
         child: InkWell(
             onTap: () {
-              print("im inside the inkwell on Tap()");
+              //print("im inside the inkwell on Tap()");
               check().then((intenet) {
-                print("im inside the inkwell");
+                //print("im inside the inkwell");
                 if (intenet) {
                   // Internet Present Case
-                  print("im inside the button above if ");
+                  //print("im inside the button above if ");
                   if ((data_value[0][i] == 1) || (data_value[0][i] == "1")) {
-                    print("im inside the if of inkwell ++++++++++");
+                    //print("im inside the if of inkwell ++++++++++");
                     setState(() {
                       data_value[0][i] = 0;
                       up = "False";
@@ -1088,9 +1088,9 @@ class _PagesState extends State<Pages> with WidgetsBindingObserver {
                     //   update_value(data[i],up, i);
                     // }
                     update_value(data[i],up, i);
-                    print("${data_value[0][i]} data value is =================");
-                    print("$up the value of up is *************");
-                    print("$i after i is+++++++++++++++++------");
+                    // print("${data_value[0][i]} data value is =================");
+                    // print("$up the value of up is *************");
+                    // print("$i after i is+++++++++++++++++------");
                     _buildButtonsWithNames();
                   });
                   //print("Connection: present");
@@ -1519,18 +1519,18 @@ class _PagesState extends State<Pages> with WidgetsBindingObserver {
 
   void initial() async {
     local_ip = widget.local_ip;
-    print("im inside the initial function $local_ip");
+    //print("im inside the initial function $local_ip");
     loginData = await SharedPreferences.getInstance();
     setState(() {
       loginData.setString('ip', local_ip);
       ip = loginData.getString('ip');
-      print("im inside the setstate of initial $ip");
+      //print("im inside the setstate of initial $ip");
     });
   }
 
 
   Future<http.Response> update_value(button, button_value, i) async {
-   print("im inside the update value 0----0099898");
+  // print("im inside the update value 0----0099898");
     final response = await http.get(Uri.http("$ip", "/$button/$button_value"));
     if (response.statusCode == 200) {
       result = true;
@@ -1558,7 +1558,7 @@ class _PagesState extends State<Pages> with WidgetsBindingObserver {
   }
 
   Future<http.Response> call() async {
-    print("im inside the calll 0----0099898");
+    //print("im inside the calll 0----0099898");
     databaseReference.child(auth.currentUser.uid).once().then((DataSnapshot snapshot) async {
       setState(() {
         dataJson = snapshot.value;
@@ -1566,13 +1566,13 @@ class _PagesState extends State<Pages> with WidgetsBindingObserver {
       });
     });
     if(ip.toLowerCase().toString() != 'false') {
-      print("im inside the if loop of call +++++++++++++++++ *********************");
+      //print("im inside the if loop of call +++++++++++++++++ *********************");
       final response = await http.get(Uri.http("$ip", "/key"));
       if (response.statusCode == 200) {
         // print("response: ${response.statusCode}");
         setState(() {
           data = jsonDecode(response.body);
-          print("$data inside the value of setstate in if case");
+          //print("$data inside the value of setstate in if case");
         });
 
         // print("values $data");
@@ -1593,10 +1593,10 @@ class _PagesState extends State<Pages> with WidgetsBindingObserver {
       return response;
     }
     else if(ip.toLowerCase().toString() == 'false'){
-    print("im inside the else if of call()");
+    //print("im inside the else if of call()");
       setState(() {
         data = dataJson.keys.toList();
-        print("----- $data --------");
+        //print("----- $data --------");
       });
 
     result = true;
@@ -1605,7 +1605,7 @@ class _PagesState extends State<Pages> with WidgetsBindingObserver {
 
   Future<bool> call_value() async {
 
-    print("im inside the call by 74873268768723657 value 0----0099898");
+    //print("im inside the call by 74873268768723657 value 0----0099898");
     databaseReference.child(auth.currentUser.uid).once().then((DataSnapshot snapshot) async {
       setState(() {
         dataJson = snapshot.value;
@@ -1613,14 +1613,14 @@ class _PagesState extends State<Pages> with WidgetsBindingObserver {
       });
     });
     if(ip.toLowerCase().toString() != 'false') {
-      print("im inside the if loop of call_value *********************");
+      //print("im inside the if loop of call_value *********************");
       final response = await http.get(Uri.http("$ip", "/value"));
 
       if (response.statusCode == 200) {
         // print("response: ${response.statusCode}");
         setState(() {
           data_value = jsonDecode(response.body);
-          print("-----$data_value  value of data_value-----");
+          //print("-----$data_value  value of data_value-----");
         });
         // print("response 2: ${response.body}");
         result2 = true;
@@ -1628,15 +1628,15 @@ class _PagesState extends State<Pages> with WidgetsBindingObserver {
         Future.delayed(const Duration(seconds: 5), () {
 // Here you can write your code
 
-           print("im inside the if of future delay");
+           //print("im inside the if of future delay");
           setState(() {
-            print("****************************we are checking the below line**********************************************");
+            //print("****************************we are checking the below line**********************************************");
             // print("after");
 
             for (int i = 0; i < data_value.length; i++) {
-              print("${data_value.length} the value inside the setstate of data_value");
+              //print("${data_value.length} the value inside the setstate of data_value");
               data_value[0][i] = data_value[0][i];
-              print("${data_value[0][i]} the value of data_value");
+              //print("${data_value[0][i]} the value of data_value");
             }
 
             // _buildButtonsWithNames();
@@ -1658,23 +1658,22 @@ class _PagesState extends State<Pages> with WidgetsBindingObserver {
       return true;
     }
     else if(ip.toLowerCase().toString() == 'false'){
-     print("im inside the else if of call_value()");
+     //print("im inside the else if of call_value()");
       setState(() {
         data_value = dataJson.values.toList();
-        print("$data_value the data value inside the call_by setsstate");
+        //print("$data_value the data value inside the call_by setsstate");
       });
       result2 = true;
 
       Future.delayed(const Duration(seconds: 5), () {
 // Here you can write your code
-        print("im inside the future delay !!!!!!!!!!!!!!1111");
-        print(data_value);
-        print(data_value.length);
-
-        print("im inside the future delay !!!!!!!!!!!!!!1111");
+//         print("im inside the future delay !!!!!!!!!!!!!!1111");
+//         print(data_value);
+//         print(data_value.length);
+//         print("im inside the future delay !!!!!!!!!!!!!!1111");
         setState(() {
           // print("after");
-            print("${data_value.length} the length of data values indidde the call by setstate");
+            //print("${data_value.length} the length of data values indidde the call by setstate");
           for (int i = 0; i < data_value.length; i++) {
             print(data_value[i]);
             //print(data_value[0][i]);
@@ -1711,13 +1710,13 @@ class _PagesState extends State<Pages> with WidgetsBindingObserver {
     setState(() {
       loginData.setString('ip', local_ip);
       ip = loginData.getString('ip');
-      print("im inside the setstate of getname $ip");
+      //print("im inside the setstate of getname $ip");
     });
 
-    print("${widget.local_ip} im inside the getname checking local local ip");
-    print("$ip ip inside the getname");
+    // print("${widget.local_ip} im inside the getname checking local local ip");
+    // print("$ip ip inside the getname");
     if(ip.toString().toLowerCase() != "false") {
-      print("iam using offline json");
+      //print("iam using offline json");
 
       final response = await http.get(Uri.http("$ip", "/key"));
       var fetchdata = jsonDecode(response.body);
@@ -1756,10 +1755,6 @@ class _PagesState extends State<Pages> with WidgetsBindingObserver {
               (!name.contains(data[i].toString().contains("Master_Bedroom")))) {
             name.add("Master_Bedroom");
             pg.add("Master_Bedroom");
-          } else if (data[i].toString().contains("_Bedroom") &&
-              (!name.contains(data[i].toString().contains("Bedroom")))) {
-            name.add("Bedroom");
-            pg.add("Bedroom");
           } else if (data[i].toString().contains("_Bedroom1") &&
               (!name.contains(data[i].toString().contains("Bedroom_1")))) {
             name.add("Bedroom_1");
@@ -1768,6 +1763,10 @@ class _PagesState extends State<Pages> with WidgetsBindingObserver {
               (!name.contains(data[i].toString().contains("Bedroom_2")))) {
             name.add("Bedroom_2");
             pg.add("Bedroom_2");
+          } else if (data[i].toString().contains("_Bedroom") &&
+              (!name.contains(data[i].toString().contains("Bedroom")))) {
+            name.add("Bedroom");
+            pg.add("Bedroom");
           } else if (data[i].toString().contains("_Store_Room") &&
               (!name.contains(data[i].toString().contains("Store_Room")))) {
             name.add("Store_Room");
@@ -1793,7 +1792,7 @@ class _PagesState extends State<Pages> with WidgetsBindingObserver {
       }
     }
     else if(ip.toLowerCase().toString() == "false"){
-      print("iam using online json");
+      //print("iam using online json");
       // databaseReference.child(auth.currentUser.uid).once().then((DataSnapshot snapshot) async {
       //
       //   setState(() {
@@ -1805,7 +1804,7 @@ class _PagesState extends State<Pages> with WidgetsBindingObserver {
       setState(() {
 
         data = dataJson.keys.toList();
-        print("$data im inside the setstate of else if");
+        //print("$data im inside the setstate of else if");
         //print(data);
 
       });
@@ -1843,11 +1842,7 @@ class _PagesState extends State<Pages> with WidgetsBindingObserver {
             (!name.contains(data[i].toString().contains("Master_Bedroom")))) {
           name.add("Master_Bedroom");
           pg.add("Master_Bedroom");
-        } else if (data[i].toString().contains("_Bedroom") &&
-            (!name.contains(data[i].toString().contains("Bedroom")))) {
-          name.add("Bedroom");
-          pg.add("Bedroom");
-        } else if (data[i].toString().contains("_Bedroom_1") &&
+        } else if (data[i].toString().contains("_Bedroom1") &&
             (!name.contains(data[i].toString().contains("Bedroom_1")))) {
           name.add("Bedroom_1");
           pg.add("Bedroom_1");
@@ -1855,6 +1850,10 @@ class _PagesState extends State<Pages> with WidgetsBindingObserver {
             (!name.contains(data[i].toString().contains("Bedroom_2")))) {
           name.add("Bedroom_2");
           pg.add("Bedroom_2");
+        } else if (data[i].toString().contains("_Bedroom") &&
+            (!name.contains(data[i].toString().contains("Bedroom")))) {
+          name.add("Bedroom");
+          pg.add("Bedroom");
         } else if (data[i].toString().contains("_Store_Room") &&
             (!name.contains(data[i].toString().contains("Store_Room")))) {
           name.add("Store_Room");
@@ -1884,7 +1883,7 @@ class _PagesState extends State<Pages> with WidgetsBindingObserver {
     setState(() {
       name = name.toSet().toList();
       pg = pg.toSet().toList();
-      print("$name  of the individual page");
+      //print("$name  of the individual page");
     });
     return "success";
   }
@@ -2126,11 +2125,11 @@ class _PagesState extends State<Pages> with WidgetsBindingObserver {
                               ? AssetImage(
                             "images/room/bathroom 2.png",
                           )
-                              : ((widget.room_name.toString().replaceAll("_", " ") ==  "Bedroom1"))
+                              : ((widget.room_name.toString().replaceAll("_", " ") == "Bedroom1"))
                               ? AssetImage(
                             "images/room/bedroom 1.png",
                           )
-                              : ((widget.room_name.toString().replaceAll("_", " ") ==  "Bedroom2"))
+                              : ((widget.room_name.toString().replaceAll("_", " ") == "Bedroom2"))
                               ? AssetImage(
                             "images/room/bedroom 2.png",
                           )

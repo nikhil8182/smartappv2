@@ -108,28 +108,28 @@ class _GeoLocationPageState extends State<GeoLocationPage> {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: [
-                        // Text(
-                        //   "${weather.toString()}",
-                        //   // temp.toString(),
-                        //   style: GoogleFonts.montserrat(
-                        //     fontSize: height * 0.045,
-                        //     fontWeight: FontWeight.bold,
-                        //   ),
-                        // ),
-                        ((weather.toString())=="null")?CircularProgressIndicator(
-                          backgroundColor: Colors.grey[700],
-                          valueColor:
-                          new AlwaysStoppedAnimation<Color>(
-                              Colors.white),
-                        )
-                            :Text(
-                            "${weather.toString()}",
-                            // temp.toString(),
-                            style: GoogleFonts.montserrat(
-                              fontSize: height * 0.045,
-                              fontWeight: FontWeight.bold,
-                            ),
+                        Text(
+                          "33",
+                          // temp.toString(),
+                          style: GoogleFonts.montserrat(
+                            fontSize: height * 0.045,
+                            fontWeight: FontWeight.bold,
                           ),
+                        ),
+                        // ((weather.toString())=="null")?CircularProgressIndicator(
+                        //   backgroundColor: Colors.grey[700],
+                        //   valueColor:
+                        //   new AlwaysStoppedAnimation<Color>(
+                        //       Colors.white),
+                        // )
+                        //     :Text(
+                        //     "${weather.toString()}",
+                        //     // temp.toString(),
+                        //     style: GoogleFonts.montserrat(
+                        //       fontSize: height * 0.045,
+                        //       fontWeight: FontWeight.bold,
+                        //     ),
+                        //   ),
                         Text(
                           "°C",
                           style: GoogleFonts.montserrat(

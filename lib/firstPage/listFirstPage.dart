@@ -83,7 +83,10 @@ class _FirstPageListContainersState extends State<FirstPageListContainers> {
   }
   else if((result == ConnectivityResult.mobile)&&(!mobNotifier)){
   //print("mobile ****************************");
-  if(!mobNotifier){
+  if((!mobNotifier) && (ipAddress.toString().toLowerCase() == 'false')){
+    get_name();
+  }
+  else{
   showSimpleNotification(
   Text(" please switch on your wifi network ",
   style: TextStyle(color: Colors.white),), background: Colors.red,
@@ -290,18 +293,22 @@ class _FirstPageListContainersState extends State<FirstPageListContainers> {
   (!name.contains(data[i].toString().contains("Master_Bedroom")))) {
   name.add("Master_Bedroom");
   pg.add("Master_Bedroom");
+  } else if (data[i].toString().contains("_Bedroom1") &&
+   !name.contains(data[i].toString().contains("Bedroom1"))){
+    name.add("Bedroom1");
+    //print("----- bedroom1 $name name -------");
+    pg.add("Bedroom1");
+    //print("----- bedroom1 $pg pg -------");
+  } else if (data[i].toString().contains("_Bedroom2") &&
+      (!name.contains(data[i].toString().contains("Bedroom2")))) {
+    name.add("Bedroom2");
+    //print("----- bedroom1 $name name -------");
+    pg.add("Bedroom2");
+    //print("----- bedroom1 $pg pg -------");
   } else if (data[i].toString().contains("_Bedroom") &&
   (!name.contains(data[i].toString().contains("Bedroom")))) {
   name.add("Bedroom");
   pg.add("Bedroom");
-  } else if (data[i].toString().contains("_Bedroom1") &&
-  (!name.contains(data[i].toString().contains("Bedroom1")))) {
-  name.add("Bedroom1");
-  pg.add("Bedroom1");
-  } else if (data[i].toString().contains("_Bedroom2") &&
-  (!name.contains(data[i].toString().contains("Bedroom2")))) {
-  name.add("Bedroom2");
-  pg.add("Bedroom2");
   } else if (data[i].toString().contains("_Store_Room") &&
   (!name.contains(data[i].toString().contains("Store_Room")))) {
   name.add("Store_Room");
@@ -392,9 +399,9 @@ class _FirstPageListContainersState extends State<FirstPageListContainers> {
               padding: EdgeInsets.all(18.0),
               child: GestureDetector(
                 onTap: (){
-                  print(name[index].toString());
-                  print(index);
-                  print(ipAddress);
+                  // print(name[index].toString());
+                  // print(index);
+                  // print(ipAddress);
                   Navigator.push(context, MaterialPageRoute(builder: (context)=>Button(name[index].toString(),index,ipAddress,g1,)));
                 },
                 child: Padding(

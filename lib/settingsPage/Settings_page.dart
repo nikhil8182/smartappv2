@@ -74,51 +74,51 @@ class _DummySettingsPageState extends State<DummySettingsPage> {
                       color: Colors.white),
                 ),
               ),
-              SizedBox(
-                // height: 20.0,
-                height: height * 0.025,
-              ),
-              Padding(
-                padding: EdgeInsets.all(18.0),
-                child: ListTile(
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(20.0),
-                    side: BorderSide(color: Colors.black),
-                  ),
-                  tileColor: Color.fromRGBO(54, 54, 54, 1.0),
-                  leading: CircleAvatar(
-                    radius: height * 0.030,
-                    backgroundColor: Color.fromRGBO(94, 94, 94, 1.0),
-                    child: Image(
-                      image: AssetImage("images/account.png"),
-                      height: height * 0.028,
-                    ),
-                  ),
-                  title: Text(
-                    "ArunKumar ",
-                    style: GoogleFonts.inter(
-                        fontSize: height * 0.022,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.white),
-                  ),
-                  subtitle: Text(
-                    "Account Settings ",
-                    style: GoogleFonts.inter(
-                        fontSize: height * 0.013, color: Colors.white),
-                  ),
-                  trailing: Container(
-                    padding: EdgeInsets.all(10.0),
-                    decoration: BoxDecoration(
-                      color: Color.fromRGBO(94, 94, 94, 1.0),
-                      borderRadius: BorderRadius.circular(10.0),
-                    ),
-                    child: Image(
-                      image: AssetImage("images/arrow.png"),
-                      height: height * 0.028,
-                    ),
-                  ),
-                ),
-              ),
+              // SizedBox(
+              //   // height: 20.0,
+              //   height: height * 0.025,
+              // ),
+              // Padding(
+              //   padding: EdgeInsets.all(18.0),
+              //   child: ListTile(
+              //     shape: RoundedRectangleBorder(
+              //       borderRadius: BorderRadius.circular(20.0),
+              //       side: BorderSide(color: Colors.black),
+              //     ),
+              //     tileColor: Color.fromRGBO(54, 54, 54, 1.0),
+              //     leading: CircleAvatar(
+              //       radius: height * 0.030,
+              //       backgroundColor: Color.fromRGBO(94, 94, 94, 1.0),
+              //       child: Image(
+              //         image: AssetImage("images/account.png"),
+              //         height: height * 0.028,
+              //       ),
+              //     ),
+              //     title: Text(
+              //       "ArunKumar ",
+              //       style: GoogleFonts.inter(
+              //           fontSize: height * 0.022,
+              //           fontWeight: FontWeight.bold,
+              //           color: Colors.white),
+              //     ),
+              //     subtitle: Text(
+              //       "Account Settings ",
+              //       style: GoogleFonts.inter(
+              //           fontSize: height * 0.013, color: Colors.white),
+              //     ),
+              //     trailing: Container(
+              //       padding: EdgeInsets.all(10.0),
+              //       decoration: BoxDecoration(
+              //         color: Color.fromRGBO(94, 94, 94, 1.0),
+              //         borderRadius: BorderRadius.circular(10.0),
+              //       ),
+              //       child: Image(
+              //         image: AssetImage("images/arrow.png"),
+              //         height: height * 0.028,
+              //       ),
+              //     ),
+              //   ),
+              // ),
               SizedBox(
                 // height: 20.0,
                 height: height * 0.025,
