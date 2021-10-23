@@ -436,10 +436,10 @@ var dataJson;
 
 class Button extends StatefulWidget {
 
-  String place;
-  int ind;
-  String ipAddress;
-  Gradient g1;
+  final String place;
+  final int ind;
+  final String ipAddress;
+  final Gradient g1;
   Button(this.place, this.ind, this.ipAddress, this.g1);
 
   @override
@@ -453,7 +453,7 @@ class _ButtonState extends State<Button> {
   List name = [];
   List pg = [];
   bool check;
-  String local_ip;
+  String localIp;
   String ip;
   Timer timer;
   int pageLoader ;
@@ -461,7 +461,7 @@ class _ButtonState extends State<Button> {
   SharedPreferences loginData;
 
 
-  Future get_name() async {
+  Future getName() async {
     pageLoader = 0;
     databaseReference.child(auth.currentUser.uid).once().then((DataSnapshot snapshot) async {
       setState(() {
@@ -473,17 +473,17 @@ class _ButtonState extends State<Button> {
     });
 
     loginData = await SharedPreferences.getInstance();
-    local_ip = widget.ipAddress;
+    localIp = widget.ipAddress;
     //print("$local_ip ========");
 
-    loginData.setString('ip', local_ip);
+    loginData.setString('ip', localIp);
     setState(() {
       ip = loginData.getString('ip');
       //print("$ip --------------");
     }
     );
 
-    if (local_ip.toString().toLowerCase() != "false") {
+    if (localIp.toString().toLowerCase() != "false") {
       //print("iam using online json");
 
       final response = await http.get(Uri.http('$ip', "/key"));
@@ -559,7 +559,7 @@ class _ButtonState extends State<Button> {
         }
       }
     }
-    else if(local_ip.toLowerCase().toString() == "false"){
+    else if(localIp.toLowerCase().toString() == "false"){
       // print("iam using online json");
       // print(" the value of dataJson is $dataJson");
       setState(() {
@@ -655,7 +655,7 @@ class _ButtonState extends State<Button> {
   @override
   void initState() {
     timer = Timer.periodic(Duration(seconds: 1), (Timer t) {
-      get_name();
+      getName();
     });
     // print("email ${widget.email} place ${widget.place} ind ${widget.ind} ");
     super.initState();
@@ -686,11 +686,11 @@ class _ButtonState extends State<Button> {
 }
 
 class Pages extends StatefulWidget {
-  String room_name;
-  int index;
-  Gradient g1;
-  String local_ip;
-  Pages(this.room_name, this.g1,this.index,this.local_ip);
+  final String roomName;
+  final int index;
+  final Gradient g1;
+  final String localIp;
+  Pages(this.roomName, this.g1,this.index,this.localIp);
   @override
   _PagesState createState() => _PagesState();
 }
@@ -724,14 +724,60 @@ class _PagesState extends State<Pages> with WidgetsBindingObserver {
   void buttonOnline(int i){
     //print("${data[i]}");
     if (data[i].toString().contains("Button") &&
-        data[i].toString().contains(widget.room_name)) {
+        data[i].toString().contains(widget.roomName)) {
       // print("im inside the button above button list container");
       // print("$buttonsList ");
       // print("--------  ${data_value[i]} --------");
       buttonsList.add(Container(
         child: InkWell(
             onTap: () {
-
+//print("im inside the inkwell on Tap()");
+              check().then((internet) {
+                //print("im inside the inkwell");
+                if (internet) {
+                  // Internet Present Case
+                  //print("im inside the button above if ");
+                  if ((dataValue[i] == true) || (dataValue[i] == "true")) {
+                    //print("im inside the if of inkwell ++++++++++");
+                    setState(() {
+                      dataValue[i] = false;
+                      up = "False";
+                    });
+                  } else {
+                    setState(() {
+                      dataValue[i] = true;
+                      up = "True";
+                    });
+                  }
+                  setState(() {
+                    // if(widget.check_url==false){
+                    //   update_value(data[i],data_value[0][i], i);
+                    // }else{
+                    //   update_value(data[i],up, i);
+                    // }
+                    updateValue(data[i],up, i);
+                    // print("${data_value[0][i]} data value is =================");
+                    // print("$up the value of up is *************");
+                    // print("$i after i is+++++++++++++++++------");
+                    _buildButtonsWithNames();
+                  });
+                  //print("Connection: present");
+                } else {
+                  showDialog(
+                      context: context,
+                      builder: (_) => AlertDialog(
+                        backgroundColor: Colors.black,
+                        title: Text(
+                          "No Internet Connection",
+                          style: TextStyle(color: Colors.white),
+                        ),
+                        content: Text(
+                            "Please check your Internet Connection",
+                            style: TextStyle(color: Colors.white)),
+                      ));
+                  //print("Connection: not present");
+                }
+              });
             },
             child: Container(
                 height: MediaQuery.of(context).size.height * 0.17,
@@ -739,7 +785,7 @@ class _PagesState extends State<Pages> with WidgetsBindingObserver {
                 padding: const EdgeInsets.all(10),
                 margin: EdgeInsets.all(10),
                 decoration: BoxDecoration(
-                    color: (data_value[i] == true) || (data_value[i] == "true") || (data_value[i] == "0")? Colors.grey[900]:Colors.orange,
+                    color: (dataValue[i] == true) || (dataValue[i] == "true") || (dataValue[i] == "0")? Colors.grey[900]:Colors.orange,
                     borderRadius: BorderRadius.circular(20.0),
                     boxShadow: [
                       BoxShadow(
@@ -772,7 +818,7 @@ class _PagesState extends State<Pages> with WidgetsBindingObserver {
                     Container(
                       child: Column(
                         children: [
-                          (data_value[i] == true) || (data_value[i] == "true")
+                          (dataValue[i] == true) || (dataValue[i] == "true")
                               ? AutoSizeText(
                             data[i]
                                 .toString()
@@ -803,11 +849,53 @@ class _PagesState extends State<Pages> with WidgetsBindingObserver {
       ));
     }
     else if (data[i].toString().contains("Push") &&
-        data[i].toString().contains(widget.room_name)) {
+        data[i].toString().contains(widget.roomName)) {
       //print("--------  ${data_value[i]} --------");
       buttonsList.add(Container(
           child: InkWell(
-              onTap: () {  },
+              onTap: () {
+                check().then((intenet) {
+                  if (intenet) {
+                    // Internet Present Case
+                    if ((dataValue[i] == true) || (dataValue[i] == "true")) {
+                      setState(() {
+                        dataValue[i] = false;
+                        up = "False";
+                      });
+                    } else {
+                      setState(() {
+                        dataValue[i] = true;
+                        up = "True";
+                      });
+                    }
+                    setState(() {
+                      // if(widget.check_url==false){
+                      //   update_value(data[i],data_value[0][i], i);
+                      // }else{
+                      //   update_value(data[i],up, i);
+                      // }
+
+                      updateValue(data[i],up, i);
+                      _buildButtonsWithNames();
+                    });
+                    //print("Connection: present");
+                  } else {
+                    showDialog(
+                        context: context,
+                        builder: (_) => AlertDialog(
+                          backgroundColor: Colors.black,
+                          title: Text(
+                            "No Internet Connection",
+                            style: TextStyle(color: Colors.white),
+                          ),
+                          content: Text(
+                              "Please check your Internet Connection",
+                              style: TextStyle(color: Colors.white)),
+                        ));
+                    //print("Connection: not present");
+                  }
+                });
+              },
               child: Container(
                 // height: MediaQuery.of(context).size.height * 0.12,
                 // width: MediaQuery.of(context).size.width * 0.265,
@@ -817,7 +905,7 @@ class _PagesState extends State<Pages> with WidgetsBindingObserver {
                   padding: const EdgeInsets.all(5),
                   margin: EdgeInsets.all(10),
                   decoration: BoxDecoration(
-                      color: (data_value[i] == true) || (data_value[i] == "true") || (data_value[i] == "0")? Colors.grey[900]:Colors.orange,
+                      color: (dataValue[i] == true) || (dataValue[i] == "true") || (dataValue[i] == "0")? Colors.grey[900]:Colors.orange,
                       borderRadius: BorderRadius.circular(20),
                       boxShadow: [
                         BoxShadow(
@@ -852,7 +940,7 @@ class _PagesState extends State<Pages> with WidgetsBindingObserver {
                       Container(
                         child: Column(
                           children: [
-                            (data_value[i] == true) || (data_value[i] == "true")
+                            (dataValue[i] == true) || (dataValue[i] == "true")
                                 ? AutoSizeText(
                               data[i]
                                   .toString()
@@ -883,7 +971,7 @@ class _PagesState extends State<Pages> with WidgetsBindingObserver {
                   )))));
     }
     else if (data[i].toString().contains("Slide") &&
-        data[i].toString().contains(widget.room_name)) {
+        data[i].toString().contains(widget.roomName)) {
       //print("--------  ${data_value[i]} --------");
       buttonsList.add(Container(
         child: Container(
@@ -916,7 +1004,7 @@ class _PagesState extends State<Pages> with WidgetsBindingObserver {
                     /*Text(data[i].toString().split("Slide")[0].replaceAll("_", " "),
                       style: GoogleFonts.robotoSlab(color: Colors.black)),*/
                     Text(
-                        "Fan Speed  ${data_value[i].toString().substring(0, 1)}",
+                        "Fan Speed  ${dataValue[i].toString().substring(0, 1)}",
                         style: GoogleFonts.robotoSlab(color: Colors.white)),
                   ],
                 ),
@@ -925,18 +1013,17 @@ class _PagesState extends State<Pages> with WidgetsBindingObserver {
                   child: Slider(
                     activeColor: Colors.yellowAccent,
                     inactiveColor: Colors.grey[500],
-                    value: double.parse(data_value[i].toString()),
+                    value: double.parse(dataValue[i].toString()),
                     min: 0,
                     max: 4,
                     divisions: 4,
-                    label: data_value[i].toString().substring(0, 1),
+                    label: dataValue[i].toString().substring(0, 1),
                     onChangeEnd: (double value) {
                       check().then((intenet) {
                         if (intenet) {
                           // Internet Present Case
-
                           setState(() {
-                            data_value[i] = value.toInt().toString();
+                            dataValue[i] = value.toInt().toString();
                             /*update_value(data[i], data_value[0][i], i);
                           _buildButtonsWithNames();*/
                           });
@@ -956,14 +1043,14 @@ class _PagesState extends State<Pages> with WidgetsBindingObserver {
                               ));
                         }
                         setState(() {
-                          update_value(data[i], data_value[i], i);
+                          updateValue(data[i], dataValue[i], i);
                           _buildButtonsWithNames();
                         });
                       });
                     },
                     onChanged: (double value) {
                       setState(() {
-                        data_value[i] = value.toString();
+                        dataValue[i] = value.toString();
                       });
                     },
                   ),
@@ -973,11 +1060,53 @@ class _PagesState extends State<Pages> with WidgetsBindingObserver {
       ));
     }
     else if (data[i].toString().contains("Switch") &&
-        data[i].toString().contains(widget.room_name)) {
+        data[i].toString().contains(widget.roomName)) {
       //print("--------  ${data_value[i]} --------");
       buttonsList.add(Container(
           child: InkWell(
-              onTap: () { },
+              onTap: () {
+                check().then((intenet) {
+                  if (intenet) {
+                    // Internet Present Case
+                    if ((dataValue[i] == true) || (dataValue[i] == "true")) {
+                      setState(() {
+                        dataValue[i] = false;
+                        up = "False";
+                      });
+                    } else {
+                      setState(() {
+                        dataValue[i] = true;
+                        up = "True";
+                      });
+                    }
+                    setState(() {
+                      // if(widget.check_url==false){
+                      //   update_value(data[i],data_value[0][i], i);
+                      // }else{
+                      //   update_value(data[i],up, i);
+                      // }
+
+                      updateValue(data[i],up, i);
+                      _buildButtonsWithNames();
+                    });
+                    //print("Connection: present");
+                  } else {
+                    showDialog(
+                        context: context,
+                        builder: (_) => AlertDialog(
+                          backgroundColor: Colors.black,
+                          title: Text(
+                            "No Internet Connection",
+                            style: TextStyle(color: Colors.white),
+                          ),
+                          content: Text(
+                              "Please check your Internet Connection",
+                              style: TextStyle(color: Colors.white)),
+                        ));
+                    //print("Connection: not present");
+                  }
+                });
+              },
               child: Container(
                 // height: MediaQuery.of(context).size.height * 0.12,
                 // width: MediaQuery.of(context).size.width * 0.265,
@@ -987,7 +1116,7 @@ class _PagesState extends State<Pages> with WidgetsBindingObserver {
                   padding: const EdgeInsets.all(5),
                   margin: EdgeInsets.all(10),
                   decoration: BoxDecoration(
-                      color: (data_value[i] == true) || (data_value[i] == "true") || (data_value[i] == "0")? Colors.grey[900]:Colors.orange,
+                      color: (dataValue[i] == true) || (dataValue[i] == "true") || (dataValue[i] == "0")? Colors.grey[900]:Colors.orange,
                       borderRadius: BorderRadius.circular(20),
                       boxShadow: [
                         BoxShadow(
@@ -1022,7 +1151,7 @@ class _PagesState extends State<Pages> with WidgetsBindingObserver {
                       Container(
                         child: Column(
                           children: [
-                            (data_value[i] == true) || (data_value[i] == "true")
+                            (dataValue[i] == true) || (dataValue[i] == "true")
                                 ? AutoSizeText(
                               data[i]
                                   .toString()
@@ -1057,7 +1186,7 @@ class _PagesState extends State<Pages> with WidgetsBindingObserver {
   void buttonOffline(int i) {
     //print("${data[i]}");
     if (data[i].toString().contains("Button") &&
-        data[i].toString().contains(widget.room_name)) {
+        data[i].toString().contains(widget.roomName)) {
       // print("im inside the button above button list container");
       // print("$buttonsList ");
       buttonsList.add(Container(
@@ -1069,15 +1198,15 @@ class _PagesState extends State<Pages> with WidgetsBindingObserver {
                 if (intenet) {
                   // Internet Present Case
                   //print("im inside the button above if ");
-                  if ((data_value[0][i] == 1) || (data_value[0][i] == "1")) {
+                  if ((dataValue[0][i] == 1) || (dataValue[0][i] == "1")) {
                     //print("im inside the if of inkwell ++++++++++");
                     setState(() {
-                      data_value[0][i] = 0;
+                      dataValue[0][i] = 0;
                       up = "False";
                     });
                   } else {
                     setState(() {
-                      data_value[0][i] = 1;
+                      dataValue[0][i] = 1;
                       up = "True";
                     });
                   }
@@ -1087,7 +1216,7 @@ class _PagesState extends State<Pages> with WidgetsBindingObserver {
                     // }else{
                     //   update_value(data[i],up, i);
                     // }
-                    update_value(data[i],up, i);
+                    updateValue(data[i],up, i);
                     // print("${data_value[0][i]} data value is =================");
                     // print("$up the value of up is *************");
                     // print("$i after i is+++++++++++++++++------");
@@ -1117,7 +1246,7 @@ class _PagesState extends State<Pages> with WidgetsBindingObserver {
                 padding: const EdgeInsets.all(10),
                 margin: EdgeInsets.all(10),
                 decoration: BoxDecoration(
-                    color: (data_value[0][i] == 0) || (data_value[0][i] == "0")? Colors.grey[900]:Colors.orange,
+                    color: (dataValue[0][i] == 0) || (dataValue[0][i] == "0")? Colors.grey[900]:Colors.orange,
                     borderRadius: BorderRadius.circular(20.0),
                     boxShadow: [
                       BoxShadow(
@@ -1150,7 +1279,7 @@ class _PagesState extends State<Pages> with WidgetsBindingObserver {
                     Container(
                       child: Column(
                         children: [
-                          (data_value[0][i] == 1) || (data_value[0][i] == "1")
+                          (dataValue[0][i] == 1) || (dataValue[0][i] == "1")
                               ? AutoSizeText(
                             data[i]
                                 .toString()
@@ -1181,21 +1310,21 @@ class _PagesState extends State<Pages> with WidgetsBindingObserver {
       ));
     }
     else if (data[i].toString().contains("Push") &&
-        data[i].toString().contains(widget.room_name)) {
+        data[i].toString().contains(widget.roomName)) {
       buttonsList.add(Container(
           child: InkWell(
               onTap: () {
                 check().then((intenet) {
                   if (intenet) {
                     // Internet Present Case
-                    if ((data_value[0][i] == 1) || (data_value[0][i] == "1")) {
+                    if ((dataValue[0][i] == 1) || (dataValue[0][i] == "1")) {
                       setState(() {
-                        data_value[0][i] = 0;
+                        dataValue[0][i] = 0;
                         up = "False";
                       });
                     } else {
                       setState(() {
-                        data_value[0][i] = 1;
+                        dataValue[0][i] = 1;
                         up = "True";
                       });
                     }
@@ -1206,7 +1335,7 @@ class _PagesState extends State<Pages> with WidgetsBindingObserver {
                       //   update_value(data[i],up, i);
                       // }
 
-                      update_value(data[i],up, i);
+                      updateValue(data[i],up, i);
                       _buildButtonsWithNames();
                     });
                     //print("Connection: present");
@@ -1236,7 +1365,7 @@ class _PagesState extends State<Pages> with WidgetsBindingObserver {
                   padding: const EdgeInsets.all(5),
                   margin: EdgeInsets.all(10),
                   decoration: BoxDecoration(
-                      color: (data_value[0][i] == 0) || (data_value[0][i] == "0")? Colors.grey[900]:Colors.orange,
+                      color: (dataValue[0][i] == 0) || (dataValue[0][i] == "0")? Colors.grey[900]:Colors.orange,
                       borderRadius: BorderRadius.circular(20),
                       boxShadow: [
                         BoxShadow(
@@ -1271,7 +1400,7 @@ class _PagesState extends State<Pages> with WidgetsBindingObserver {
                       Container(
                         child: Column(
                           children: [
-                            (data_value[0][i] == 1) || (data_value[0][i] == "1")
+                            (dataValue[0][i] == 1) || (dataValue[0][i] == "1")
                                 ? AutoSizeText(
                               data[i]
                                   .toString()
@@ -1302,7 +1431,7 @@ class _PagesState extends State<Pages> with WidgetsBindingObserver {
                   )))));
     }
     else if (data[i].toString().contains("Slide") &&
-        data[i].toString().contains(widget.room_name)) {
+        data[i].toString().contains(widget.roomName)) {
       buttonsList.add(Container(
         child: Container(
             height: MediaQuery.of(context).size.height * 0.12,
@@ -1334,7 +1463,7 @@ class _PagesState extends State<Pages> with WidgetsBindingObserver {
                     /*Text(data[i].toString().split("Slide")[0].replaceAll("_", " "),
                       style: GoogleFonts.robotoSlab(color: Colors.black)),*/
                     Text(
-                        "Fan Speed  ${data_value[0][i].toString().substring(0, 1)}",
+                        "Fan Speed  ${dataValue[0][i].toString().substring(0, 1)}",
                         style: GoogleFonts.robotoSlab(color: Colors.white)),
                   ],
                 ),
@@ -1343,18 +1472,18 @@ class _PagesState extends State<Pages> with WidgetsBindingObserver {
                   child: Slider(
                     activeColor: Colors.yellowAccent,
                     inactiveColor: Colors.grey[500],
-                    value: double.parse(data_value[0][i]),
+                    value: double.parse(dataValue[0][i]),
                     min: 0,
                     max: 4,
                     divisions: 4,
-                    label: data_value[0][i].toString().substring(0, 1),
+                    label: dataValue[0][i].toString().substring(0, 1),
                     onChangeEnd: (double value) {
                       check().then((intenet) {
                         if (intenet) {
                           // Internet Present Case
 
                           setState(() {
-                            data_value[0][i] = value.toInt().toString();
+                            dataValue[0][i] = value.toInt().toString();
                             /*update_value(data[i], data_value[0][i], i);
                           _buildButtonsWithNames();*/
                           });
@@ -1374,14 +1503,14 @@ class _PagesState extends State<Pages> with WidgetsBindingObserver {
                               ));
                         }
                         setState(() {
-                          update_value(data[i], data_value[0][i], i);
+                          updateValue(data[i], dataValue[0][i], i);
                           _buildButtonsWithNames();
                         });
                       });
                     },
                     onChanged: (double value) {
                       setState(() {
-                        data_value[0][i] = value.toString();
+                        dataValue[0][i] = value.toString();
                       });
                     },
                   ),
@@ -1391,21 +1520,21 @@ class _PagesState extends State<Pages> with WidgetsBindingObserver {
       ));
     }
     else if (data[i].toString().contains("Switch") &&
-        data[i].toString().contains(widget.room_name)) {
+        data[i].toString().contains(widget.roomName)) {
       buttonsList.add(Container(
           child: InkWell(
               onTap: () {
                 check().then((intenet) {
                   if (intenet) {
                     // Internet Present Case
-                    if ((data_value[0][i] == 1) || (data_value[0][i] == "1")) {
+                    if ((dataValue[0][i] == 1) || (dataValue[0][i] == "1")) {
                       setState(() {
-                        data_value[0][i] = 0;
+                        dataValue[0][i] = 0;
                         up = "False";
                       });
                     } else {
                       setState(() {
-                        data_value[0][i] = 1;
+                        dataValue[0][i] = 1;
                         up = "True";
                       });
                     }
@@ -1416,7 +1545,7 @@ class _PagesState extends State<Pages> with WidgetsBindingObserver {
                       //   update_value(data[i],up, i);
                       // }
 
-                      update_value(data[i],up, i);
+                      updateValue(data[i],up, i);
                       _buildButtonsWithNames();
                     });
                     //print("Connection: present");
@@ -1446,7 +1575,7 @@ class _PagesState extends State<Pages> with WidgetsBindingObserver {
                   padding: const EdgeInsets.all(5),
                   margin: EdgeInsets.all(10),
                   decoration: BoxDecoration(
-                      color: (data_value[0][i] == 0) || (data_value[0][i] == "0")? Colors.grey[900]:Colors.orange,
+                      color: (dataValue[0][i] == 0) || (dataValue[0][i] == "0")? Colors.grey[900]:Colors.orange,
                       borderRadius: BorderRadius.circular(20),
                       boxShadow: [
                         BoxShadow(
@@ -1481,7 +1610,7 @@ class _PagesState extends State<Pages> with WidgetsBindingObserver {
                       Container(
                         child: Column(
                           children: [
-                            (data_value[0][i] == 1) || (data_value[0][i] == "1")
+                            (dataValue[0][i] == 1) || (dataValue[0][i] == "1")
                                 ? AutoSizeText(
                               data[i]
                                   .toString()
@@ -1518,46 +1647,66 @@ class _PagesState extends State<Pages> with WidgetsBindingObserver {
 
 
   void initial() async {
-    local_ip = widget.local_ip;
+    localIp = widget.localIp;
     //print("im inside the initial function $local_ip");
     loginData = await SharedPreferences.getInstance();
     setState(() {
-      loginData.setString('ip', local_ip);
+      loginData.setString('ip', localIp);
       ip = loginData.getString('ip');
       //print("im inside the setstate of initial $ip");
     });
   }
 
 
-  Future<http.Response> update_value(button, button_value, i) async {
-  // print("im inside the update value 0----0099898");
-    final response = await http.get(Uri.http("$ip", "/$button/$button_value"));
-    if (response.statusCode == 200) {
-      result = true;
-      // print("response 1 : ${response.body}");
-      if (response.body != "success");
-      // _showScaffold("Update Failed, Please check server or internet connection and retry");
-    } else {
-      if ((data_value[0][i] == 0) || (data_value[0][i] == "0")) {
-        setState(() {
-          data_value[0][i] = 1;
-          _buildButtonsWithNames();
-        });
+  updateValue(button, buttonValue, i) async {
+    //print("--------  im inside the update value   0----0099898");
+
+    databaseReference.child(auth.currentUser.uid).once().then((
+        DataSnapshot snapshot) async {
+      setState(() {
+        print("${auth.currentUser.uid}");
+        dataJson = snapshot.value;
+        //print(dataJson);
+      });
+    });
+    if (ip.toLowerCase().toString() != 'false') {
+      final response = await http.get( Uri.http("$ip", "/$button/$buttonValue"));
+      if (response.statusCode == 200) {
+        result = true;
+        //print("im inside the update the value");
+        // print("response 1 : ${response.body}");
+        if (response.body != "success");
+        // _showScaffold("Update Failed, Please check server or internet connection and retry");
       } else {
-        setState(() {
-          data_value[0][i] = 0;
-          _buildButtonsWithNames();
-        });
+        if ((dataValue[0][i] == 0) || (dataValue[0][i] == "0")) {
+          setState(() {
+            //print("im inside the if loop of update value");
+            dataValue[0][i] = 1;
+            _buildButtonsWithNames();
+          });
+        } else {
+          setState(() {
+            //print("im inside the else case of update values");
+            dataValue[0][i] = 0;
+            _buildButtonsWithNames();
+          });
+        }
+        result = false;
+        // If the server did not return a 200 OK response,
+        // then throw an exception.
+        throw Exception('Failed to load album');
       }
-      result = false;
-      // If the server did not return a 200 OK response,
-      // then throw an exception.
-      throw Exception('Failed to load album');
+      return response;
     }
-    return response;
+    else if(ip.toLowerCase().toString() == 'false'){
+      databaseReference.child(auth.currentUser.uid).update({
+        button : buttonValue
+      });
+      result = true;
+    }
   }
 
-  Future<http.Response> call() async {
+  call() async {
     //print("im inside the calll 0----0099898");
     databaseReference.child(auth.currentUser.uid).once().then((DataSnapshot snapshot) async {
       setState(() {
@@ -1603,7 +1752,7 @@ class _PagesState extends State<Pages> with WidgetsBindingObserver {
     }
   }
 
-  Future<bool> call_value() async {
+  callByValue() async {
 
     //print("im inside the call by 74873268768723657 value 0----0099898");
     databaseReference.child(auth.currentUser.uid).once().then((DataSnapshot snapshot) async {
@@ -1619,7 +1768,7 @@ class _PagesState extends State<Pages> with WidgetsBindingObserver {
       if (response.statusCode == 200) {
         // print("response: ${response.statusCode}");
         setState(() {
-          data_value = jsonDecode(response.body);
+          dataValue = jsonDecode(response.body);
           //print("-----$data_value  value of data_value-----");
         });
         // print("response 2: ${response.body}");
@@ -1633,9 +1782,9 @@ class _PagesState extends State<Pages> with WidgetsBindingObserver {
             //print("****************************we are checking the below line**********************************************");
             // print("after");
 
-            for (int i = 0; i < data_value.length; i++) {
+            for (int i = 0; i < dataValue.length; i++) {
               //print("${data_value.length} the value inside the setstate of data_value");
-              data_value[0][i] = data_value[0][i];
+              dataValue[0][i] = dataValue[0][i];
               //print("${data_value[0][i]} the value of data_value");
             }
 
@@ -1660,7 +1809,7 @@ class _PagesState extends State<Pages> with WidgetsBindingObserver {
     else if(ip.toLowerCase().toString() == 'false'){
      //print("im inside the else if of call_value()");
       setState(() {
-        data_value = dataJson.values.toList();
+        dataValue = dataJson.values.toList();
         //print("$data_value the data value inside the call_by setsstate");
       });
       result2 = true;
@@ -1674,10 +1823,10 @@ class _PagesState extends State<Pages> with WidgetsBindingObserver {
         setState(() {
           // print("after");
             //print("${data_value.length} the length of data values indidde the call by setstate");
-          for (int i = 0; i < data_value.length; i++) {
-            print(data_value[i]);
+          for (int i = 0; i < dataValue.length; i++) {
+            print(dataValue[i]);
             //print(data_value[0][i]);
-            data_value[i] = data_value[i];
+            dataValue[i] = dataValue[i];
           }
           // _buildButtonsWithNames();
           // Here you can write your code for open new view
@@ -1686,32 +1835,29 @@ class _PagesState extends State<Pages> with WidgetsBindingObserver {
     }
   }
 
-  final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
   List data;
-  List data_value;
+  List dataValue;
   List<Container> buttonsList = List<Container>();
   String title;
   bool result = false;
   bool result2 = false;
-  Offset _offset = Offset.zero;
-  Color c;
-  double _currentSliderValue = 0;
   bool isSwitched;
   Timer timer;
   List name = [];
   List pg = [];
-  String button_name;
-  String local_ip;
+  String buttonName;
+  String localIp;
 
-  Future get_name() async {
+  getName() async {
     //final response = await http.get('http://34.83.46.202.xip.io/cyberhome/home.php?username=${widget.email}&query=table');
     //final response = await http.get('http://$local_ip/key/');
-    loginData = await SharedPreferences.getInstance();
-    setState(() {
-      loginData.setString('ip', local_ip);
-      ip = loginData.getString('ip');
-      //print("im inside the setstate of getname $ip");
-    });
+
+    // loginData = await SharedPreferences.getInstance();
+    // setState(() {
+    //   loginData.setString('ip', local_ip);
+    //   ip = loginData.getString('ip');
+    //   //print("im inside the setstate of getname $ip");
+    // });
 
     // print("${widget.local_ip} im inside the getname checking local local ip");
     // print("$ip ip inside the getname");
@@ -1901,110 +2047,113 @@ class _PagesState extends State<Pages> with WidgetsBindingObserver {
   @override
   void initState() {
     initial();
-    get_name();
+    getName();
     // print("mood check ${widget.isDark}");
     check().then((intenet) {
       if (intenet) {
-        call().then((value) => call_value());
-      } else {
-        showDialog(
-            context: context,
-            builder: (_) => AlertDialog(
-              backgroundColor: Colors.black,
-              title: Text(
-                "No Internet Connection",
-                style: TextStyle(color: Colors.white),
-              ),
-              content: Text("Please check your Internet Connection",
-                  style: TextStyle(color: Colors.white)),
-            ));
-        //print("Connection: not present");
+        call().then((value) => callByValue());
       }
+      // else {
+      //   showDialog(
+      //       context: context,
+      //       builder: (_) => AlertDialog(
+      //         backgroundColor: Colors.black,
+      //         title: Text(
+      //           "No Internet Connection",
+      //           style: TextStyle(color: Colors.white),
+      //         ),
+      //         content: Text("Please check your Internet Connection",
+      //             style: TextStyle(color: Colors.white)),
+      //       ));
+      //   //print("Connection: not present");
+      // }
     });
     timer = Timer.periodic(
         Duration(seconds: 3),
             (Timer t) => check().then((intenet) {
           if (intenet) {
-            call().then((value) => call_value());
-          } else {
-            showDialog(
-                context: context,
-                builder: (_) => AlertDialog(
-                  backgroundColor: Colors.black,
-                  title: Text(
-                    "No Internet Connection",
-                    style: TextStyle(color: Colors.white),
-                  ),
-                  content: Text("Please check your Internet Connection",
-                      style: TextStyle(color: Colors.white)),
-                ));
+            call().then((value) => callByValue());
           }
+          // else {
+          //   showDialog(
+          //       context: context,
+          //       builder: (_) => AlertDialog(
+          //         backgroundColor: Colors.black,
+          //         title: Text(
+          //           "No Internet Connection",
+          //           style: TextStyle(color: Colors.white),
+          //         ),
+          //         content: Text("Please check your Internet Connection",
+          //             style: TextStyle(color: Colors.white)),
+          //       ));
+          // }
         }));
     //  call_value();
     super.initState();
     // print("data ${data.toString()}");
     // print("data_value ${data_value.toString()}");
 
-    WidgetsBinding.instance.addObserver(this);
+    //WidgetsBinding.instance.addObserver(this);
   }
 
-  @override
-  void didChangeAppLifecycleState(AppLifecycleState state) {
-    if (state == AppLifecycleState.resumed) {
-      check().then((intenet) {
-        if (intenet) {
-          call().then((value) => call_value());
-        } else {
-          showDialog(
-              context: context,
-              builder: (_) => AlertDialog(
-                backgroundColor: Colors.black,
-                title: Text(
-                  "No Internet Connection",
-                  style: TextStyle(color: Colors.white),
-                ),
-                content: Text("Please check your Internet Connection",
-                    style: TextStyle(color: Colors.white)),
-              ));
-          //print("Connection: not present");
-        }
-      }
-      );
-      timer = Timer.periodic(
-          Duration(seconds: 3),
-              (Timer t) => check().then((intenet) {
-            if (intenet) {
-              call().then((value) => call_value());
-            } else {
-              showDialog(
-                  context: context,
-                  builder: (_) => AlertDialog(
-                    backgroundColor: Colors.black,
-                    title: Text(
-                      "No Internet Connection",
-                      style: TextStyle(color: Colors.white),
-                    ),
-                    content: Text(
-                        "Please check your Internet Connection",
-                        style: TextStyle(color: Colors.white)),
-                  ));
-            }
-          })); //   _showScaffold("resume");
-      // user returned to our app
-    } else if (state == AppLifecycleState.inactive) {
-      // print("app:inactive");
-      timer?.cancel();
-      // app is inactive
-    } else if (state == AppLifecycleState.paused) {
-      timer?.cancel();
-      // print("app:pause");
-      // user is about quit our app temporally
-    }
-  }
+  // @override
+  // void didChangeAppLifecycleState(AppLifecycleState state) {
+  //   if (state == AppLifecycleState.resumed) {
+  //     check().then((intenet) {
+  //       if (intenet) {
+  //         call().then((value) => call_value());
+  //       }
+  //       else {
+  //         showDialog(
+  //             context: context,
+  //             builder: (_) => AlertDialog(
+  //               backgroundColor: Colors.black,
+  //               title: Text(
+  //                 "No Internet Connection",
+  //                 style: TextStyle(color: Colors.white),
+  //               ),
+  //               content: Text("Please check your Internet Connection",
+  //                   style: TextStyle(color: Colors.white)),
+  //             ));
+  //         //print("Connection: not present");
+  //       }
+  //     }
+  //     );
+  //     timer = Timer.periodic(
+  //         Duration(seconds: 3),
+  //             (Timer t) => check().then((intenet) {
+  //           if (intenet) {
+  //             call().then((value) => call_value());
+  //           } else {
+  //             showDialog(
+  //                 context: context,
+  //                 builder: (_) => AlertDialog(
+  //                   backgroundColor: Colors.black,
+  //                   title: Text(
+  //                     "No Internet Connection",
+  //                     style: TextStyle(color: Colors.white),
+  //                   ),
+  //                   content: Text(
+  //                       "Please check your Internet Connection",
+  //                       style: TextStyle(color: Colors.white)),
+  //                 ));
+  //           }
+  //         })); //   _showScaffold("resume");
+  //     // user returned to our app
+  //   } else if (state == AppLifecycleState.inactive) {
+  //     // print("app:inactive");
+  //     timer?.cancel();
+  //     // app is inactive
+  //   } else if (state == AppLifecycleState.paused) {
+  //     timer?.cancel();
+  //     // print("app:pause");
+  //     // user is about quit our app temporally
+  //   }
+  // }
 
   @override
   void dispose() {
-    WidgetsBinding.instance.removeObserver(this);
+    // WidgetsBinding.instance.removeObserver(this);
     timer?.cancel();
     super.dispose();
   }
@@ -2073,16 +2222,17 @@ class _PagesState extends State<Pages> with WidgetsBindingObserver {
     // );
     return Scaffold(
       extendBodyBehindAppBar: true,
-      appBar: AppBar(
-        backgroundColor: Colors.transparent,
-      ),
+      // appBar: AppBar(
+      //   backgroundColor: Colors.transparent,
+      // ),
       body: Container(
         height: height * 1.0,
         width: width * 1.0,
-        child: Stack(children: [
-          Column(
-            children: [
-              Container(
+        child: Column(
+          children: [
+            Stack(
+              children: [
+                Container(
                 decoration: BoxDecoration(
                     gradient: LinearGradient(
                         begin: Alignment.bottomLeft,
@@ -2096,73 +2246,73 @@ class _PagesState extends State<Pages> with WidgetsBindingObserver {
                           0.9
                         ])),
                 child: Container(
-                  height: height * 0.54,
+                  height: height * 0.35,
                   width: width * 1.0,
                   decoration: BoxDecoration(
                       image: DecorationImage(
                           colorFilter: ColorFilter.mode(
                               Colors.black.withOpacity(0.7),
                               BlendMode.dstATop),
-                          image: ((widget.room_name.toString().replaceAll("_", " ") == "Hall"))
+                          image: ((widget.roomName.toString().replaceAll("_", " ") == "Hall"))
                               ? AssetImage(
                             "images/room/hall.png",
                           )
-                              : ((widget.room_name.toString().replaceAll("_", " ") == "Admin Room"))
+                              : ((widget.roomName.toString().replaceAll("_", " ") == "Admin Room"))
                               ? AssetImage(
-                            "images/room/admin room.png",
-                          ) : ((widget.room_name.toString().replaceAll("_", " ") == "Garage"))
+                            "images/room/admin room.jpg",
+                          ) : ((widget.roomName.toString().replaceAll("_", " ") == "Garage"))
                               ? AssetImage(
                             "images/room/garage.png",
                           )
-                              : ((widget.room_name.toString().replaceAll("_", " ") == "Kitchen"))
+                              : ((widget.roomName.toString().replaceAll("_", " ") == "Kitchen"))
                               ? AssetImage(
                             "images/room/kitchen.png",
                           )
-                              : ((widget.room_name.toString().replaceAll("_", " ") == "Bathroom1"))
+                              : ((widget.roomName.toString().replaceAll("_", " ") == "Bathroom1"))
                               ? AssetImage(
                             "images/room/bathroom 1.png",
-                          ): ((widget.room_name.toString().replaceAll("_", " ") == "Bathroom2"))
+                          ): ((widget.roomName.toString().replaceAll("_", " ") == "Bathroom2"))
                               ? AssetImage(
                             "images/room/bathroom 2.png",
                           )
-                              : ((widget.room_name.toString().replaceAll("_", " ") == "Bedroom1"))
+                              : ((widget.roomName.toString().replaceAll("_", " ") == "Bedroom1"))
                               ? AssetImage(
                             "images/room/bedroom 1.png",
                           )
-                              : ((widget.room_name.toString().replaceAll("_", " ") == "Bedroom2"))
+                              : ((widget.roomName.toString().replaceAll("_", " ") == "Bedroom2"))
                               ? AssetImage(
                             "images/room/bedroom 2.png",
                           )
-                              : ((widget.room_name.toString().replaceAll("_", " ") ==  "Master Bedroom"))
+                              : ((widget.roomName.toString().replaceAll("_", " ") ==  "Master Bedroom"))
                               ? AssetImage(
                             "images/room/master bedroom.png",
                           )
-                              : ((widget.room_name.toString().replaceAll("_", " ") ==  "Bedroom"))
+                              : ((widget.roomName.toString().replaceAll("_", " ") ==  "Bedroom"))
                               ? AssetImage(
                             "images/room/bedroom 2.png",
                           )
-                              : ((widget.room_name.toString().replaceAll("_", " ") ==  "Kids Room"))
+                              : ((widget.roomName.toString().replaceAll("_", " ") ==  "Kids Room"))
                               ? AssetImage(
                             "images/room/kids bedroom.png",
                           )
-                              : ((widget.room_name.toString().replaceAll("_", " ") ==  "Outside"))
+                              : ((widget.roomName.toString().replaceAll("_", " ") ==  "Outside"))
                               ? AssetImage(
                             "images/room/outside.png",
                           )
-                              : ((widget.room_name.toString().replaceAll("_", " ") ==  "Garden"))
+                              : ((widget.roomName.toString().replaceAll("_", " ") ==  "Garden"))
                               ? AssetImage(
                             "images/room/garden.png",
                           )
-                              : ((widget.room_name.toString().replaceAll("_", " ") ==  "Parking"))
+                              : ((widget.roomName.toString().replaceAll("_", " ") ==  "Parking"))
                               ? AssetImage(
                             "images/room/parking.png",
                           )
-                              : ((widget.room_name.toString().replaceAll("_", " ") ==  "Living Room"))
+                              : ((widget.roomName.toString().replaceAll("_", " ") ==  "Living Room"))
                               ? AssetImage(
                             "images/room/living room.png",
 
                           )
-                              : ((widget.room_name.toString().replaceAll("_", " ") ==  "Store Room"))
+                              : ((widget.roomName.toString().replaceAll("_", " ") ==  "Store Room"))
                               ? AssetImage(
                             "images/room/store room.png",
                           )
@@ -2171,38 +2321,45 @@ class _PagesState extends State<Pages> with WidgetsBindingObserver {
                   ),
                 ),
               ),
-              Container(
-                padding: EdgeInsets.symmetric(horizontal: 40.0),
-                //height: height * 0.3724,
-                height: height * 0.427
-                ,
-                width: width * 1.0,
-                decoration: BoxDecoration(
-                    gradient: LinearGradient(
-                        begin: Alignment.bottomLeft,
-                        end: Alignment.topRight,
-                        colors: [
-                          Color.fromRGBO(0, 0, 0, 1.0),
-                          Color.fromRGBO(45, 47, 49, 1.0),
-                        ],
-                        stops: [
-                          0.1,
-                          0.7
-                        ])),
-
+                Padding(
+                  padding: EdgeInsets.all(8.0),
+                  child: IconButton(
+                    onPressed: (){
+                      Navigator.pop(context);
+                    },
+                    icon: Icon(Icons.arrow_back,color: Colors.white,size: height*0.030,),
+                  ),
+                )
+              ]
+            ),
+            Container(
+              padding: EdgeInsets.symmetric(horizontal: 10.0),
+              //height: height * 0.3724,
+              height: height * 0.61489,
+              width: width * 1.0,
+              decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                      begin: Alignment.bottomLeft,
+                      end: Alignment.topRight,
+                      colors: [
+                        Color.fromRGBO(0, 0, 0, 1.0),
+                        Color.fromRGBO(45, 47, 49, 1.0),
+                      ],
+                      stops: [
+                        0.1,
+                        0.7
+                      ]),
               ),
-            ],
-          ),
-          SingleChildScrollView(
-            padding: EdgeInsets.symmetric(vertical: 350.0),
-            child: Container(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
+                  SizedBox(
+                    height: height * 0.015,
+                  ),
                   Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 12.0),
+                      padding: EdgeInsets.symmetric(horizontal: 8.0),
                       child: Text(
-                        widget.room_name.toString().replaceAll("_", " "),
+                        widget.roomName.toString().replaceAll("_", " "),
                         style: GoogleFonts.robotoSlab(
                             fontSize: 24, color: Colors.white),
                       )),
@@ -2212,8 +2369,8 @@ class _PagesState extends State<Pages> with WidgetsBindingObserver {
                   ),
 
                   Container(
-                    padding: EdgeInsets.symmetric(horizontal: 10.0),
-                    height: height * 1.0,
+                    padding: EdgeInsets.symmetric(horizontal: 5.0),
+                    height: height * 0.5500,
                     width: width * 1.0,
                     color: Colors.transparent,
                     // decoration: BoxDecoration(
@@ -2228,39 +2385,41 @@ class _PagesState extends State<Pages> with WidgetsBindingObserver {
                     //           0.1,
                     //           0.7
                     //         ])),
-                    child: Column(
-                      children: [
-                        result && result2
-                            ? Container(
-                            padding: EdgeInsets.all(10.0),
-                            // color: Colors.red,
-                            child: Wrap(
-                              spacing: 2.0,
-                              children: _buildButtonsWithNames(),
-                            ))
-                            : Container(
-                          child: Container(
-                            margin: EdgeInsets.only(top: height * 0.4),
-                            padding: EdgeInsets.all(10),
-                            child: CircularProgressIndicator(
-                              backgroundColor: Colors.grey[700],
-                              valueColor:
-                              new AlwaysStoppedAnimation<Color>(
-                                  Colors.white),
+                    child: SingleChildScrollView(
+                      child: Column(
+                        children: [
+                          result && result2
+                              ? Container(
+                              padding: EdgeInsets.all(10.0),
+                              // color: Colors.red,
+                              child: Wrap(
+                                spacing: 2.0,
+                                children: _buildButtonsWithNames(),
+                              ))
+                              : Container(
+                            child: Container(
+                              margin: EdgeInsets.only(top: height * 0.4),
+                              padding: EdgeInsets.all(10),
+                              child: CircularProgressIndicator(
+                                backgroundColor: Colors.grey[700],
+                                valueColor:
+                                new AlwaysStoppedAnimation<Color>(
+                                    Colors.white),
+                              ),
                             ),
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
                   ),
 
                 ],
               ),
+
             ),
-          ),
-        ]
+          ],
         ),
-      ),
+        ),
     );
   }
 }

@@ -17,7 +17,6 @@ FirebaseAuth auth = FirebaseAuth.instance;
 final databaseReference = FirebaseDatabase.instance.reference();
 
 class FirstPageGridContainer extends StatefulWidget {
-  const FirstPageGridContainer({Key key}) : super(key: key);
 
   @override
   _FirstPageGridContainerState createState() => _FirstPageGridContainerState();
@@ -25,10 +24,10 @@ class FirstPageGridContainer extends StatefulWidget {
 
 class _FirstPageGridContainerState extends State<FirstPageGridContainer> {
 
-  String ip_local;
-  SharedPreferences logindata;
+  bool wifiNotifier = false;
+  String ipLocal = " ";
   String ip;
-  String username;
+  String username ;
   bool notifier = false;
   bool mobNotifier = false;
   Gradient g1 = LinearGradient(
@@ -39,75 +38,12 @@ class _FirstPageGridContainerState extends State<FirstPageGridContainer> {
         Colors.grey[800],
       ]);
 
-  var dataJson;
-  void initial() async {
-    logindata = await SharedPreferences.getInstance();
-    setState(() {
-      username = logindata.getString('username');
-    });
-  }
-
-  SharedPreferences loginData;
-  String userName = " ";
-  String ipAddress;
-
-  Future <String> getData(){
-
-    databaseReference.child(auth.currentUser.uid).once().then((DataSnapshot snapshot) async {
-
-      // print('Data : ${snapshot.value}');
-      // print("iam going to map ");
-
-      // print("dataJson = $dataJson");
-      // print(dataJson["name"]);
-      // userName = dataJson["name"];
-      // ipAddress= dataJson["ip"];
-
-      setState(() {
-        dataJson = snapshot.value;
-        //print(dataJson);
-        userName = dataJson["name"];
-        ipAddress= dataJson["ip"].toString();
-
-        // ip_local = loginData.setString('ip', ipAddress) as String ;
-        //print("$ipAddress --------");
-      });
-
-
-      if(result == ConnectivityResult.wifi) {
-        //print("wifi =============_________(((((((((()))))))");
-        get_name();
-      }
-      else if((result == ConnectivityResult.mobile)&&(!mobNotifier)){
-        //print("mobile ****************************");
-        if((!mobNotifier) && (ipAddress.toString().toLowerCase() == 'false')) {
-          get_name();
-        }
-        else{
-          showSimpleNotification(
-            Text(" please switch on your wifi network ",
-              style: TextStyle(color: Colors.white),), background: Colors.red,
-          );
-        }
-        mobNotifier = true;
-      }
-      else if((result == ConnectivityResult.none)&&(!notifier))
-      {
-        // print(" ************** none **************");
-        // print("$notifier the value of the notifier is 00000000");
-        if(!notifier){
-          // print(" im inside the if notifier class");
-          showSimpleNotification(
-            Text(" No Internet Connectivity ",
-              style: TextStyle(color: Colors.white),), background: Colors.red,
-          );
-        }
-        notifier = true;
-      }
-
-    });
-  }
-
+  bool currentIndex = false;
+  bool valueStatus = false;
+  List name = [];
+  List pg = [];
+  List data;
+  bool first;
   bool adminStatus = false;
   bool kitchenStatus = false;
   bool hallStatus = false;
@@ -126,6 +62,164 @@ class _FirstPageGridContainerState extends State<FirstPageGridContainer> {
   int statusInt = 0;
   List toggleValues = [];
   int intValue = 0;
+
+
+  var dataJson;
+
+  // void initial() async {
+  //   fireData();
+  //   loginData = await SharedPreferences.getInstance();
+  //   setState(() {
+  //     username = loginData.getString('username');
+  //     ipAddress = loginData.getString('ip');
+  //   });
+  // }
+
+  SharedPreferences loginData;
+  String userName = " ";
+  String ipAddress = " ";
+
+
+  Future<void> localData() async {
+    loginData = await SharedPreferences.getInstance();
+    setState(() {
+      //print("im inside the localdata ");
+      ipAddress = loginData.getString('ip');
+    }
+    );
+  }
+  Future <void> initial() async {
+    loginData = await SharedPreferences.getInstance();
+    username = loginData.getString('username');
+    ipAddress = loginData.getString('ip');
+    // print("$ipAddress im inside the initial state in listPage");
+    // print("$username im inside the initial state in listPage");
+
+  }
+
+  Future<void> fireData() async {
+    databaseReference.child(auth.currentUser.uid).once().then((DataSnapshot snapshot) async {
+
+      // setState(() {
+      //   dataJson = snapshot.value;
+      //   // data1 = dataJson.keys.toList();
+      //   //print(dataJson);
+      //   userName = dataJson["name"];
+      //   ipLocal = dataJson["ip"].toString();
+      // });
+
+      dataJson = snapshot.value;
+      // data1 = dataJson.keys.toList();
+      //print(dataJson);
+      userName = dataJson["name"];
+      ipLocal = dataJson["ip"].toString();
+
+      loginData = await SharedPreferences.getInstance();
+      loginData.setString('ip', ipLocal );
+      loginData.setString('username', userName);
+      username = loginData.getString('username');
+      ipAddress = loginData.getString('ip');
+    });
+  }
+
+  //
+  //
+  // fireData(){
+  //   databaseReference.child(auth.currentUser.uid).once().then((DataSnapshot snapshot) async {
+  //     // setState(() {
+  //     //   dataJson = snapshot.value;
+  //     //   //print(dataJson);
+  //     //   userName = dataJson["name"];
+  //     //   ipLocal= dataJson["ip"].toString();
+  //     // });
+  //
+  //     dataJson = snapshot.value;
+  //     //print(dataJson);
+  //     userName = dataJson["name"];
+  //     ipLocal= dataJson["ip"].toString();
+  //
+  //     if(ipLocal == null){
+  //       print(" ipLocal value is null");
+  //     }else{
+  //
+  //       loginData = await SharedPreferences.getInstance();
+  //       loginData.setString('ip', ipLocal );
+  //       // loginData.setString('username', userName);
+  //       ipAddress = loginData.getString('ip');
+  //     }
+  //
+  //   });
+  //
+  // }
+
+  Future<void> getData()async {
+    // databaseReference.child(auth.currentUser.uid).once().then((DataSnapshot snapshot) async {
+    //   // setState(() {
+    //   //   dataJson = snapshot.value;
+    //   //   //print(dataJson);
+    //   //   userName = dataJson["name"];
+    //   //   ipLocal= dataJson["ip"].toString();
+    //   //   loginData.setString('ip', ipLocal);
+    //   // });
+    //
+    //   dataJson = snapshot.value;
+    //   //print(dataJson);
+    //   userName = dataJson["name"];
+    //   ipLocal= dataJson["ip"].toString();
+    //
+    //   loginData = await SharedPreferences.getInstance();
+    //   loginData.setString('ip', ipLocal );
+    //   // loginData.setString('username', userName);
+    //   ipAddress = loginData.getString('ip');
+    //
+    //   print("above if lop $ipAddress");
+
+      //initial();
+
+       fireData();
+       initial();
+      if (result == ConnectivityResult.wifi) {
+        // print("wifi in gridPage =============_________(((((((((()))))))");
+        // print("$ipAddress =============------+++++++++++@@@@@@ ");
+        //localData();
+        //print("after local data $ipAddress");
+        getName();
+      } else if ((result == ConnectivityResult.mobile) && (!mobNotifier)) {
+        // print("mobile in gridPage****************************");
+        // print("$ipAddress =============------+++++++++++@@@@@@ ");
+        if ((!mobNotifier) && (ipAddress.toString().toLowerCase() == 'false')) {
+          // initial();
+          showSimpleNotification(
+            Text(" your are on Demo Login by Mobile Data   ",
+              style: TextStyle(color: Colors.white),), background: Colors.green,
+          );
+          getName();
+          localData();
+        } else {
+          showSimpleNotification(
+            Text(
+              " please switch on your wifi network ",
+              style: TextStyle(color: Colors.white),
+            ),
+            background: Colors.red,
+          );
+        }
+        mobNotifier = true;
+      } else if ((result == ConnectivityResult.none) && (!notifier)) {
+        if (!notifier) {
+          // showAnotherAlertDialog(context);
+          showSimpleNotification(
+            Text(
+              " No Internet Connectivity ",
+              style: TextStyle(color: Colors.white),
+            ),
+            background: Colors.red,
+          );
+        }
+        showAnotherAlertDialog(context);
+        notifier = true;
+      }
+    }
 
   Future<void> toggleButton(int index,int sts) async {
     setState(() {
@@ -154,17 +248,9 @@ class _FirstPageGridContainerState extends State<FirstPageGridContainer> {
   }
 
 
-  bool currentIndex = false;
-  bool _pinned = true;
-  bool _floating = false;
 
-  bool valueStatus = false;
-  List name = [];
-  List pg = [];
-  List data;
-  bool first;
 
-  Future get_name() async {
+  Future getName() async {
     //print("iam inside getname");
     //print(ipAddress);
     if(ipAddress.toString().toLowerCase() != "false"){
@@ -246,13 +332,16 @@ class _FirstPageGridContainerState extends State<FirstPageGridContainer> {
       }
     }
     else if(ipAddress.toLowerCase().toString() == "false"){
-      //print("iam using online json");
+      //print("iam using online json in grid");
       setState(() {
         // print(dataJson);
         //data = jsonDecode(dataJson);
         //
         // data = dataJson;
+        //print("i am above the data = dataJson.keys.toList() in grid?????????????????????????????????????????????????????????????????????? ");
         data = dataJson.keys.toList();
+        //print("i am belove the data = dataJson.keys.toList() in grid?????????????????????????????????????????????????????????????????????? ");
+
         //print(data);
 
       });
@@ -349,20 +438,14 @@ class _FirstPageGridContainerState extends State<FirstPageGridContainer> {
   bool hasInternet = false;
   ConnectivityResult result = ConnectivityResult.none;
 
+   //old method
+  // Future<void> internet() async {
+  //   hasInternet = await InternetConnectionChecker().hasConnection;
+  //   result = await Connectivity().checkConnectivity();
+  // }
+
+
   Future<void> internet() async {
-    hasInternet = await InternetConnectionChecker().hasConnection;
-    result = await Connectivity().checkConnectivity();
-  }
-
-  @override
-  void initState() {
-
-    initial();
-    timer = Timer.periodic(Duration(seconds: 1), (Timer t) {
-      getData();
-    });
-
-    internet();
     Connectivity().onConnectivityChanged.listen((result) {
       setState(() {
         this.result = result;
@@ -374,10 +457,34 @@ class _FirstPageGridContainerState extends State<FirstPageGridContainer> {
       setState(() {
         this.hasInternet = hasInternet;
       });
-
     });
-    super.initState();
+    hasInternet = await InternetConnectionChecker().hasConnection;
+    result = await Connectivity().checkConnectivity();
+  }
 
+  @override
+  void initState() {
+    // localData();
+    // initial();
+    fireData();
+    timer = Timer.periodic(Duration(seconds: 1), (Timer t) {
+      getData();
+    });
+    internet();
+    // Connectivity().onConnectivityChanged.listen((result) {
+    //   setState(() {
+    //     this.result = result;
+    //   });
+    // });
+    //
+    // InternetConnectionChecker().onStatusChange.listen((status) async {
+    //   final hasInternet = status == InternetConnectionStatus.connected;
+    //   setState(() {
+    //     this.hasInternet = hasInternet;
+    //   });
+    //
+    // });
+    super.initState();
     //print("url type: ${widget.check_url}");
   }
 
@@ -444,7 +551,7 @@ class _FirstPageGridContainerState extends State<FirstPageGridContainer> {
                               .toString()
                               .contains("Admin")
                               ? AssetImage(
-                            "images/room/admin room.png",
+                            "images/room/admin room.jpg",
                           )
                               : name[index]
                               .toString()
@@ -842,7 +949,7 @@ class _FirstPageGridContainerState extends State<FirstPageGridContainer> {
                                         ],
                                       ),
                                       ((name[index].toString().length)>13)?SizedBox(width: width*0.030,):
-                                      ((name[index].toString().length)>=9)?SizedBox(width: width*0.060,):
+                                      ((name[index].toString().length)>=9)?SizedBox(width: width*0.090,):
                                       ((name[index].toString().length)<=4)? SizedBox(width: width*0.20,)
                                           :((name[index].toString().length)<=8)? SizedBox(width: width*0.14,)
                                           :SizedBox(width: width*0.20),
@@ -901,7 +1008,7 @@ class _FirstPageGridContainerState extends State<FirstPageGridContainer> {
                                       ((name[index].toString().length)>13)?SizedBox(width: width*0.030,):
                                       ((name[index].toString().length)>=9)?SizedBox(width: width*0.060,):
                                       ((name[index].toString().length)<=4)? SizedBox(width: width*0.20,)
-                                          :((name[index].toString().length)<=8)? SizedBox(width: width*0.14,)
+                                          :((name[index].toString().length)<=8)? SizedBox(width: width*0.12,)
                                           :SizedBox(width: width*0.20),
                                       //((name[index].toString().length)>10)?SizedBox(width: width*0.030,):SizedBox(width: width*0.13,),
                                       Transform.scale(
@@ -955,7 +1062,7 @@ class _FirstPageGridContainerState extends State<FirstPageGridContainer> {
                                       ((name[index].toString().length)>13)?SizedBox(width: width*0.030,):
                                       ((name[index].toString().length)>=9)?SizedBox(width: width*0.060,):
                                       ((name[index].toString().length)<=4)? SizedBox(width: width*0.20,)
-                                          :((name[index].toString().length)<=8)? SizedBox(width: width*0.14,)
+                                          :((name[index].toString().length)<=8)? SizedBox(width: width*0.12,)
                                           :SizedBox(width: width*0.20),
                                       //((name[index].toString().length)>10)?SizedBox(width: width*0.030,):SizedBox(width: width*0.13,),
                                       Transform.scale(
@@ -1380,6 +1487,37 @@ class _FirstPageGridContainerState extends State<FirstPageGridContainer> {
         crossAxisSpacing: 0.0,
         childAspectRatio: 1.0,
       ),
+    );
+  }
+  showAnotherAlertDialog(BuildContext context) {
+    //Create button
+    Widget okButton = TextButton(
+      child: Text("ok"),
+      onPressed: (){
+        notifier = false;
+        mobNotifier = false;
+        wifiNotifier = false;
+        getData();
+        Navigator.pop(context, false);
+      },
+    );
+    // Create AlertDialog
+    AlertDialog alert = AlertDialog(
+      backgroundColor: Colors.white.withOpacity(0.1),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12.0)),
+      title:Text(" No Internet Connection" ),
+      content: Text("please check your network connection"),
+      actions: [
+        okButton,
+      ],
+
+    );
+
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return alert ;
+      },
     );
   }
 }

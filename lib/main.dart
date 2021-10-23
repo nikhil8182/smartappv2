@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:onwords_home/log_ins/login_page.dart';
-import 'package:onwords_home/splashScreen.dart';
 import 'package:overlay_support/overlay_support.dart';
 import 'package:provider/provider.dart';
 import 'Routine_Page/task_data.dart';
@@ -19,22 +18,24 @@ FlutterLocalNotificationsPlugin();
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   Firebase.initializeApp();
-  var initializationSettingsAndroid =
-  AndroidInitializationSettings('launch_background');
-  var initializationSettingsIOS = IOSInitializationSettings(
-      requestAlertPermission: true,
-      requestBadgePermission: true,//backup code
-      requestSoundPermission: true,//parthosh
-      onDidReceiveLocalNotification:
-          (int id, String title, String body, String payload) async {});
-  var initializationSettings = InitializationSettings(
-      android: initializationSettingsAndroid, iOS: initializationSettingsIOS);
-  await flutterLocalNotificationsPlugin.initialize(initializationSettings,
-      onSelectNotification: (String payload) async {
-        if (payload != null) {
-          debugPrint('notification payload:' + payload);
-        }
-      });
+
+  ///notification
+  // var initializationSettingsAndroid =
+  // AndroidInitializationSettings('launch_background');
+  // var initializationSettingsIOS = IOSInitializationSettings(
+  //     requestAlertPermission: true,
+  //     requestBadgePermission: true,//backup code
+  //     requestSoundPermission: true,//parthosh
+  //     onDidReceiveLocalNotification:
+  //         (int id, String title, String body, String payload) async {});
+  // var initializationSettings = InitializationSettings(
+  //     android: initializationSettingsAndroid, iOS: initializationSettingsIOS);
+  // await flutterLocalNotificationsPlugin.initialize(initializationSettings,
+  //     onSelectNotification: (String payload) async {
+  //       if (payload != null) {
+  //         debugPrint('notification payload:' + payload);
+  //       }
+  //     });
 
   runApp(MyApp());
 }
@@ -50,7 +51,7 @@ class MyApp extends StatelessWidget {
         //     .copyWith(scaffoldBackgroundColor: Color.fromARGB(255, 18, 32, 47)),
         debugShowCheckedModeBanner: false,
         home: Scaffold(
-          body:SplashScreen(),
+          body:LoginPage(),
         ),
         ),
       ),

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
-// import 'package:onwords_home/demo/demo_home_page.dart';
 import 'package:onwords_home/log_ins/installation_page.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../home_page.dart';
@@ -29,7 +28,7 @@ class _LoginPageState extends State<LoginPage> {
 
   @override
   void initState() {
-
+    check_if_already_login();
     Connectivity().onConnectivityChanged.listen((result) {
       setState(() {
         this.result = result;
@@ -41,11 +40,8 @@ class _LoginPageState extends State<LoginPage> {
         this.hasInternet = hasInternet;
       });
     });
-
     email = TextEditingController();
     pass = TextEditingController();
-    check_if_already_login();
-
     super.initState();
   }
 

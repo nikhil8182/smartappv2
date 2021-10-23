@@ -1,5 +1,3 @@
-
-import 'dart:convert';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
@@ -7,16 +5,14 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:http/http.dart' as http;
 import 'package:internet_connection_checker/internet_connection_checker.dart';
 import 'package:onwords_home/firstPage/gridFirstPage.dart';
-import 'package:onwords_home/firstPage/individual_page.dart';
 import 'package:onwords_home/firstPage/listFirstPage.dart';
 import 'package:onwords_home/firstPage/weatherService.dart';
 import 'package:overlay_support/overlay_support.dart';
 import 'dart:async';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:auto_size_text/auto_size_text.dart';
+
 
 
 
@@ -29,14 +25,15 @@ class FirstPage extends StatefulWidget {
   _FirstPageState createState() => _FirstPageState();
 }
 
-class _FirstPageState extends State<FirstPage> with AutomaticKeepAliveClientMixin {
+class _FirstPageState extends State<FirstPage>{
   var dataJson;
-  //String ip_Local;
-  SharedPreferences logindata;
+
+  SharedPreferences loginData;
   String ip;
   String username;
   bool notifier = false;
   bool mobNotifier = false;
+  bool wifiNotifier = false;
   bool currentIndex = false;
   bool _pinned = true;
   bool _floating = false;
@@ -51,76 +48,116 @@ class _FirstPageState extends State<FirstPage> with AutomaticKeepAliveClientMixi
         Colors.grey[800],
       ]);
 
+  String userName = " ";
+  String ipAddress;
+  String ipLocal = " ";
 
-  void initial() async {
-    logindata = await SharedPreferences.getInstance();
-    setState(() {
-      username = logindata.getString('username');
+  Future <void> initial() async {
+
+     loginData = await SharedPreferences.getInstance();
+  setState(() {
+  username = loginData.getString('username');
+  ipAddress = loginData.getString('ip');
+      });
+    //   print("$ipAddress inside the initial() in FirstPage");
+    // print("$username inside the initial() in FirstPage");
+
+  }
+  Future<void> fireData() async {
+    databaseReference.child(auth.currentUser.uid).once().then((DataSnapshot snapshot) async {
+
+      // setState(() {
+      //   dataJson = snapshot.value;
+      //   // data1 = dataJson.keys.toList();
+      //   //print(dataJson);
+      //   userName = dataJson["name"];
+      //   ipLocal = dataJson["ip"].toString();
+      // });
+
+      dataJson = snapshot.value;
+      // data1 = dataJson.keys.toList();
+      //print(dataJson);
+      userName = dataJson["name"];
+      ipLocal = dataJson["ip"].toString();
+
+      loginData = await SharedPreferences.getInstance();
+      loginData.setString('ip', ipLocal );
+      loginData.setString('username', userName);
+      ipAddress = loginData.getString('ip');
     });
   }
 
-  String userName = " ";
-  String ipAddress;
 
-  Future <String> getData(){
+  getData(){
+    // databaseReference.child(auth.currentUser.uid).once().then((DataSnapshot snapshot) async {
+    //
+    //   // setState(() {
+    //   //   dataJson = snapshot.value;
+    //   //   userName = dataJson["name"];
+    //   //   ipAddress= dataJson["ip"].toString();
+    //   // });
+    //   dataJson = snapshot.value;
+    //   userName = dataJson["name"];
+    //   ip  = dataJson["ip"].toString();
+    //   print("$ip in firstPage");
+    //   print("$userName in firstPage ");
+    //   loginData = await SharedPreferences.getInstance();
+    //   loginData.setString('username',userName);
+    //   loginData.setString('ip', ip);
+    //
+    //   ipAddress = loginData.getString('ip');
+    //
+    //
+    //   print("$ipAddress inside the getData  in FirstPage");
+    //
+    //   // setState(() {
+    //   //     username = logindata.getString('username');
+    //   //   });
+    //
+    // });
+    fireData();
+    initial();
+    if((!wifiNotifier) && (result == ConnectivityResult.wifi)) {
+      //print("wifi in first page=============_________(((((((((()))))))");
+      // get_name();
+      //  showSimpleNotification(
+      //    Text(" your are on WiFi Network  ",
+      //      style: TextStyle(color: Colors.white),), background: Colors.green,
+      //  );
+      wifiNotifier = true;
+    }
+    else if((result == ConnectivityResult.mobile)&&(!mobNotifier)){
+      //print("mobile in firstpage ****************************");
 
-    databaseReference.child(auth.currentUser.uid).once().then((DataSnapshot snapshot) async {
-
-      // print('Data : ${snapshot.value}');
-      // print("iam going to map ");
-
-      // print("dataJson = $dataJson");
-      // print(dataJson["name"]);
-      // userName = dataJson["name"];
-      // ipAddress= dataJson["ip"];
-
-      setState(() {
-        dataJson = snapshot.value;
-        //print(dataJson);
-        userName = dataJson["name"];
-        ipAddress= dataJson["ip"].toString();
-
-        // ip_local = loginData.setString('ip', ipAddress) as String ;
-        //print("$ipAddress --------");
-      });
-
-
-      if(result == ConnectivityResult.wifi) {
-        //print("wifi =============_________(((((((((()))))))");
-       // get_name();
+      if((!mobNotifier) && (ipAddress.toString().toLowerCase() == 'false')){
+        showSimpleNotification(
+          Text(" your are on Demo Login by Mobile Data   ",
+            style: TextStyle(color: Colors.white),), background: Colors.green,
+        );
       }
-      else if((result == ConnectivityResult.mobile)&&(!mobNotifier)){
-        //print("mobile ****************************");
-        if((!mobNotifier) && (ipAddress.toString().toLowerCase() == 'false')){
-          showSimpleNotification(
-            Text(" your are on Mobile Data  ",
-              style: TextStyle(color: Colors.white),), background: Colors.green,
-          );
-        }
-        else{
-          showSimpleNotification(
-            Text(" please switch on your wifi network ",
-              style: TextStyle(color: Colors.white),), background: Colors.red,
-          );
-
-        }
-        mobNotifier = true;
+      else{
+        // showAnotherAlertDialog(context);
+        // showSimpleNotification(
+        //   Text(" please switch on your wifi network ",
+        //     style: TextStyle(color: Colors.white),), background: Colors.red,
+        // );
       }
-      else if((result == ConnectivityResult.none)&&(!notifier))
-      {
-        // print(" ************** none **************");
-        // print("$notifier the value of the notifier is 00000000");
-        if(!notifier){
-          // print(" im inside the if notifier class");
-          showSimpleNotification(
-            Text(" No Internet Connectivity ",
-              style: TextStyle(color: Colors.white),), background: Colors.red,
-          );
-        }
-        notifier = true;
-      }
+      mobNotifier = true;
+    }
 
-    });
+    else if((result == ConnectivityResult.none)&&(!notifier))
+    {
+      if(!notifier){
+        //showWifiNetAlertDialog(context);
+        showSimpleNotification(
+          Text(" No Internet Connectivity",
+            style: TextStyle(color: Colors.white),), background: Colors.red,
+        );
+        // showWifiNetAlertDialog(context);
+      }
+      notifier = true;
+    }
+
   }
 
 
@@ -131,29 +168,22 @@ class _FirstPageState extends State<FirstPage> with AutomaticKeepAliveClientMixi
 
   @override
   void initState() {
-
-    initial();
-    timer = Timer.periodic(Duration(seconds: 1), (Timer t) {
-      getData();
-    });
-
-    internet();
     Connectivity().onConnectivityChanged.listen((result) {
      setState(() {
        this.result = result;
      });
     });
-
     InternetConnectionChecker().onStatusChange.listen((status) async {
       final hasInternet = status == InternetConnectionStatus.connected;
       setState(() {
         this.hasInternet = hasInternet;
       });
-
+    });
+    internet();
+    timer = Timer.periodic(Duration(seconds: 1), (Timer t) {
+      getData();
     });
     super.initState();
-
-    //print("url type: ${widget.check_url}");
   }
 
   GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey();
@@ -219,7 +249,7 @@ class _FirstPageState extends State<FirstPage> with AutomaticKeepAliveClientMixi
                             fontWeight: FontWeight.w900),
                       ),
                       Text(
-                        userName,
+                        username??" ",
                         style: GoogleFonts.inter(
                             fontWeight: FontWeight.w300, color: Colors.white),
                       ),
@@ -349,25 +379,54 @@ class _FirstPageState extends State<FirstPage> with AutomaticKeepAliveClientMixi
     ),
     );
   }
-
-  @override
-  // TODO: implement wantKeepAlive
-  bool get wantKeepAlive => true;
-
-  showAnotherAlertDialog(BuildContext context) {
+  showWifiNetAlertDialog(BuildContext context) {
     // Create button
     Widget okButton = TextButton(
       child: Text("ok"),
       onPressed: (){
+        notifier = false;
+        mobNotifier = false;
+        wifiNotifier = false;
+        getData();
         Navigator.pop(context, false);
       },
     );
     // Create AlertDialog
     AlertDialog alert = AlertDialog(
-      backgroundColor: Colors.white.withOpacity(0.1),
+      backgroundColor: Colors.white.withOpacity(0.2),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12.0)),
+      title: Text(" No Internet ",style: TextStyle(color: Colors.white60,fontWeight: FontWeight.bold),),
+      content: Text("please connect your device with Internet  ",style: TextStyle(color: Colors.white60),),
+      actions: [
+        okButton,
+      ],
+    );
+
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return alert ;
+      },
+    );
+  }
+  showAnotherAlertDialog(BuildContext context) {
+    // Create button
+    Widget okButton = TextButton(
+      child: Text("ok"),
+      onPressed: (){
+        notifier = false;
+        mobNotifier = false;
+        wifiNotifier = false;
+        getData();
+        Navigator.pop(context, false);
+      },
+    );
+    // Create AlertDialog
+    AlertDialog alert = AlertDialog(
+      backgroundColor: Colors.white.withOpacity(0.2),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12.0)),
       title: Text("Oops!!!! ",style: TextStyle(color: Colors.white60,fontWeight: FontWeight.bold),),
-      content: Text(" please connect your device with home wifi network  ",style: TextStyle(color: Colors.white60),),
+      content: Text("please connect your device with Local WiFi Network  ",style: TextStyle(color: Colors.white60),),
       actions: [
         okButton,
       ],
