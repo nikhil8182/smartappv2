@@ -1658,7 +1658,7 @@ class _PagesState extends State<Pages> with WidgetsBindingObserver {
   }
 
 
-  updateValue(button, buttonValue, i) async {
+   updateValue(button, buttonValue, i) async {
     //print("--------  im inside the update value   0----0099898");
 
     databaseReference.child(auth.currentUser.uid).once().then((
@@ -1706,7 +1706,7 @@ class _PagesState extends State<Pages> with WidgetsBindingObserver {
     }
   }
 
-  call() async {
+   call() async {
     //print("im inside the calll 0----0099898");
     databaseReference.child(auth.currentUser.uid).once().then((DataSnapshot snapshot) async {
       setState(() {
