@@ -435,7 +435,7 @@ final databaseReference = FirebaseDatabase.instance.reference();
 var dataJson;
 
 class Button extends StatefulWidget {
-
+//fuck
   final String place;
   final int ind;
   final String ipAddress;
