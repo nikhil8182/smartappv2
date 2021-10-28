@@ -218,10 +218,10 @@ class _FirstPageListContainersState extends State<FirstPageListContainers> {
           // localData();
         }
         else {
-          showWifiNetAlertDialog(context);
+          //showWifiNetAlertDialog(context);
           showSimpleNotification(
             Text(
-              " please switch on your wifi network in list",
+              " please switch on your wifi network ",
               style: TextStyle(color: Colors.white),
             ),
             background: Colors.red,
@@ -282,9 +282,10 @@ class _FirstPageListContainersState extends State<FirstPageListContainers> {
 
   Future getName() async {
     //print("iam inside getname");
-    //print(ipAddress);
+    //print("in the getname $ipAddress");
     if (ipAddress.toString().toLowerCase() != "false") {
       //print("iam using online json");
+      //print("in the getname insid ethe  $ipAddress");
       final response = await http.get(Uri.parse(
         "http://$ipAddress/key",
       ));
@@ -295,6 +296,7 @@ class _FirstPageListContainersState extends State<FirstPageListContainers> {
 
         setState(() {
           data = fetchdata;
+          // print(data);
         });
       }
 
@@ -327,18 +329,22 @@ class _FirstPageListContainersState extends State<FirstPageListContainers> {
             (!name.contains(data[i].toString().contains("Master_Bedroom")))) {
           name.add("Master_Bedroom");
           pg.add("Master_Bedroom");
+        } else if (data[i].toString().contains("_Bedroom1") &&
+            !name.contains(data[i].toString().contains("Bedroom1"))) {
+          name.add("Bedroom1");
+          //print("----- bedroom1 $name name -------");
+          pg.add("Bedroom1");
+          //print("----- bedroom1 $pg pg -------");
+        } else if (data[i].toString().contains("_Bedroom2") &&
+            (!name.contains(data[i].toString().contains("Bedroom2")))) {
+          name.add("Bedroom2");
+          //print("----- bedroom1 $name name -------");
+          pg.add("Bedroom2");
+          //print("----- bedroom1 $pg pg -------");
         } else if (data[i].toString().contains("_Bedroom") &&
             (!name.contains(data[i].toString().contains("Bedroom")))) {
           name.add("Bedroom");
           pg.add("Bedroom");
-        } else if (data[i].toString().contains("_Bedroom1") &&
-            (!name.contains(data[i].toString().contains("Bedroom_1")))) {
-          name.add("Bedroom_1");
-          pg.add("Bedroom_1");
-        } else if (data[i].toString().contains("_Bedroom2") &&
-            (!name.contains(data[i].toString().contains("Bedroom_2")))) {
-          name.add("Bedroom_2");
-          pg.add("Bedroom_2");
         } else if (data[i].toString().contains("_Store_Room") &&
             (!name.contains(data[i].toString().contains("Store_Room")))) {
           name.add("Store_Room");

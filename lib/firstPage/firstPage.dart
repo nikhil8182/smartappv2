@@ -59,7 +59,7 @@ class _FirstPageState extends State<FirstPage>{
   username = loginData.getString('username');
   ipAddress = loginData.getString('ip');
       });
-    //   print("$ipAddress inside the initial() in FirstPage");
+    // print("$ipAddress inside the initial() in FirstPage");
     // print("$username inside the initial() in FirstPage");
 
   }

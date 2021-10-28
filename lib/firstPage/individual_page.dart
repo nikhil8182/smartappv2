@@ -461,6 +461,16 @@ class _ButtonState extends State<Button> {
   SharedPreferences loginData;
 
 
+  initial() async {
+    loginData = await SharedPreferences.getInstance();
+    localIp = widget.ipAddress;
+    print("$localIp ========");
+    loginData.setString('ip', localIp);
+    ip = loginData.getString('ip');
+    print("$ip --------------");
+  }
+
+
   Future getName() async {
     pageLoader = 0;
     databaseReference.child(auth.currentUser.uid).once().then((DataSnapshot snapshot) async {
@@ -472,27 +482,20 @@ class _ButtonState extends State<Button> {
       });
     });
 
-    loginData = await SharedPreferences.getInstance();
-    localIp = widget.ipAddress;
-    //print("$local_ip ========");
-
-    loginData.setString('ip', localIp);
-    setState(() {
-      ip = loginData.getString('ip');
-      //print("$ip --------------");
-    }
-    );
+    initial();
 
     if (localIp.toString().toLowerCase() != "false") {
-      //print("iam using online json");
+      print("iam using online json");
 
       final response = await http.get(Uri.http('$ip', "/key"));
 
       var fetchdata = jsonDecode(response.body);
       if (response.statusCode == 200) {
-        setState(() {
-          data = fetchdata;
-        });
+        // setState(() {
+        //   data = fetchdata;
+        // });
+        data = fetchdata;
+      }
 
         for (int i = 0; i < data.length; i++) {
           if (data[i].toString().contains("_Admin_Room") &&
@@ -557,7 +560,7 @@ class _ButtonState extends State<Button> {
             pg.add("Garden");
           }
         }
-      }
+
     }
     else if(localIp.toLowerCase().toString() == "false"){
       // print("iam using online json");
@@ -643,17 +646,21 @@ class _ButtonState extends State<Button> {
     else{
       print("iam stuck inside else");
     }
-      setState(() {
-        name = name.toSet().toList();
-        pg = pg.toSet().toList();
-        // print(name);
-      });
+
+    name = name.toSet().toList();
+    pg = pg.toSet().toList();
+      // setState(() {
+      //   name = name.toSet().toList();
+      //   pg = pg.toSet().toList();
+      //   // print(name);
+      // });
       return "success";
     }
 
 
   @override
   void initState() {
+    initial();
     timer = Timer.periodic(Duration(seconds: 1), (Timer t) {
       getName();
     });
@@ -1648,12 +1655,12 @@ class _PagesState extends State<Pages> with WidgetsBindingObserver {
 
   void initial() async {
     localIp = widget.localIp;
-    //print("im inside the initial function $local_ip");
+    print("im inside the initial function in pages $localIp");
     loginData = await SharedPreferences.getInstance();
     setState(() {
       loginData.setString('ip', localIp);
       ip = loginData.getString('ip');
-      //print("im inside the setstate of initial $ip");
+      print("im inside the setstate of initial $ip");
     });
   }
 
@@ -1761,6 +1768,7 @@ class _PagesState extends State<Pages> with WidgetsBindingObserver {
         //print(dataJson);
       });
     });
+
     if(ip.toLowerCase().toString() != 'false') {
       //print("im inside the if loop of call_value *********************");
       final response = await http.get(Uri.http("$ip", "/value"));
@@ -1774,24 +1782,31 @@ class _PagesState extends State<Pages> with WidgetsBindingObserver {
         // print("response 2: ${response.body}");
         result2 = true;
 
-        Future.delayed(const Duration(seconds: 5), () {
+        Future.delayed(const Duration(seconds: 1), () {
 // Here you can write your code
 
+          for (int i = 0; i < dataValue.length; i++) {
+            //print("${data_value.length} the value inside the setstate of data_value");
+            dataValue[0][i] = dataValue[0][i];
+            //print("${data_value[0][i]} the value of data_value");
+          }
+
+
            //print("im inside the if of future delay");
-          setState(() {
-            //print("****************************we are checking the below line**********************************************");
-            // print("after");
-
-            for (int i = 0; i < dataValue.length; i++) {
-              //print("${data_value.length} the value inside the setstate of data_value");
-              dataValue[0][i] = dataValue[0][i];
-              //print("${data_value[0][i]} the value of data_value");
-            }
-
-            // _buildButtonsWithNames();
-
-            // Here you can write your code for open new view
-          });
+          // setState(() {***************************************************
+          //   //print("****************************we are checking the below line**********************************************");
+          //   // print("after");
+          //
+          //   for (int i = 0; i < dataValue.length; i++) {
+          //     //print("${data_value.length} the value inside the setstate of data_value");
+          //     dataValue[0][i] = dataValue[0][i];
+          //     //print("${data_value[0][i]} the value of data_value");
+          //   }
+          //
+          //   // _buildButtonsWithNames();
+          //
+          //   // Here you can write your code for open new view
+          // });*************************************************************
         });
         // If the server did return a 200 OK response,
         // then parse the JSON.
@@ -1861,6 +1876,7 @@ class _PagesState extends State<Pages> with WidgetsBindingObserver {
 
     // print("${widget.local_ip} im inside the getname checking local local ip");
     // print("$ip ip inside the getname");
+    initial();
     if(ip.toString().toLowerCase() != "false") {
       //print("iam using offline json");
 
@@ -1870,8 +1886,7 @@ class _PagesState extends State<Pages> with WidgetsBindingObserver {
         setState(() {
           data = fetchdata;
         });
-
-
+      }
         for (int i = 0; i < data.length; i++) {
           if (data[i].toString().contains("_Admin_Room") &&
               (!name.contains(data[i].toString().contains("Admin_Room")))) {
@@ -1935,7 +1950,6 @@ class _PagesState extends State<Pages> with WidgetsBindingObserver {
             pg.add("Garden");
           }
         }
-      }
     }
     else if(ip.toLowerCase().toString() == "false"){
       //print("iam using online json");
@@ -2048,6 +2062,10 @@ class _PagesState extends State<Pages> with WidgetsBindingObserver {
   void initState() {
     initial();
     getName();
+    // timer = Timer.periodic(
+    //     Duration(seconds: 3),
+    //         (Timer t) => callByValue());
+
     // print("mood check ${widget.isDark}");
     check().then((intenet) {
       if (intenet) {
@@ -2068,6 +2086,8 @@ class _PagesState extends State<Pages> with WidgetsBindingObserver {
       //   //print("Connection: not present");
       // }
     });
+
+
     timer = Timer.periodic(
         Duration(seconds: 3),
             (Timer t) => check().then((intenet) {
