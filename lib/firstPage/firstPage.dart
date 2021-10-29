@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
@@ -12,6 +14,7 @@ import 'package:onwords_home/firstPage/weatherService.dart';
 import 'package:overlay_support/overlay_support.dart';
 import 'dart:async';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:http/http.dart' as http;
 
 
 
@@ -29,6 +32,10 @@ class _FirstPageState extends State<FirstPage>{
   var dataJson;
 
   SharedPreferences loginData;
+  String userName = " ";
+  String ipAddress;
+  String ipLocal = " ";
+
   String ip;
   String username;
   bool notifier = false;
@@ -39,6 +46,9 @@ class _FirstPageState extends State<FirstPage>{
   bool _floating = false;
   Timer timer;
   bool hasInternet = false;
+  List data = [];
+  var sharedDataValues;
+  List<String> localDataVal = [ ];
   ConnectivityResult result = ConnectivityResult.none;
   Gradient g1 = LinearGradient(
       begin: Alignment.centerLeft,
@@ -48,12 +58,12 @@ class _FirstPageState extends State<FirstPage>{
         Colors.grey[800],
       ]);
 
-  String userName = " ";
-  String ipAddress;
-  String ipLocal = " ";
+
+
+
 
   Future <void> initial() async {
-
+    //print("im inside the initial second");
      loginData = await SharedPreferences.getInstance();
   setState(() {
   username = loginData.getString('username');
@@ -61,18 +71,42 @@ class _FirstPageState extends State<FirstPage>{
       });
     // print("$ipAddress inside the initial() in FirstPage");
     // print("$username inside the initial() in FirstPage");
-
+     localDataVariableStorage();
   }
+
+  localDataVariableStorage() async {
+
+    if (ipAddress.toString().toLowerCase() != "false") {
+      //print("iam using online json");
+      //print("in the getname insid ethe  $ipAddress");
+      final response = await http.get(Uri.parse(
+        "http://$ipAddress/key",
+      ));
+
+      var fetchdata = jsonDecode(response.body);
+      if (response.statusCode == 200) {
+        // data = fetchdata;
+        setState(() {
+          data = fetchdata;
+          localDataVal.add(data.toString());
+          loginData.setStringList('dataValues', localDataVal);
+          // print(data);
+        });
+      }
+    }else if (ipAddress.toLowerCase().toString() == "false"){
+      setState(() {
+        data = dataJson.keys.toList();
+        localDataVal.add(data.toString());
+        loginData.setStringList('dataValues', localDataVal);
+      });
+    }
+    sharedDataValues = loginData.getStringList('dataValues');
+  }
+
+
+
   Future<void> fireData() async {
     databaseReference.child(auth.currentUser.uid).once().then((DataSnapshot snapshot) async {
-
-      // setState(() {
-      //   dataJson = snapshot.value;
-      //   // data1 = dataJson.keys.toList();
-      //   //print(dataJson);
-      //   userName = dataJson["name"];
-      //   ipLocal = dataJson["ip"].toString();
-      // });
 
       dataJson = snapshot.value;
       // data1 = dataJson.keys.toList();
@@ -83,95 +117,48 @@ class _FirstPageState extends State<FirstPage>{
       loginData = await SharedPreferences.getInstance();
       loginData.setString('ip', ipLocal );
       loginData.setString('username', userName);
-      ipAddress = loginData.getString('ip');
+      //ipAddress = loginData.getString('ip');
     });
   }
 
 
   getData(){
-    // databaseReference.child(auth.currentUser.uid).once().then((DataSnapshot snapshot) async {
-    //
-    //   // setState(() {
-    //   //   dataJson = snapshot.value;
-    //   //   userName = dataJson["name"];
-    //   //   ipAddress= dataJson["ip"].toString();
-    //   // });
-    //   dataJson = snapshot.value;
-    //   userName = dataJson["name"];
-    //   ip  = dataJson["ip"].toString();
-    //   print("$ip in firstPage");
-    //   print("$userName in firstPage ");
-    //   loginData = await SharedPreferences.getInstance();
-    //   loginData.setString('username',userName);
-    //   loginData.setString('ip', ip);
-    //
-    //   ipAddress = loginData.getString('ip');
-    //
-    //
-    //   print("$ipAddress inside the getData  in FirstPage");
-    //
-    //   // setState(() {
-    //   //     username = logindata.getString('username');
-    //   //   });
-    //
-    // });
-    fireData();
     initial();
     if((!wifiNotifier) && (result == ConnectivityResult.wifi)) {
-      //print("wifi in first page=============_________(((((((((()))))))");
-      // get_name();
-      //  showSimpleNotification(
-      //    Text(" your are on WiFi Network  ",
-      //      style: TextStyle(color: Colors.white),), background: Colors.green,
-      //  );
       wifiNotifier = true;
     }
     else if((result == ConnectivityResult.mobile)&&(!mobNotifier)){
-      //print("mobile in firstpage ****************************");
-
       if((!mobNotifier) && (ipAddress.toString().toLowerCase() == 'false')){
         showSimpleNotification(
           Text(" your are on Demo Login by Mobile Data   ",
             style: TextStyle(color: Colors.white),), background: Colors.green,
         );
       }
-      else{
-        // showAnotherAlertDialog(context);
-        // showSimpleNotification(
-        //   Text(" please switch on your wifi network ",
-        //     style: TextStyle(color: Colors.white),), background: Colors.red,
-        // );
-      }
       mobNotifier = true;
     }
 
-    else if((result == ConnectivityResult.none)&&(!notifier))
-    {
-      if(!notifier){
-        //showWifiNetAlertDialog(context);
-        showSimpleNotification(
-          Text(" No Internet Connectivity",
-            style: TextStyle(color: Colors.white),), background: Colors.red,
-        );
-        // showWifiNetAlertDialog(context);
-      }
-      notifier = true;
-    }
+    //important recently committed
+    // else if((result == ConnectivityResult.none)&&(!notifier))
+    // {
+    //   if(!notifier){
+    //     //showWifiNetAlertDialog(context);
+    //     showSimpleNotification(
+    //       Text(" No Internet Connectivity",
+    //         style: TextStyle(color: Colors.white),), background: Colors.red,
+    //     );
+    //     // showWifiNetAlertDialog(context);
+    //   }
+    //   notifier = true;
+    // }
 
   }
 
 
   Future<void> internet() async {
-    hasInternet = await InternetConnectionChecker().hasConnection;
-    result = await Connectivity().checkConnectivity();
-  }
-
-  @override
-  void initState() {
     Connectivity().onConnectivityChanged.listen((result) {
-     setState(() {
-       this.result = result;
-     });
+      setState(() {
+        this.result = result;
+      });
     });
     InternetConnectionChecker().onStatusChange.listen((status) async {
       final hasInternet = status == InternetConnectionStatus.connected;
@@ -179,10 +166,18 @@ class _FirstPageState extends State<FirstPage>{
         this.hasInternet = hasInternet;
       });
     });
+    hasInternet = await InternetConnectionChecker().hasConnection;
+    result = await Connectivity().checkConnectivity();
+  }
+
+  @override
+  void initState() {
     internet();
-    timer = Timer.periodic(Duration(seconds: 1), (Timer t) {
-      getData();
-    });
+    fireData();
+    getData();
+    // timer = Timer.periodic(Duration(seconds: 1), (Timer t) {
+    //   getData();
+    // });
     super.initState();
   }
 
@@ -257,77 +252,77 @@ class _FirstPageState extends State<FirstPage>{
                   ),
                 ),
               ),
-              SliverToBoxAdapter(
-                // child: Container(
-                //   // color: Color.fromRGBO(40, 36, 36, 1.0),
-                //   color: Color.fromRGBO(26, 28, 30, 0.6),
-                //   child: Padding(
-                //     padding: EdgeInsets.all(18.0),
-                //     child: Container(
-                //       height: height * 0.10,
-                //       width: width * 0.80,
-                //       decoration: BoxDecoration(
-                //         gradient: LinearGradient(
-                //           begin: Alignment.bottomLeft,
-                //           end: Alignment.topRight,
-                //           colors: [
-                //             Color.fromRGBO(247, 179, 28,1.0),
-                //             Color.fromRGBO(255, 210, 112,1.0),
-                //           ],
-                //           stops: [0.1,0.7],
-                //         ),
-                //         borderRadius: BorderRadius.circular(20.0),
-                //         boxShadow: [
-                //           BoxShadow(
-                //             color: Colors.white38,
-                //             offset: Offset(
-                //               -2.5,
-                //               -0.5,
-                //             ),
-                //             blurRadius: 6.0,
-                //             spreadRadius: 1.0,
-                //           ),
-                //           BoxShadow(
-                //             color: Colors.black,
-                //             offset: Offset(
-                //               2.5,
-                //               2.5,
-                //             ),
-                //             blurRadius: 10.0,
-                //             spreadRadius: 1.0,
-                //           ),
-                //         ],
-                //       ),
-                //       child: Padding(
-                //         padding: EdgeInsets.symmetric(horizontal: 15.0),
-                //         child: Row(
-                //           mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                //           children: [
-                //             Column(
-                //               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                //               children: [
-                //                 Text("Partially cloudy"),
-                //                 Text(
-                //                   "32°C",
-                //                   style: GoogleFonts.montserrat(
-                //                     fontSize: height*0.045,
-                //                     fontWeight: FontWeight.bold,
-                //                   ),
-                //                 )
-                //               ],
-                //             ),
-                //             Image(
-                //               image: AssetImage("images/cloud.png"),
-                //               height: height * 0.085,
-                //             )
-                //           ],
-                //         ),
-                //       ),
-                //     ),
-                //   ),
-                // ),
-                child: GeoLocationPage(),
-              ),
+              // SliverToBoxAdapter(
+              //   // child: Container(
+              //   //   // color: Color.fromRGBO(40, 36, 36, 1.0),
+              //   //   color: Color.fromRGBO(26, 28, 30, 0.6),
+              //   //   child: Padding(
+              //   //     padding: EdgeInsets.all(18.0),
+              //   //     child: Container(
+              //   //       height: height * 0.10,
+              //   //       width: width * 0.80,
+              //   //       decoration: BoxDecoration(
+              //   //         gradient: LinearGradient(
+              //   //           begin: Alignment.bottomLeft,
+              //   //           end: Alignment.topRight,
+              //   //           colors: [
+              //   //             Color.fromRGBO(247, 179, 28,1.0),
+              //   //             Color.fromRGBO(255, 210, 112,1.0),
+              //   //           ],
+              //   //           stops: [0.1,0.7],
+              //   //         ),
+              //   //         borderRadius: BorderRadius.circular(20.0),
+              //   //         boxShadow: [
+              //   //           BoxShadow(
+              //   //             color: Colors.white38,
+              //   //             offset: Offset(
+              //   //               -2.5,
+              //   //               -0.5,
+              //   //             ),
+              //   //             blurRadius: 6.0,
+              //   //             spreadRadius: 1.0,
+              //   //           ),
+              //   //           BoxShadow(
+              //   //             color: Colors.black,
+              //   //             offset: Offset(
+              //   //               2.5,
+              //   //               2.5,
+              //   //             ),
+              //   //             blurRadius: 10.0,
+              //   //             spreadRadius: 1.0,
+              //   //           ),
+              //   //         ],
+              //   //       ),
+              //   //       child: Padding(
+              //   //         padding: EdgeInsets.symmetric(horizontal: 15.0),
+              //   //         child: Row(
+              //   //           mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              //   //           children: [
+              //   //             Column(
+              //   //               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              //   //               children: [
+              //   //                 Text("Partially cloudy"),
+              //   //                 Text(
+              //   //                   "32°C",
+              //   //                   style: GoogleFonts.montserrat(
+              //   //                     fontSize: height*0.045,
+              //   //                     fontWeight: FontWeight.bold,
+              //   //                   ),
+              //   //                 )
+              //   //               ],
+              //   //             ),
+              //   //             Image(
+              //   //               image: AssetImage("images/cloud.png"),
+              //   //               height: height * 0.085,
+              //   //             )
+              //   //           ],
+              //   //         ),
+              //   //       ),
+              //   //     ),
+              //   //   ),
+              //   // ),
+              //   child: GeoLocationPage(),
+              // ),
               SliverToBoxAdapter(
                 child: Container(
                   // color: Color.fromRGBO(40, 36, 36, 1.0),
@@ -379,36 +374,37 @@ class _FirstPageState extends State<FirstPage>{
     ),
     );
   }
-  showWifiNetAlertDialog(BuildContext context) {
-    // Create button
-    Widget okButton = TextButton(
-      child: Text("ok"),
-      onPressed: (){
-        notifier = false;
-        mobNotifier = false;
-        wifiNotifier = false;
-        getData();
-        Navigator.pop(context, false);
-      },
-    );
-    // Create AlertDialog
-    AlertDialog alert = AlertDialog(
-      backgroundColor: Colors.white.withOpacity(0.2),
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12.0)),
-      title: Text(" No Internet ",style: TextStyle(color: Colors.white60,fontWeight: FontWeight.bold),),
-      content: Text("please connect your device with Internet  ",style: TextStyle(color: Colors.white60),),
-      actions: [
-        okButton,
-      ],
-    );
 
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return alert ;
-      },
-    );
-  }
+  // showWifiNetAlertDialog(BuildContext context) {
+  //   // Create button
+  //   Widget okButton = TextButton(
+  //     child: Text("ok"),
+  //     onPressed: (){
+  //       notifier = false;
+  //       mobNotifier = false;
+  //       wifiNotifier = false;
+  //       getData();
+  //       Navigator.pop(context, false);
+  //     },
+  //   );
+  //   // Create AlertDialog
+  //   AlertDialog alert = AlertDialog(
+  //     backgroundColor: Colors.white.withOpacity(0.2),
+  //     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12.0)),
+  //     title: Text(" No Internet ",style: TextStyle(color: Colors.white60,fontWeight: FontWeight.bold),),
+  //     content: Text("please connect your device with Internet  ",style: TextStyle(color: Colors.white60),),
+  //     actions: [
+  //       okButton,
+  //     ],
+  //   );
+  //
+  //   showDialog(
+  //     context: context,
+  //     builder: (BuildContext context) {
+  //       return alert ;
+  //     },
+  //   );
+  // }
   showAnotherAlertDialog(BuildContext context) {
     // Create button
     Widget okButton = TextButton(
