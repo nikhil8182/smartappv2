@@ -84,9 +84,9 @@ class _FirstPageListContainersState extends State<FirstPageListContainers> {
       username = loginData.getString('username');
       ipAddress = loginData.getString('ip');
       data = loginData.getStringList('dataValues');
-    print("$ipAddress im inside the initial state in listPage");
-    print("$username im inside the initial state in listPage");
-    print("$data in initial of list page");
+    // print("$ipAddress im inside the initial state in listPage");
+    // print("$username im inside the initial state in listPage");
+    // print("$data in initial of list page");
     getName();
   }
 
@@ -165,7 +165,7 @@ class _FirstPageListContainersState extends State<FirstPageListContainers> {
       if ((!wifiNotifier) && (ipAddress.toString().toLowerCase() != 'false')) {
         showSimpleNotification(
           Text(
-            " your on wifi network in List ",
+            " your on wifi network ",
             style: TextStyle(color: Colors.white),
           ),
           background: Colors.green,
@@ -477,8 +477,8 @@ class _FirstPageListContainersState extends State<FirstPageListContainers> {
     //   print("iam stuck inside else");
     // }
 
-    print("$data the inside the getname in list");
-    print("${data.length} the length of the data");
+    // print("$data the inside the getname in list");
+    // print("${data.length} the length of the data");
 
     for (int i = 0; i < data.length; i++) {
       if (data[i].toString().contains("_Admin_Room") &&
@@ -585,7 +585,10 @@ class _FirstPageListContainersState extends State<FirstPageListContainers> {
     // fireData();
     internet();
     // fireData();
-    initial();
+    Future.delayed(Duration(seconds: 2), () {
+      initial();
+    });
+    // initial();
     timer = Timer.periodic(Duration(seconds: 1), (Timer t) {
       wiFiChecker();
       // getName();

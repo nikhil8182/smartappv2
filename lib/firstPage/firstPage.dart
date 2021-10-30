@@ -60,7 +60,7 @@ class _FirstPageState extends State<FirstPage>{
 
 
   Future <void> initial() async {
-    print("im inside the initial second");
+    //print("im inside the initial second");
     loginData = await SharedPreferences.getInstance();
     // setState(() {
     //   username = loginData.getString('username');
@@ -68,8 +68,8 @@ class _FirstPageState extends State<FirstPage>{
     //   });
     username = loginData.getString('username');
     ipAddress = loginData.getString('ip');
-    print("$ipAddress inside the initial() in FirstPage");
-    print("$username inside the initial() in FirstPage");
+    // print("$ipAddress inside the initial() in FirstPage");
+    // print("$username inside the initial() in FirstPage");
     localDataVariableStorage();
   }
 
@@ -111,7 +111,7 @@ class _FirstPageState extends State<FirstPage>{
 
 
   Future<void> fireData() async {
-    print("im at before atlast of firedata");
+    //print("im at before atlast of firedata");
     databaseReference.child(auth.currentUser.uid).once().then((DataSnapshot snapshot) async {
 
       dataJson = snapshot.value;
@@ -123,9 +123,9 @@ class _FirstPageState extends State<FirstPage>{
       print("$ipLocal  ipLocal is firedata");
       checkData();
       //ipAddress = loginData.getString('ip');
-      print("im at atlast of firedata");
+      //print("im at atlast of firedata");
     });
-    print("above checkData");
+    //print("above checkData");
     //checkData();
   }
 
