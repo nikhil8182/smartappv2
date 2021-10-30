@@ -8,7 +8,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 
 //master version v3.1
-//last cloned  24-sep 2-30 pm
+//last cloned  30-oct 2-30 pm
 
 FirebaseAuth auth = FirebaseAuth.instance;
 
@@ -18,6 +18,7 @@ FlutterLocalNotificationsPlugin();
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   Firebase.initializeApp();
+
 
   ///notification
   // var initializationSettingsAndroid =
