@@ -463,192 +463,274 @@ class _ButtonState extends State<Button> {
 
   initial() async {
     loginData = await SharedPreferences.getInstance();
-    localIp = widget.ipAddress;
-    print("$localIp ========");
-    loginData.setString('ip', localIp);
     ip = loginData.getString('ip');
+    data = loginData.getStringList('dataValues');
     print("$ip --------------");
+    print("$data --------------");
+    getName();
   }
 
 
   Future getName() async {
     pageLoader = 0;
-    databaseReference.child(auth.currentUser.uid).once().then((DataSnapshot snapshot) async {
-      setState(() {
-        pageLoader = 1;
-        //print("${auth.currentUser.uid} the uid is !!!!!!!!!");
-        dataJson = snapshot.value;
-        //print(dataJson);
-      });
+    print("$pageLoader the loader is before");
+
+    // databaseReference.child(auth.currentUser.uid).once().then((DataSnapshot snapshot) async {
+    //   setState(() {
+    //     pageLoader = 1;
+    //     //print("${auth.currentUser.uid} the uid is !!!!!!!!!");
+    //     dataJson = snapshot.value;
+    //     //print(dataJson);
+    //   });
+    // });
+
+    setState(() {
+      pageLoader = 1;
+      print("$pageLoader the loader is after");
+
     });
 
-    initial();
+    //initial();
 
-    if (localIp.toString().toLowerCase() != "false") {
-      print("iam using online json");
+    print("${data.length} the lenth of the in inidiviul");
 
-      final response = await http.get(Uri.http('$ip', "/key"));
-
-      var fetchdata = jsonDecode(response.body);
-      if (response.statusCode == 200) {
-        // setState(() {
-        //   data = fetchdata;
-        // });
-        data = fetchdata;
-      }
-
-        for (int i = 0; i < data.length; i++) {
-          if (data[i].toString().contains("_Admin_Room") &&
-              (!name.contains(data[i].toString().contains("Admin_Room")))) {
-            name.add("Admin_Room");
-            pg.add("Admin_Room");
-          } else if (data[i].toString().contains("_Hall") &&
-              (!name.contains(data[i].toString().contains("Hall")))) {
-            name.add("Hall");
-            pg.add("Hall");
-          } else if (data[i].toString().contains("Living_Room") &&
-              (!name.contains(data[i].toString().contains("Living_Room")))) {
-            name.add("Living_Room");
-            pg.add("Living_Room");
-          } else if (data[i].toString().contains("_Garage") &&
-              (!name.contains(data[i].toString().contains("Garage")))) {
-            name.add("Garage");
-            pg.add("Garage");
-          } else if (data[i].toString().contains("_Kitchen") &&
-              (!name.contains(data[i].toString().contains("Kitchen")))) {
-            name.add("Kitchen");
-            pg.add("Kitchen");
-          } else if (data[i].toString().contains("_Bathroom") &&
-              (!name.contains(data[i].toString().contains("Bathroom")))) {
-            name.add("Bathroom");
-            pg.add("Bathroom");
-          } else if (data[i].toString().contains("Master_Bedroom") &&
-              (!name.contains(data[i].toString().contains("Master_Bedroom")))) {
-            name.add("Master_Bedroom");
-            pg.add("Master_Bedroom");
-          } else if (data[i].toString().contains("_Bedroom1") &&
-              (!name.contains(data[i].toString().contains("Bedroom1")))) {
-            name.add("Bedroom1");
-            pg.add("Bedroom1");
-          } else if (data[i].toString().contains("_Bedroom2") &&
-              (!name.contains(data[i].toString().contains("Bedroom2")))) {
-            name.add("Bedroom2");
-            pg.add("Bedroom2");
-          } else if (data[i].toString().contains("_Bedroom") &&
-              (!name.contains(data[i].toString().contains("Bedroom")))) {
-            name.add("Bedroom");
-            pg.add("Bedroom");
-          } else if (data[i].toString().contains("_Store_Room") &&
-              (!name.contains(data[i].toString().contains("Store_Room")))) {
-            name.add("Store_Room");
-            pg.add("Store_Room");
-          } else if (data[i].toString().contains("_Outside") &&
-              (!name.contains(data[i].toString().contains("Outside")))) {
-            name.add("Outside");
-            pg.add("Outside");
-          } else if (data[i].toString().contains("_Parking") &&
-              (!name.contains(data[i].toString().contains("Parking")))) {
-            name.add("Parking");
-            pg.add("Parking");
-          } else if (data[i].toString().contains("_Outside") &&
-              (!name.contains(data[i].toString().contains("Outside")))) {
-            name.add("Outside");
-            pg.add("Outside");
-          } else if (data[i].toString().contains("_Garden") &&
-              (!name.contains(data[i].toString().contains("Garden")))) {
-            name.add("Garden");
-            pg.add("Garden");
-          }
-        }
-
-    }
-    else if(localIp.toLowerCase().toString() == "false"){
-      // print("iam using online json");
-      // print(" the value of dataJson is $dataJson");
-      setState(() {
-        // print(dataJson);
-        //data = jsonDecode(dataJson);
-        //
-        // data = dataJson;
-        data = dataJson.keys.toList();
-        //print(" the value of key data values $data");
-
-      });
-
-      for (int i = 0; i < data.length; i++) {
-        if (data[i].toString().contains("_Admin_Room") &&
-            (!name.contains(data[i].toString().contains("Admin_Room")))) {
-          name.add("Admin_Room");
-          pg.add("Admin_Room");
-        } else if (data[i].toString().contains("_Hall") &&
-            (!name.contains(data[i].toString().contains("Hall")))) {
-          name.add("Hall");
-          pg.add("Hall");
-        } else if (data[i].toString().contains("Living_Room") &&
-            (!name.contains(data[i].toString().contains("Living_Room")))) {
-          name.add("Living_Room");
-          pg.add("Living_Room");
-        } else if (data[i].toString().contains("_Garage") &&
-            (!name.contains(data[i].toString().contains("Garage")))) {
-          name.add("Garage");
-          pg.add("Garage");
-        } else if (data[i].toString().contains("_Kitchen") &&
-            (!name.contains(data[i].toString().contains("Kitchen")))) {
-          name.add("Kitchen");
-          pg.add("Kitchen");
-        } else if (data[i].toString().contains("_Bathroom1") &&
-            (!name.contains(data[i].toString().contains("Bathroom1")))) {
-          name.add("Bathroom1");
-          pg.add("Bathroom1");
-        } else if (data[i].toString().contains("_Bathroom2") &&
-            (!name.contains(data[i].toString().contains("Bathroom2")))) {
-          name.add("Bathroom2");
-          pg.add("Bathroom2");
-        }else if (data[i].toString().contains("Master_Bedroom") &&
-            (!name.contains(data[i].toString().contains("Master_Bedroom")))) {
-          name.add("Master_Bedroom");
-          pg.add("Master_Bedroom");
-        }else if (data[i].toString().contains("_Bedroom1") &&
-            (!name.contains(data[i].toString().contains("Bedroom1")))) {
-          name.add("Bedroom1");
-          pg.add("Bedroom1");
-        } else if (data[i].toString().contains("_Bedroom2") &&
-            (!name.contains(data[i].toString().contains("Bedroom2")))) {
-          name.add("Bedroom2");
-          pg.add("Bedroom2");
-        }  else if (data[i].toString().contains("_Bedroom") &&
-            (!name.contains(data[i].toString().contains("Bedroom")))) {
-          name.add("Bedroom");
-          pg.add("Bedroom");
-        } else if (data[i].toString().contains("_Store_Room") &&
-            (!name.contains(data[i].toString().contains("Store_Room")))) {
-          name.add("Store_Room");
-          pg.add("Store_Room");
-        } else if (data[i].toString().contains("_Outside") &&
-            (!name.contains(data[i].toString().contains("Outside")))) {
-          name.add("Outside");
-          pg.add("Outside");
-        } else if (data[i].toString().contains("_Parking") &&
-            (!name.contains(data[i].toString().contains("Parking")))) {
-          name.add("Parking");
-          pg.add("Parking");
-        } else if (data[i].toString().contains("_Outside") &&
-            (!name.contains(data[i].toString().contains("Outside")))) {
-          name.add("Outside");
-          pg.add("Outside");
-        } else if (data[i].toString().contains("_Garden") &&
-            (!name.contains(data[i].toString().contains("Garden")))) {
-          name.add("Garden");
-          pg.add("Garden");
-        }
+    for (int i = 0; i < data.length; i++) {
+      if (data[i].toString().contains("_Admin_Room") &&
+          (!name.contains(data[i].toString().contains("Admin_Room")))) {
+        name.add("Admin_Room");
+        pg.add("Admin_Room");
+      } else if (data[i].toString().contains("_Hall") &&
+          (!name.contains(data[i].toString().contains("Hall")))) {
+        name.add("Hall");
+        pg.add("Hall");
+      } else if (data[i].toString().contains("Living_Room") &&
+          (!name.contains(data[i].toString().contains("Living_Room")))) {
+        name.add("Living_Room");
+        pg.add("Living_Room");
+      } else if (data[i].toString().contains("_Garage") &&
+          (!name.contains(data[i].toString().contains("Garage")))) {
+        name.add("Garage");
+        pg.add("Garage");
+      } else if (data[i].toString().contains("_Kitchen") &&
+          (!name.contains(data[i].toString().contains("Kitchen")))) {
+        name.add("Kitchen");
+        pg.add("Kitchen");
+      } else if (data[i].toString().contains("_Bathroom") &&
+          (!name.contains(data[i].toString().contains("Bathroom")))) {
+        name.add("Bathroom");
+        pg.add("Bathroom");
+      } else if (data[i].toString().contains("Master_Bedroom") &&
+          (!name.contains(data[i].toString().contains("Master_Bedroom")))) {
+        name.add("Master_Bedroom");
+        pg.add("Master_Bedroom");
+      } else if (data[i].toString().contains("_Bedroom1") &&
+          !name.contains(data[i].toString().contains("Bedroom1"))) {
+        name.add("Bedroom1");
+        //print("----- bedroom1 $name name -------");
+        pg.add("Bedroom1");
+        //print("----- bedroom1 $pg pg -------");
+      } else if (data[i].toString().contains("_Bedroom2") &&
+          (!name.contains(data[i].toString().contains("Bedroom2")))) {
+        name.add("Bedroom2");
+        //print("----- bedroom1 $name name -------");
+        pg.add("Bedroom2");
+        //print("----- bedroom1 $pg pg -------");
+      } else if (data[i].toString().contains("_Bedroom") &&
+          (!name.contains(data[i].toString().contains("Bedroom")))) {
+        name.add("Bedroom");
+        pg.add("Bedroom");
+      } else if (data[i].toString().contains("_Store_Room") &&
+          (!name.contains(data[i].toString().contains("Store_Room")))) {
+        name.add("Store_Room");
+        pg.add("Store_Room");
+      } else if (data[i].toString().contains("_Outside") &&
+          (!name.contains(data[i].toString().contains("Outside")))) {
+        name.add("Outside");
+        pg.add("Outside");
+      } else if (data[i].toString().contains("_Parking") &&
+          (!name.contains(data[i].toString().contains("Parking")))) {
+        name.add("Parking");
+        pg.add("Parking");
+      } else if (data[i].toString().contains("_Outside") &&
+          (!name.contains(data[i].toString().contains("Outside")))) {
+        name.add("Outside");
+        pg.add("Outside");
+      } else if (data[i].toString().contains("_Garden") &&
+          (!name.contains(data[i].toString().contains("Garden")))) {
+        name.add("Garden");
+        pg.add("Garden");
       }
     }
-    else{
-      print("iam stuck inside else");
-    }
+
+    // name = name.toSet().toList();
+    // pg = pg.toSet().toList();
+    // if (localIp.toString().toLowerCase() != "false") {
+    //   print("iam using online json");
+    //
+    //   final response = await http.get(Uri.http('$ip', "/key"));
+    //
+    //   var fetchdata = jsonDecode(response.body);
+    //   if (response.statusCode == 200) {
+    //     // setState(() {
+    //     //   data = fetchdata;
+    //     // });
+    //     data = fetchdata;
+    //   }
+    //
+    //     for (int i = 0; i < data.length; i++) {
+    //       if (data[i].toString().contains("_Admin_Room") &&
+    //           (!name.contains(data[i].toString().contains("Admin_Room")))) {
+    //         name.add("Admin_Room");
+    //         pg.add("Admin_Room");
+    //       } else if (data[i].toString().contains("_Hall") &&
+    //           (!name.contains(data[i].toString().contains("Hall")))) {
+    //         name.add("Hall");
+    //         pg.add("Hall");
+    //       } else if (data[i].toString().contains("Living_Room") &&
+    //           (!name.contains(data[i].toString().contains("Living_Room")))) {
+    //         name.add("Living_Room");
+    //         pg.add("Living_Room");
+    //       } else if (data[i].toString().contains("_Garage") &&
+    //           (!name.contains(data[i].toString().contains("Garage")))) {
+    //         name.add("Garage");
+    //         pg.add("Garage");
+    //       } else if (data[i].toString().contains("_Kitchen") &&
+    //           (!name.contains(data[i].toString().contains("Kitchen")))) {
+    //         name.add("Kitchen");
+    //         pg.add("Kitchen");
+    //       } else if (data[i].toString().contains("_Bathroom") &&
+    //           (!name.contains(data[i].toString().contains("Bathroom")))) {
+    //         name.add("Bathroom");
+    //         pg.add("Bathroom");
+    //       } else if (data[i].toString().contains("Master_Bedroom") &&
+    //           (!name.contains(data[i].toString().contains("Master_Bedroom")))) {
+    //         name.add("Master_Bedroom");
+    //         pg.add("Master_Bedroom");
+    //       } else if (data[i].toString().contains("_Bedroom1") &&
+    //           (!name.contains(data[i].toString().contains("Bedroom1")))) {
+    //         name.add("Bedroom1");
+    //         pg.add("Bedroom1");
+    //       } else if (data[i].toString().contains("_Bedroom2") &&
+    //           (!name.contains(data[i].toString().contains("Bedroom2")))) {
+    //         name.add("Bedroom2");
+    //         pg.add("Bedroom2");
+    //       } else if (data[i].toString().contains("_Bedroom") &&
+    //           (!name.contains(data[i].toString().contains("Bedroom")))) {
+    //         name.add("Bedroom");
+    //         pg.add("Bedroom");
+    //       } else if (data[i].toString().contains("_Store_Room") &&
+    //           (!name.contains(data[i].toString().contains("Store_Room")))) {
+    //         name.add("Store_Room");
+    //         pg.add("Store_Room");
+    //       } else if (data[i].toString().contains("_Outside") &&
+    //           (!name.contains(data[i].toString().contains("Outside")))) {
+    //         name.add("Outside");
+    //         pg.add("Outside");
+    //       } else if (data[i].toString().contains("_Parking") &&
+    //           (!name.contains(data[i].toString().contains("Parking")))) {
+    //         name.add("Parking");
+    //         pg.add("Parking");
+    //       } else if (data[i].toString().contains("_Outside") &&
+    //           (!name.contains(data[i].toString().contains("Outside")))) {
+    //         name.add("Outside");
+    //         pg.add("Outside");
+    //       } else if (data[i].toString().contains("_Garden") &&
+    //           (!name.contains(data[i].toString().contains("Garden")))) {
+    //         name.add("Garden");
+    //         pg.add("Garden");
+    //       }
+    //     }
+    //
+    // }
+    // else if(localIp.toLowerCase().toString() == "false"){
+    //   // print("iam using online json");
+    //   // print(" the value of dataJson is $dataJson");
+    //   setState(() {
+    //     // print(dataJson);
+    //     //data = jsonDecode(dataJson);
+    //     //
+    //     // data = dataJson;
+    //     data = dataJson.keys.toList();
+    //     //print(" the value of key data values $data");
+    //
+    //   });
+    //
+    //   for (int i = 0; i < data.length; i++) {
+    //     if (data[i].toString().contains("_Admin_Room") &&
+    //         (!name.contains(data[i].toString().contains("Admin_Room")))) {
+    //       name.add("Admin_Room");
+    //       pg.add("Admin_Room");
+    //     } else if (data[i].toString().contains("_Hall") &&
+    //         (!name.contains(data[i].toString().contains("Hall")))) {
+    //       name.add("Hall");
+    //       pg.add("Hall");
+    //     } else if (data[i].toString().contains("Living_Room") &&
+    //         (!name.contains(data[i].toString().contains("Living_Room")))) {
+    //       name.add("Living_Room");
+    //       pg.add("Living_Room");
+    //     } else if (data[i].toString().contains("_Garage") &&
+    //         (!name.contains(data[i].toString().contains("Garage")))) {
+    //       name.add("Garage");
+    //       pg.add("Garage");
+    //     } else if (data[i].toString().contains("_Kitchen") &&
+    //         (!name.contains(data[i].toString().contains("Kitchen")))) {
+    //       name.add("Kitchen");
+    //       pg.add("Kitchen");
+    //     } else if (data[i].toString().contains("_Bathroom1") &&
+    //         (!name.contains(data[i].toString().contains("Bathroom1")))) {
+    //       name.add("Bathroom1");
+    //       pg.add("Bathroom1");
+    //     } else if (data[i].toString().contains("_Bathroom2") &&
+    //         (!name.contains(data[i].toString().contains("Bathroom2")))) {
+    //       name.add("Bathroom2");
+    //       pg.add("Bathroom2");
+    //     }else if (data[i].toString().contains("Master_Bedroom") &&
+    //         (!name.contains(data[i].toString().contains("Master_Bedroom")))) {
+    //       name.add("Master_Bedroom");
+    //       pg.add("Master_Bedroom");
+    //     }else if (data[i].toString().contains("_Bedroom1") &&
+    //         (!name.contains(data[i].toString().contains("Bedroom1")))) {
+    //       name.add("Bedroom1");
+    //       pg.add("Bedroom1");
+    //     } else if (data[i].toString().contains("_Bedroom2") &&
+    //         (!name.contains(data[i].toString().contains("Bedroom2")))) {
+    //       name.add("Bedroom2");
+    //       pg.add("Bedroom2");
+    //     }  else if (data[i].toString().contains("_Bedroom") &&
+    //         (!name.contains(data[i].toString().contains("Bedroom")))) {
+    //       name.add("Bedroom");
+    //       pg.add("Bedroom");
+    //     } else if (data[i].toString().contains("_Store_Room") &&
+    //         (!name.contains(data[i].toString().contains("Store_Room")))) {
+    //       name.add("Store_Room");
+    //       pg.add("Store_Room");
+    //     } else if (data[i].toString().contains("_Outside") &&
+    //         (!name.contains(data[i].toString().contains("Outside")))) {
+    //       name.add("Outside");
+    //       pg.add("Outside");
+    //     } else if (data[i].toString().contains("_Parking") &&
+    //         (!name.contains(data[i].toString().contains("Parking")))) {
+    //       name.add("Parking");
+    //       pg.add("Parking");
+    //     } else if (data[i].toString().contains("_Outside") &&
+    //         (!name.contains(data[i].toString().contains("Outside")))) {
+    //       name.add("Outside");
+    //       pg.add("Outside");
+    //     } else if (data[i].toString().contains("_Garden") &&
+    //         (!name.contains(data[i].toString().contains("Garden")))) {
+    //       name.add("Garden");
+    //       pg.add("Garden");
+    //     }
+    //   }
+    // }
+    //
+    // else{
+    //   print("iam stuck inside else");
+    // }
 
     name = name.toSet().toList();
     pg = pg.toSet().toList();
+
       // setState(() {
       //   name = name.toSet().toList();
       //   pg = pg.toSet().toList();
@@ -661,9 +743,6 @@ class _ButtonState extends State<Button> {
   @override
   void initState() {
     initial();
-    timer = Timer.periodic(Duration(seconds: 1), (Timer t) {
-      getName();
-    });
     // print("email ${widget.email} place ${widget.place} ind ${widget.ind} ");
     super.initState();
     // print("final url check $check");
@@ -704,6 +783,26 @@ class Pages extends StatefulWidget {
 
 class _PagesState extends State<Pages> with WidgetsBindingObserver {
 
+  List data;
+  List dataValue;
+  List<Container> buttonsList = List<Container>();
+  String title;
+  bool result = false;
+  bool result2 = false;
+  bool isSwitched;
+  Timer timer;
+  List name = [];
+  List pg = [];
+  String buttonName;
+  String localIp;
+  String up;
+  SharedPreferences loginData;
+  String ip;
+
+
+
+
+
   List<Widget> _buildButtonsWithNames() {
     //print(" im inside the buildbutton--------------===========");
     buttonsList.clear();
@@ -724,9 +823,6 @@ class _PagesState extends State<Pages> with WidgetsBindingObserver {
     });
     return buttonsList;
   }
-
-  String up;
-
 
   void buttonOnline(int i){
     //print("${data[i]}");
@@ -1649,19 +1745,24 @@ class _PagesState extends State<Pages> with WidgetsBindingObserver {
     }
   }
 
-  SharedPreferences loginData;
-  String ip;
-
-
   void initial() async {
-    localIp = widget.localIp;
-    print("im inside the initial function in pages $localIp");
+
     loginData = await SharedPreferences.getInstance();
-    setState(() {
-      loginData.setString('ip', localIp);
-      ip = loginData.getString('ip');
-      print("im inside the setstate of initial $ip");
-    });
+    ip = loginData.getString('ip');
+    data = loginData.getStringList('dataValues');
+    print("$ip --------------");
+    print("$data --------------");
+    getName();
+
+    // localIp = widget.localIp;
+    // print("im inside the initial function in pages $localIp");
+    // loginData = await SharedPreferences.getInstance();
+    // setState(() {
+    //   loginData.setString('ip', localIp);
+    //   ip = loginData.getString('ip');
+    //   print("im inside the setstate of initial $ip");
+    //});
+
   }
 
 
@@ -1676,6 +1777,7 @@ class _PagesState extends State<Pages> with WidgetsBindingObserver {
         //print(dataJson);
       });
     });
+
     if (ip.toLowerCase().toString() != 'false') {
       final response = await http.get( Uri.http("$ip", "/$button/$buttonValue"));
       if (response.statusCode == 200) {
@@ -1850,19 +1952,6 @@ class _PagesState extends State<Pages> with WidgetsBindingObserver {
     }
   }
 
-  List data;
-  List dataValue;
-  List<Container> buttonsList = List<Container>();
-  String title;
-  bool result = false;
-  bool result2 = false;
-  bool isSwitched;
-  Timer timer;
-  List name = [];
-  List pg = [];
-  String buttonName;
-  String localIp;
-
   getName() async {
     //final response = await http.get('http://34.83.46.202.xip.io/cyberhome/home.php?username=${widget.email}&query=table');
     //final response = await http.get('http://$local_ip/key/');
@@ -1876,175 +1965,251 @@ class _PagesState extends State<Pages> with WidgetsBindingObserver {
 
     // print("${widget.local_ip} im inside the getname checking local local ip");
     // print("$ip ip inside the getname");
-    initial();
-    if(ip.toString().toLowerCase() != "false") {
-      //print("iam using offline json");
 
-      final response = await http.get(Uri.http("$ip", "/key"));
-      var fetchdata = jsonDecode(response.body);
-      if (response.statusCode == 200) {
-        setState(() {
-          data = fetchdata;
-        });
+    // initial();
+
+    // if(ip.toString().toLowerCase() != "false") {
+    //   //print("iam using offline json");
+    //
+    //   final response = await http.get(Uri.http("$ip", "/key"));
+    //   var fetchdata = jsonDecode(response.body);
+    //   if (response.statusCode == 200) {
+    //     setState(() {
+    //       data = fetchdata;
+    //     });
+    //   }
+    //     for (int i = 0; i < data.length; i++) {
+    //       if (data[i].toString().contains("_Admin_Room") &&
+    //           (!name.contains(data[i].toString().contains("Admin_Room")))) {
+    //         name.add("Admin_Room");
+    //         pg.add("Admin_Room");
+    //       } else if (data[i].toString().contains("_Hall") &&
+    //           (!name.contains(data[i].toString().contains("Hall")))) {
+    //         name.add("Hall");
+    //         pg.add("Hall");
+    //       } else if (data[i].toString().contains("Living_Room") &&
+    //           (!name.contains(data[i].toString().contains("Living_Room")))) {
+    //         name.add("Living_Room");
+    //         pg.add("Living_Room");
+    //       } else if (data[i].toString().contains("_Garage") &&
+    //           (!name.contains(data[i].toString().contains("Garage")))) {
+    //         name.add("Garage");
+    //         pg.add("Garage");
+    //       } else if (data[i].toString().contains("_Kitchen") &&
+    //           (!name.contains(data[i].toString().contains("Kitchen")))) {
+    //         name.add("Kitchen");
+    //         pg.add("Kitchen");
+    //       } else if (data[i].toString().contains("_Bathroom") &&
+    //           (!name.contains(data[i].toString().contains("Bathroom")))) {
+    //         name.add("Bathroom");
+    //         pg.add("Bathroom");
+    //       } else if (data[i].toString().contains("Master_Bedroom") &&
+    //           (!name.contains(data[i].toString().contains("Master_Bedroom")))) {
+    //         name.add("Master_Bedroom");
+    //         pg.add("Master_Bedroom");
+    //       } else if (data[i].toString().contains("_Bedroom1") &&
+    //           (!name.contains(data[i].toString().contains("Bedroom_1")))) {
+    //         name.add("Bedroom_1");
+    //         pg.add("Bedroom_1");
+    //       } else if (data[i].toString().contains("_Bedroom2") &&
+    //           (!name.contains(data[i].toString().contains("Bedroom_2")))) {
+    //         name.add("Bedroom_2");
+    //         pg.add("Bedroom_2");
+    //       } else if (data[i].toString().contains("_Bedroom") &&
+    //           (!name.contains(data[i].toString().contains("Bedroom")))) {
+    //         name.add("Bedroom");
+    //         pg.add("Bedroom");
+    //       } else if (data[i].toString().contains("_Store_Room") &&
+    //           (!name.contains(data[i].toString().contains("Store_Room")))) {
+    //         name.add("Store_Room");
+    //         pg.add("Store_Room");
+    //       } else if (data[i].toString().contains("_Outside") &&
+    //           (!name.contains(data[i].toString().contains("Outside")))) {
+    //         name.add("Outside");
+    //         pg.add("Outside");
+    //       } else if (data[i].toString().contains("_Parking") &&
+    //           (!name.contains(data[i].toString().contains("Parking")))) {
+    //         name.add("Parking");
+    //         pg.add("Parking");
+    //       } else if (data[i].toString().contains("_Outside") &&
+    //           (!name.contains(data[i].toString().contains("Outside")))) {
+    //         name.add("Outside");
+    //         pg.add("Outside");
+    //       } else if (data[i].toString().contains("_Garden") &&
+    //           (!name.contains(data[i].toString().contains("Garden")))) {
+    //         name.add("Garden");
+    //         pg.add("Garden");
+    //       }
+    //     }
+    // }
+    // else if(ip.toLowerCase().toString() == "false"){
+    //   //print("iam using online json");
+    //   // databaseReference.child(auth.currentUser.uid).once().then((DataSnapshot snapshot) async {
+    //   //
+    //   //   setState(() {
+    //   //     dataJson = snapshot.value;
+    //   //     print("$dataJson  im inside the datarefernce");
+    //   //   });
+    //   // });
+    //
+    //   setState(() {
+    //
+    //     data = dataJson.keys.toList();
+    //     //print("$data im inside the setstate of else if");
+    //     //print(data);
+    //
+    //   });
+    //
+    //   for (int i = 0; i < data.length; i++) {
+    //     if (data[i].toString().contains("_Admin_Room") &&
+    //         (!name.contains(data[i].toString().contains("Admin_Room")))) {
+    //       name.add("Admin_Room");
+    //       pg.add("Admin_Room");
+    //     } else if (data[i].toString().contains("_Hall") &&
+    //         (!name.contains(data[i].toString().contains("Hall")))) {
+    //       name.add("Hall");
+    //       pg.add("Hall");
+    //     } else if (data[i].toString().contains("Living_Room") &&
+    //         (!name.contains(data[i].toString().contains("Living_Room")))) {
+    //       name.add("Living_Room");
+    //       pg.add("Living_Room");
+    //     } else if (data[i].toString().contains("_Garage") &&
+    //         (!name.contains(data[i].toString().contains("Garage")))) {
+    //       name.add("Garage");
+    //       pg.add("Garage");
+    //     } else if (data[i].toString().contains("_Kitchen") &&
+    //         (!name.contains(data[i].toString().contains("Kitchen")))) {
+    //       name.add("Kitchen");
+    //       pg.add("Kitchen");
+    //     } else if (data[i].toString().contains("_Bathroom1") &&
+    //         (!name.contains(data[i].toString().contains("Bathroom1")))) {
+    //       name.add("Bathroom1");
+    //       pg.add("Bathroom1");
+    //     } else if (data[i].toString().contains("_Bathroom2") &&
+    //         (!name.contains(data[i].toString().contains("Bathroom2")))) {
+    //       name.add("Bathroom2");
+    //       pg.add("Bathroom2");
+    //     }else if (data[i].toString().contains("Master_Bedroom") &&
+    //         (!name.contains(data[i].toString().contains("Master_Bedroom")))) {
+    //       name.add("Master_Bedroom");
+    //       pg.add("Master_Bedroom");
+    //     } else if (data[i].toString().contains("_Bedroom1") &&
+    //         (!name.contains(data[i].toString().contains("Bedroom_1")))) {
+    //       name.add("Bedroom_1");
+    //       pg.add("Bedroom_1");
+    //     } else if (data[i].toString().contains("_Bedroom2") &&
+    //         (!name.contains(data[i].toString().contains("Bedroom_2")))) {
+    //       name.add("Bedroom_2");
+    //       pg.add("Bedroom_2");
+    //     } else if (data[i].toString().contains("_Bedroom") &&
+    //         (!name.contains(data[i].toString().contains("Bedroom")))) {
+    //       name.add("Bedroom");
+    //       pg.add("Bedroom");
+    //     } else if (data[i].toString().contains("_Store_Room") &&
+    //         (!name.contains(data[i].toString().contains("Store_Room")))) {
+    //       name.add("Store_Room");
+    //       pg.add("Store_Room");
+    //     } else if (data[i].toString().contains("_Outside") &&
+    //         (!name.contains(data[i].toString().contains("Outside")))) {
+    //       name.add("Outside");
+    //       pg.add("Outside");
+    //     } else if (data[i].toString().contains("_Parking") &&
+    //         (!name.contains(data[i].toString().contains("Parking")))) {
+    //       name.add("Parking");
+    //       pg.add("Parking");
+    //     } else if (data[i].toString().contains("_Outside") &&
+    //         (!name.contains(data[i].toString().contains("Outside")))) {
+    //       name.add("Outside");
+    //       pg.add("Outside");
+    //     } else if (data[i].toString().contains("_Garden") &&
+    //         (!name.contains(data[i].toString().contains("Garden")))) {
+    //       name.add("Garden");
+    //       pg.add("Garden");
+    //     }
+    //   }
+    // }
+    // else{
+    //   print("iam stuck inside else");
+    // }
+
+    print("${data.length} the getName");
+
+    for (int i = 0; i < data.length; i++) {
+      if (data[i].toString().contains("_Admin_Room") &&
+          (!name.contains(data[i].toString().contains("Admin_Room")))) {
+        name.add("Admin_Room");
+        pg.add("Admin_Room");
+      } else if (data[i].toString().contains("_Hall") &&
+          (!name.contains(data[i].toString().contains("Hall")))) {
+        name.add("Hall");
+        pg.add("Hall");
+      } else if (data[i].toString().contains("Living_Room") &&
+          (!name.contains(data[i].toString().contains("Living_Room")))) {
+        name.add("Living_Room");
+        pg.add("Living_Room");
+      } else if (data[i].toString().contains("_Garage") &&
+          (!name.contains(data[i].toString().contains("Garage")))) {
+        name.add("Garage");
+        pg.add("Garage");
+      } else if (data[i].toString().contains("_Kitchen") &&
+          (!name.contains(data[i].toString().contains("Kitchen")))) {
+        name.add("Kitchen");
+        pg.add("Kitchen");
+      } else if (data[i].toString().contains("_Bathroom") &&
+          (!name.contains(data[i].toString().contains("Bathroom")))) {
+        name.add("Bathroom");
+        pg.add("Bathroom");
+      } else if (data[i].toString().contains("Master_Bedroom") &&
+          (!name.contains(data[i].toString().contains("Master_Bedroom")))) {
+        name.add("Master_Bedroom");
+        pg.add("Master_Bedroom");
+      } else if (data[i].toString().contains("_Bedroom1") &&
+          !name.contains(data[i].toString().contains("Bedroom1"))) {
+        name.add("Bedroom1");
+        //print("----- bedroom1 $name name -------");
+        pg.add("Bedroom1");
+        //print("----- bedroom1 $pg pg -------");
+      } else if (data[i].toString().contains("_Bedroom2") &&
+          (!name.contains(data[i].toString().contains("Bedroom2")))) {
+        name.add("Bedroom2");
+        //print("----- bedroom1 $name name -------");
+        pg.add("Bedroom2");
+        //print("----- bedroom1 $pg pg -------");
+      } else if (data[i].toString().contains("_Bedroom") &&
+          (!name.contains(data[i].toString().contains("Bedroom")))) {
+        name.add("Bedroom");
+        pg.add("Bedroom");
+      } else if (data[i].toString().contains("_Store_Room") &&
+          (!name.contains(data[i].toString().contains("Store_Room")))) {
+        name.add("Store_Room");
+        pg.add("Store_Room");
+      } else if (data[i].toString().contains("_Outside") &&
+          (!name.contains(data[i].toString().contains("Outside")))) {
+        name.add("Outside");
+        pg.add("Outside");
+      } else if (data[i].toString().contains("_Parking") &&
+          (!name.contains(data[i].toString().contains("Parking")))) {
+        name.add("Parking");
+        pg.add("Parking");
+      } else if (data[i].toString().contains("_Outside") &&
+          (!name.contains(data[i].toString().contains("Outside")))) {
+        name.add("Outside");
+        pg.add("Outside");
+      } else if (data[i].toString().contains("_Garden") &&
+          (!name.contains(data[i].toString().contains("Garden")))) {
+        name.add("Garden");
+        pg.add("Garden");
       }
-        for (int i = 0; i < data.length; i++) {
-          if (data[i].toString().contains("_Admin_Room") &&
-              (!name.contains(data[i].toString().contains("Admin_Room")))) {
-            name.add("Admin_Room");
-            pg.add("Admin_Room");
-          } else if (data[i].toString().contains("_Hall") &&
-              (!name.contains(data[i].toString().contains("Hall")))) {
-            name.add("Hall");
-            pg.add("Hall");
-          } else if (data[i].toString().contains("Living_Room") &&
-              (!name.contains(data[i].toString().contains("Living_Room")))) {
-            name.add("Living_Room");
-            pg.add("Living_Room");
-          } else if (data[i].toString().contains("_Garage") &&
-              (!name.contains(data[i].toString().contains("Garage")))) {
-            name.add("Garage");
-            pg.add("Garage");
-          } else if (data[i].toString().contains("_Kitchen") &&
-              (!name.contains(data[i].toString().contains("Kitchen")))) {
-            name.add("Kitchen");
-            pg.add("Kitchen");
-          } else if (data[i].toString().contains("_Bathroom") &&
-              (!name.contains(data[i].toString().contains("Bathroom")))) {
-            name.add("Bathroom");
-            pg.add("Bathroom");
-          } else if (data[i].toString().contains("Master_Bedroom") &&
-              (!name.contains(data[i].toString().contains("Master_Bedroom")))) {
-            name.add("Master_Bedroom");
-            pg.add("Master_Bedroom");
-          } else if (data[i].toString().contains("_Bedroom1") &&
-              (!name.contains(data[i].toString().contains("Bedroom_1")))) {
-            name.add("Bedroom_1");
-            pg.add("Bedroom_1");
-          } else if (data[i].toString().contains("_Bedroom2") &&
-              (!name.contains(data[i].toString().contains("Bedroom_2")))) {
-            name.add("Bedroom_2");
-            pg.add("Bedroom_2");
-          } else if (data[i].toString().contains("_Bedroom") &&
-              (!name.contains(data[i].toString().contains("Bedroom")))) {
-            name.add("Bedroom");
-            pg.add("Bedroom");
-          } else if (data[i].toString().contains("_Store_Room") &&
-              (!name.contains(data[i].toString().contains("Store_Room")))) {
-            name.add("Store_Room");
-            pg.add("Store_Room");
-          } else if (data[i].toString().contains("_Outside") &&
-              (!name.contains(data[i].toString().contains("Outside")))) {
-            name.add("Outside");
-            pg.add("Outside");
-          } else if (data[i].toString().contains("_Parking") &&
-              (!name.contains(data[i].toString().contains("Parking")))) {
-            name.add("Parking");
-            pg.add("Parking");
-          } else if (data[i].toString().contains("_Outside") &&
-              (!name.contains(data[i].toString().contains("Outside")))) {
-            name.add("Outside");
-            pg.add("Outside");
-          } else if (data[i].toString().contains("_Garden") &&
-              (!name.contains(data[i].toString().contains("Garden")))) {
-            name.add("Garden");
-            pg.add("Garden");
-          }
-        }
     }
-    else if(ip.toLowerCase().toString() == "false"){
-      //print("iam using online json");
-      // databaseReference.child(auth.currentUser.uid).once().then((DataSnapshot snapshot) async {
-      //
-      //   setState(() {
-      //     dataJson = snapshot.value;
-      //     print("$dataJson  im inside the datarefernce");
-      //   });
-      // });
+    name = name.toSet().toList();
+    pg = pg.toSet().toList();
 
-      setState(() {
+    // setState(() {
+    // name = name.toSet().toList();
+    // pg = pg.toSet().toList();
+    //   //print("$name  of the individual page");
+    // });
 
-        data = dataJson.keys.toList();
-        //print("$data im inside the setstate of else if");
-        //print(data);
-
-      });
-
-      for (int i = 0; i < data.length; i++) {
-        if (data[i].toString().contains("_Admin_Room") &&
-            (!name.contains(data[i].toString().contains("Admin_Room")))) {
-          name.add("Admin_Room");
-          pg.add("Admin_Room");
-        } else if (data[i].toString().contains("_Hall") &&
-            (!name.contains(data[i].toString().contains("Hall")))) {
-          name.add("Hall");
-          pg.add("Hall");
-        } else if (data[i].toString().contains("Living_Room") &&
-            (!name.contains(data[i].toString().contains("Living_Room")))) {
-          name.add("Living_Room");
-          pg.add("Living_Room");
-        } else if (data[i].toString().contains("_Garage") &&
-            (!name.contains(data[i].toString().contains("Garage")))) {
-          name.add("Garage");
-          pg.add("Garage");
-        } else if (data[i].toString().contains("_Kitchen") &&
-            (!name.contains(data[i].toString().contains("Kitchen")))) {
-          name.add("Kitchen");
-          pg.add("Kitchen");
-        } else if (data[i].toString().contains("_Bathroom1") &&
-            (!name.contains(data[i].toString().contains("Bathroom1")))) {
-          name.add("Bathroom1");
-          pg.add("Bathroom1");
-        } else if (data[i].toString().contains("_Bathroom2") &&
-            (!name.contains(data[i].toString().contains("Bathroom2")))) {
-          name.add("Bathroom2");
-          pg.add("Bathroom2");
-        }else if (data[i].toString().contains("Master_Bedroom") &&
-            (!name.contains(data[i].toString().contains("Master_Bedroom")))) {
-          name.add("Master_Bedroom");
-          pg.add("Master_Bedroom");
-        } else if (data[i].toString().contains("_Bedroom1") &&
-            (!name.contains(data[i].toString().contains("Bedroom_1")))) {
-          name.add("Bedroom_1");
-          pg.add("Bedroom_1");
-        } else if (data[i].toString().contains("_Bedroom2") &&
-            (!name.contains(data[i].toString().contains("Bedroom_2")))) {
-          name.add("Bedroom_2");
-          pg.add("Bedroom_2");
-        } else if (data[i].toString().contains("_Bedroom") &&
-            (!name.contains(data[i].toString().contains("Bedroom")))) {
-          name.add("Bedroom");
-          pg.add("Bedroom");
-        } else if (data[i].toString().contains("_Store_Room") &&
-            (!name.contains(data[i].toString().contains("Store_Room")))) {
-          name.add("Store_Room");
-          pg.add("Store_Room");
-        } else if (data[i].toString().contains("_Outside") &&
-            (!name.contains(data[i].toString().contains("Outside")))) {
-          name.add("Outside");
-          pg.add("Outside");
-        } else if (data[i].toString().contains("_Parking") &&
-            (!name.contains(data[i].toString().contains("Parking")))) {
-          name.add("Parking");
-          pg.add("Parking");
-        } else if (data[i].toString().contains("_Outside") &&
-            (!name.contains(data[i].toString().contains("Outside")))) {
-          name.add("Outside");
-          pg.add("Outside");
-        } else if (data[i].toString().contains("_Garden") &&
-            (!name.contains(data[i].toString().contains("Garden")))) {
-          name.add("Garden");
-          pg.add("Garden");
-        }
-      }
-    }
-    else{
-      print("iam stuck inside else");
-    }
-    setState(() {
-      name = name.toSet().toList();
-      pg = pg.toSet().toList();
-      //print("$name  of the individual page");
-    });
     return "success";
   }
 
@@ -2061,16 +2226,20 @@ class _PagesState extends State<Pages> with WidgetsBindingObserver {
   @override
   void initState() {
     initial();
-    getName();
+
+    // getName();
     // timer = Timer.periodic(
     //     Duration(seconds: 3),
     //         (Timer t) => callByValue());
 
     // print("mood check ${widget.isDark}");
+
     check().then((intenet) {
       if (intenet) {
         call().then((value) => callByValue());
       }
+    });
+
       // else {
       //   showDialog(
       //       context: context,
@@ -2085,15 +2254,17 @@ class _PagesState extends State<Pages> with WidgetsBindingObserver {
       //       ));
       //   //print("Connection: not present");
       // }
-    });
+     //});
+
+    // timer = Timer.periodic(
+    //     Duration(seconds: 1),
+    //         (Timer t) => check().then((intenet) {
+    //       if (intenet) {
+    //         call().then((value) => callByValue());
+    //         }
+    //         }));
 
 
-    timer = Timer.periodic(
-        Duration(seconds: 3),
-            (Timer t) => check().then((intenet) {
-          if (intenet) {
-            call().then((value) => callByValue());
-          }
           // else {
           //   showDialog(
           //       context: context,
@@ -2107,7 +2278,7 @@ class _PagesState extends State<Pages> with WidgetsBindingObserver {
           //             style: TextStyle(color: Colors.white)),
           //       ));
           // }
-        }));
+        // }));
     //  call_value();
     super.initState();
     // print("data ${data.toString()}");
@@ -2115,61 +2286,6 @@ class _PagesState extends State<Pages> with WidgetsBindingObserver {
 
     //WidgetsBinding.instance.addObserver(this);
   }
-
-  // @override
-  // void didChangeAppLifecycleState(AppLifecycleState state) {
-  //   if (state == AppLifecycleState.resumed) {
-  //     check().then((intenet) {
-  //       if (intenet) {
-  //         call().then((value) => call_value());
-  //       }
-  //       else {
-  //         showDialog(
-  //             context: context,
-  //             builder: (_) => AlertDialog(
-  //               backgroundColor: Colors.black,
-  //               title: Text(
-  //                 "No Internet Connection",
-  //                 style: TextStyle(color: Colors.white),
-  //               ),
-  //               content: Text("Please check your Internet Connection",
-  //                   style: TextStyle(color: Colors.white)),
-  //             ));
-  //         //print("Connection: not present");
-  //       }
-  //     }
-  //     );
-  //     timer = Timer.periodic(
-  //         Duration(seconds: 3),
-  //             (Timer t) => check().then((intenet) {
-  //           if (intenet) {
-  //             call().then((value) => call_value());
-  //           } else {
-  //             showDialog(
-  //                 context: context,
-  //                 builder: (_) => AlertDialog(
-  //                   backgroundColor: Colors.black,
-  //                   title: Text(
-  //                     "No Internet Connection",
-  //                     style: TextStyle(color: Colors.white),
-  //                   ),
-  //                   content: Text(
-  //                       "Please check your Internet Connection",
-  //                       style: TextStyle(color: Colors.white)),
-  //                 ));
-  //           }
-  //         })); //   _showScaffold("resume");
-  //     // user returned to our app
-  //   } else if (state == AppLifecycleState.inactive) {
-  //     // print("app:inactive");
-  //     timer?.cancel();
-  //     // app is inactive
-  //   } else if (state == AppLifecycleState.paused) {
-  //     timer?.cancel();
-  //     // print("app:pause");
-  //     // user is about quit our app temporally
-  //   }
-  // }
 
   @override
   void dispose() {
@@ -2182,69 +2298,8 @@ class _PagesState extends State<Pages> with WidgetsBindingObserver {
   Widget build(BuildContext context) {
     final height = MediaQuery.of(context).size.height;
     final width = MediaQuery.of(context).size.width;
-
-    // return Stack(
-    //   children: [
-    //     Container(
-    //       child: Container(
-    //         margin:EdgeInsets.only(bottom: height*0.06),
-    //         child: Row(
-    //           mainAxisAlignment: MainAxisAlignment.spaceBetween,
-    //           children: [
-    //             //SizedBox(width: width*0.12,),
-    //             IconButton(icon: Icon(Icons.keyboard_backspace_outlined,color: Colors.white,), onPressed: (){Navigator.pop(context);}),
-    //             Container(child: Center(child: Text(widget.room_name.toString().replaceAll("_", " "),style: GoogleFonts.robotoSlab(fontSize: 18,color: Colors.white),))),
-    //
-    //             Container(
-    //               padding:  const EdgeInsets.all(15.0),
-    //             ),
-    //           ],
-    //         ),
-    //       ),
-    //       height: height*0.15,
-    //       width: width*1,
-    //       decoration: BoxDecoration(
-    //         gradient: widget.g1,
-    //       ),
-    //     ),
-    //     Container(
-    //         margin: EdgeInsets.only(top:height*0.09),
-    //         width: width*12,
-    //         decoration: BoxDecoration(
-    //           borderRadius: BorderRadius.only(topLeft: Radius.elliptical(20, 20),topRight:Radius.elliptical(20,20) ),
-    //           //color: widget.c1,
-    //           color:Colors.grey[900],
-    //         ),
-    //         child:SingleChildScrollView(
-    //           child: Column(
-    //             children: [
-    //               result && result2
-    //                   ? SingleChildScrollView(child: Container(padding:EdgeInsets.all(5),
-    //                   child: Wrap(
-    //                   spacing: 20.0,
-    //                   children: _buildButtonsWithNames(),
-    //               )))
-    //                   : Container(
-    //                 child: Container(
-    //                   margin: EdgeInsets.only(top:height*0.4),
-    //                   padding: EdgeInsets.all(10),
-    //                   child: CircularProgressIndicator(
-    //                     backgroundColor: Colors.grey[700],
-    //                     valueColor: new AlwaysStoppedAnimation<Color>(Colors.white),
-    //                   ),
-    //                 ),
-    //               ),
-    //             ],
-    //           ),
-    //         )
-    //     )
-    //   ],
-    // );
     return Scaffold(
       extendBodyBehindAppBar: true,
-      // appBar: AppBar(
-      //   backgroundColor: Colors.transparent,
-      // ),
       body: Container(
         height: height * 1.0,
         width: width * 1.0,

@@ -83,12 +83,11 @@ class _FirstPageListContainersState extends State<FirstPageListContainers> {
     loginData = await SharedPreferences.getInstance();
       username = loginData.getString('username');
       ipAddress = loginData.getString('ip');
-      sharedDataValues = loginData.getStringList('dataValues');
-
-      print("$ipAddress im inside the initial state in listPage");
+      data = loginData.getStringList('dataValues');
+    print("$ipAddress im inside the initial state in listPage");
     print("$username im inside the initial state in listPage");
-    print("$sharedDataValues in initial of list page");
-
+    print("$data in initial of list page");
+    getName();
   }
 
   // Future<void> fireData() async {
@@ -163,16 +162,19 @@ class _FirstPageListContainersState extends State<FirstPageListContainers> {
   wiFiChecker() {
     if (result == ConnectivityResult.wifi) {
       //getName();
-      showSimpleNotification(
-        Text(
-          " your on wifi network in List ",
-          style: TextStyle(color: Colors.white),
-        ),
-        background: Colors.green,
-      );
+      if ((!wifiNotifier) && (ipAddress.toString().toLowerCase() != 'false')) {
+        showSimpleNotification(
+          Text(
+            " your on wifi network in List ",
+            style: TextStyle(color: Colors.white),
+          ),
+          background: Colors.green,
+        );
+        wifiNotifier = true;
+      }
+
     } else if ((result == ConnectivityResult.mobile) && (!mobNotifier)) {
       if ((!mobNotifier) && (ipAddress.toString().toLowerCase() == 'false')) {
-
         showSimpleNotification(
           Text(" your are on Demo Login by Mobile Data   ",
             style: TextStyle(color: Colors.white),), background: Colors.green,
@@ -474,7 +476,9 @@ class _FirstPageListContainersState extends State<FirstPageListContainers> {
     // else {
     //   print("iam stuck inside else");
     // }
-    data = sharedDataValues;
+
+    print("$data the inside the getname in list");
+    print("${data.length} the length of the data");
 
     for (int i = 0; i < data.length; i++) {
       if (data[i].toString().contains("_Admin_Room") &&
@@ -544,14 +548,14 @@ class _FirstPageListContainersState extends State<FirstPageListContainers> {
       }
     }
 
-    name = name.toSet().toList();
-    pg = pg.toSet().toList();
+    // name = name.toSet().toList();
+    // pg = pg.toSet().toList();
 
-    // setState(() {
-    //   name = name.toSet().toList();
-    //   pg = pg.toSet().toList();
-    //   //print("$name  88889978");
-    // });
+    setState(() {
+      name = name.toSet().toList();
+      pg = pg.toSet().toList();
+      //print("$name  88889978");
+    });
 
     return "success";
   }
@@ -586,8 +590,6 @@ class _FirstPageListContainersState extends State<FirstPageListContainers> {
       wiFiChecker();
       // getName();
     });
-    getName();
-
     // fireData();
 
     super.initState();

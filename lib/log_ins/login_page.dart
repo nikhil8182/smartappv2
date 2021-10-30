@@ -260,11 +260,18 @@ class _LoginPageState extends State<LoginPage> {
                                     loginData.setBool('login', false);
                                     loginData.setString('username', email.text);
 
+                                    // Navigator.pushReplacement(
+                                    //     context,
+                                    //     MaterialPageRoute(
+                                    //         builder: (context) =>
+                                    //             HomePage()));
+
                                     Navigator.pushReplacement(
                                         context,
                                         MaterialPageRoute(
                                             builder: (context) =>
                                                 InstallationPage()));
+
                                     // loginState = "logedin succesfully";
                                     // print(
                                     //     "curent user = ${Firebase.auth.UserProfile}");

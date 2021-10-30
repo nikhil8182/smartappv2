@@ -59,19 +59,18 @@ class _FirstPageState extends State<FirstPage>{
       ]);
 
 
-
-
-
   Future <void> initial() async {
-    //print("im inside the initial second");
-     loginData = await SharedPreferences.getInstance();
-  setState(() {
-  username = loginData.getString('username');
-  ipAddress = loginData.getString('ip');
-      });
-    // print("$ipAddress inside the initial() in FirstPage");
-    // print("$username inside the initial() in FirstPage");
-     localDataVariableStorage();
+    print("im inside the initial second");
+    loginData = await SharedPreferences.getInstance();
+    // setState(() {
+    //   username = loginData.getString('username');
+    //   ipAddress = loginData.getString('ip');
+    //   });
+    username = loginData.getString('username');
+    ipAddress = loginData.getString('ip');
+    print("$ipAddress inside the initial() in FirstPage");
+    print("$username inside the initial() in FirstPage");
+    localDataVariableStorage();
   }
 
   localDataVariableStorage() async {
@@ -88,7 +87,9 @@ class _FirstPageState extends State<FirstPage>{
         // data = fetchdata;
         setState(() {
           data = fetchdata;
-          localDataVal.add(data.toString());
+          for(int i =0; i<data.length ; i++){
+            localDataVal.add(data[i].toString());
+          }
           loginData.setStringList('dataValues', localDataVal);
           // print(data);
         });
@@ -96,41 +97,68 @@ class _FirstPageState extends State<FirstPage>{
     }else if (ipAddress.toLowerCase().toString() == "false"){
       setState(() {
         data = dataJson.keys.toList();
-        localDataVal.add(data.toString());
+        for(int i =0; i<data.length ; i++){
+          localDataVal.add(data[i].toString());
+        }
         loginData.setStringList('dataValues', localDataVal);
       });
+    }else{
+      print("surprise motherFucker");
     }
-    sharedDataValues = loginData.getStringList('dataValues');
+    //sharedDataValues = loginData.getStringList('dataValues');
   }
 
 
 
   Future<void> fireData() async {
+    print("im at before atlast of firedata");
     databaseReference.child(auth.currentUser.uid).once().then((DataSnapshot snapshot) async {
 
       dataJson = snapshot.value;
       // data1 = dataJson.keys.toList();
-      //print(dataJson);
+      print(dataJson);
       userName = dataJson["name"];
       ipLocal = dataJson["ip"].toString();
-
-      loginData = await SharedPreferences.getInstance();
-      loginData.setString('ip', ipLocal );
-      loginData.setString('username', userName);
+      print("$userName user name is firedata");
+      print("$ipLocal  ipLocal is firedata");
+      checkData();
       //ipAddress = loginData.getString('ip');
+      print("im at atlast of firedata");
     });
+    print("above checkData");
+    //checkData();
+  }
+
+  checkData() async {
+    print("im inside the data");
+    loginData = await SharedPreferences.getInstance();
+    loginData.setString('ip', ipLocal );
+    loginData.setString('username', userName);
+    getData();
   }
 
 
   getData(){
+    print("im inside the get Data");
     initial();
     if((!wifiNotifier) && (result == ConnectivityResult.wifi)) {
+      if((!wifiNotifier) && (ipAddress.toString().toLowerCase() != 'false')){
+      }else{
+        showSimpleNotification(
+          Text(" Please Connect to your wiFi Network ",
+            style: TextStyle(color: Colors.white),), background: Colors.red,
+        );
+      }
       wifiNotifier = true;
-    }
-    else if((result == ConnectivityResult.mobile)&&(!mobNotifier)){
+    }else if((result == ConnectivityResult.mobile)&&(!mobNotifier)){
       if((!mobNotifier) && (ipAddress.toString().toLowerCase() == 'false')){
         showSimpleNotification(
           Text(" your are on Demo Login by Mobile Data   ",
+            style: TextStyle(color: Colors.white),), background: Colors.green,
+        );
+      }else{
+        showSimpleNotification(
+          Text(" please switch to wifi network   ",
             style: TextStyle(color: Colors.white),), background: Colors.green,
         );
       }
@@ -154,7 +182,7 @@ class _FirstPageState extends State<FirstPage>{
   }
 
 
-  Future<void> internet() async {
+   internet() async {
     Connectivity().onConnectivityChanged.listen((result) {
       setState(() {
         this.result = result;
@@ -172,9 +200,11 @@ class _FirstPageState extends State<FirstPage>{
 
   @override
   void initState() {
+    // timer = Timer.periodic(Duration(seconds: 1), (Timer t) {
+    //   fireData();
+    // });
     internet();
     fireData();
-    getData();
     // timer = Timer.periodic(Duration(seconds: 1), (Timer t) {
     //   getData();
     // });
