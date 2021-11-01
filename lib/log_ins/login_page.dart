@@ -30,15 +30,17 @@ class _LoginPageState extends State<LoginPage> {
   void initState() {
     check_if_already_login();
     Connectivity().onConnectivityChanged.listen((result) {
-      setState(() {
-        this.result = result;
-      });
+      // setState(() {
+      //   this.result = result;
+      // });
+      this.result = result;
     });
     InternetConnectionChecker().onStatusChange.listen((status) async {
       final hasInternet = status == InternetConnectionStatus.connected;
-      setState(() {
-        this.hasInternet = hasInternet;
-      });
+      // setState(() {
+      //   this.hasInternet = hasInternet;
+      // });
+      this.hasInternet = hasInternet;
     });
     email = TextEditingController();
     pass = TextEditingController();

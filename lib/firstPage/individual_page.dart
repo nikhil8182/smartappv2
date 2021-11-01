@@ -465,8 +465,8 @@ class _ButtonState extends State<Button> {
     loginData = await SharedPreferences.getInstance();
     ip = loginData.getString('ip');
     data = loginData.getStringList('dataValues');
-    print("$ip --------------");
-    print("$data --------------");
+    // print("$ip --------------");
+    // print("$data --------------");
     getName();
   }
 
@@ -486,13 +486,13 @@ class _ButtonState extends State<Button> {
 
     setState(() {
       pageLoader = 1;
-      print("$pageLoader the loader is after");
+      //print("$pageLoader the loader is after");
 
     });
 
     //initial();
 
-    print("${data.length} the lenth of the in inidiviul");
+    //print("${data.length} the lenth of the in inidiviul");
 
     for (int i = 0; i < data.length; i++) {
       if (data[i].toString().contains("_Admin_Room") &&
@@ -1750,8 +1750,8 @@ class _PagesState extends State<Pages> with WidgetsBindingObserver {
     loginData = await SharedPreferences.getInstance();
     ip = loginData.getString('ip');
     data = loginData.getStringList('dataValues');
-    print("$ip --------------");
-    print("$data --------------");
+    // print("$ip --------------");
+    // print("$data --------------");
     getName();
 
     // localIp = widget.localIp;
@@ -1953,6 +1953,7 @@ class _PagesState extends State<Pages> with WidgetsBindingObserver {
   }
 
   getName() async {
+
     //final response = await http.get('http://34.83.46.202.xip.io/cyberhome/home.php?username=${widget.email}&query=table');
     //final response = await http.get('http://$local_ip/key/');
 
@@ -2132,7 +2133,7 @@ class _PagesState extends State<Pages> with WidgetsBindingObserver {
     //   print("iam stuck inside else");
     // }
 
-    print("${data.length} the getName");
+    //print("${data.length} the getName");
 
     for (int i = 0; i < data.length; i++) {
       if (data[i].toString().contains("_Admin_Room") &&
@@ -2475,11 +2476,22 @@ class _PagesState extends State<Pages> with WidgetsBindingObserver {
                             child: Container(
                               margin: EdgeInsets.only(top: height * 0.4),
                               padding: EdgeInsets.all(10),
-                              child: CircularProgressIndicator(
-                                backgroundColor: Colors.grey[700],
-                                valueColor:
-                                new AlwaysStoppedAnimation<Color>(
-                                    Colors.white),
+                              child: Column(
+                                children: [
+                                  CircularProgressIndicator(
+                                    backgroundColor: Colors.grey[700],
+                                    valueColor:
+                                    new AlwaysStoppedAnimation<Color>(
+                                        Colors.white),
+                                  ),
+                                  SizedBox(
+                                    height: height*0.02,
+                                  ),
+                                  Text("Please Connect your Mobile with WiFi",
+                                    style: GoogleFonts.inter(
+                                        fontWeight: FontWeight.w300, color: Colors.white),
+                                  ),
+                                ],
                               ),
                             ),
                           ),

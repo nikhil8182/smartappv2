@@ -1,5 +1,4 @@
 import 'dart:convert';
-
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
@@ -29,13 +28,12 @@ class FirstPage extends StatefulWidget {
 }
 
 class _FirstPageState extends State<FirstPage>{
-  var dataJson;
 
+  var dataJson;
   SharedPreferences loginData;
   String userName = " ";
   String ipAddress;
   String ipLocal = " ";
-
   String ip;
   String username;
   bool notifier = false;
@@ -48,6 +46,7 @@ class _FirstPageState extends State<FirstPage>{
   bool hasInternet = false;
   List data = [];
   var sharedDataValues;
+
   List<String> localDataVal = [ ];
   ConnectivityResult result = ConnectivityResult.none;
   Gradient g1 = LinearGradient(
@@ -57,10 +56,10 @@ class _FirstPageState extends State<FirstPage>{
         Colors.grey[800],
         Colors.grey[800],
       ]);
-
+  var count =0;
 
   Future <void> initial() async {
-    //print("im inside the initial second");
+    print("im inside the initial first page");
     loginData = await SharedPreferences.getInstance();
     // setState(() {
     //   username = loginData.getString('username');
@@ -68,50 +67,78 @@ class _FirstPageState extends State<FirstPage>{
     //   });
     username = loginData.getString('username');
     ipAddress = loginData.getString('ip');
-    // print("$ipAddress inside the initial() in FirstPage");
-    // print("$username inside the initial() in FirstPage");
+    print("$ipAddress inside the initial() in FirstPage");
+    print("$username inside the initial() in FirstPage");
     localDataVariableStorage();
   }
 
-  localDataVariableStorage() async {
-
-    if (ipAddress.toString().toLowerCase() != "false") {
-      //print("iam using online json");
-      //print("in the getname insid ethe  $ipAddress");
-      final response = await http.get(Uri.parse(
-        "http://$ipAddress/key",
-      ));
-
-      var fetchdata = jsonDecode(response.body);
-      if (response.statusCode == 200) {
-        // data = fetchdata;
-        setState(() {
-          data = fetchdata;
-          for(int i =0; i<data.length ; i++){
-            localDataVal.add(data[i].toString());
-          }
-          loginData.setStringList('dataValues', localDataVal);
-          // print(data);
-        });
-      }
-    }else if (ipAddress.toLowerCase().toString() == "false"){
-      setState(() {
-        data = dataJson.keys.toList();
-        for(int i =0; i<data.length ; i++){
-          localDataVal.add(data[i].toString());
-        }
-        loginData.setStringList('dataValues', localDataVal);
-      });
-    }else{
-      print("surprise motherFucker");
-    }
-    //sharedDataValues = loginData.getStringList('dataValues');
+  localData() async {
+    loginData = await SharedPreferences.getInstance();
+    setState(() {
+      username = loginData.getString('username');
+    });
   }
 
 
 
+
+  localDataVariableStorage() async {
+     print("im inside the localdata of first page");
+    if ((ipAddress.toString().toLowerCase() != "false")&& (ipAddress != null)) {
+      print("iam using online json in below if class and ip address is $ipAddress");
+      if(result == ConnectivityResult.wifi)
+        {
+          print("in the inside the if o local data of storage inside ethe  $ipAddress");
+          final response = await http.get(Uri.parse(
+            "http://$ipAddress/key",
+          ));
+          var fetchdata = jsonDecode(response.body);
+          if (response.statusCode >0) {
+            // data = fetchdata;
+            setState(() {
+              data = fetchdata;
+              for(int i =0; i<data.length ; i++){
+                localDataVal.add(data[i].toString());
+              }
+              print("im local in if loop data $localDataVal");
+              loginData.setStringList('dataValues', localDataVal);
+              // print(data);
+            });
+          }
+        }else if(result == ConnectivityResult.mobile){
+        if(count < 1) {
+          showAnotherAlertDialog(context);
+          showSimpleNotification(
+            Text(" plaese im from else con for localDataVariableStorage ",
+              style: TextStyle(color: Colors.white),), background: Colors.red,
+          );
+          count = 2;
+        }
+      }
+    }else if ((ipAddress.toLowerCase().toString() == "false") && (ipAddress != null)){
+      print("im inisde the else if ");
+      if(result == ConnectivityResult.mobile){
+        setState(() {
+          data = dataJson.keys.toList();
+          for(int i =0; i<data.length ; i++){
+            localDataVal.add(data[i].toString());
+          }
+          print("im local in else if loop data $localDataVal");
+          loginData.setStringList('dataValues', localDataVal);
+        });
+      } else if(result == ConnectivityResult.wifi){
+        //print some add some functionality
+        print("*********im inside the else if of ip Address and inside the esle state********");
+      }
+    }
+    // else{
+    //   initial();
+    // }
+    //sharedDataValues = loginData.getStringList('dataValues');
+  }
+
   Future<void> fireData() async {
-    //print("im at before atlast of firedata");
+    print("im at before atlast of firedata");
     databaseReference.child(auth.currentUser.uid).once().then((DataSnapshot snapshot) async {
 
       dataJson = snapshot.value;
@@ -130,57 +157,56 @@ class _FirstPageState extends State<FirstPage>{
   }
 
   checkData() async {
-    print("im inside the data");
+    print("im inside the check data of first page");
     loginData = await SharedPreferences.getInstance();
     loginData.setString('ip', ipLocal );
     loginData.setString('username', userName);
-    getData();
-  }
-
-
-  getData(){
-    print("im inside the get Data");
     initial();
-    if((!wifiNotifier) && (result == ConnectivityResult.wifi)) {
-      if((!wifiNotifier) && (ipAddress.toString().toLowerCase() != 'false')){
-      }else{
-        showSimpleNotification(
-          Text(" Please Connect to your wiFi Network ",
-            style: TextStyle(color: Colors.white),), background: Colors.red,
-        );
-      }
-      wifiNotifier = true;
-    }else if((result == ConnectivityResult.mobile)&&(!mobNotifier)){
-      if((!mobNotifier) && (ipAddress.toString().toLowerCase() == 'false')){
-        showSimpleNotification(
-          Text(" your are on Demo Login by Mobile Data   ",
-            style: TextStyle(color: Colors.white),), background: Colors.green,
-        );
-      }else{
-        showSimpleNotification(
-          Text(" please switch to wifi network   ",
-            style: TextStyle(color: Colors.white),), background: Colors.green,
-        );
-      }
-      mobNotifier = true;
-    }
-
-    //important recently committed
-    // else if((result == ConnectivityResult.none)&&(!notifier))
-    // {
-    //   if(!notifier){
-    //     //showWifiNetAlertDialog(context);
-    //     showSimpleNotification(
-    //       Text(" No Internet Connectivity",
-    //         style: TextStyle(color: Colors.white),), background: Colors.red,
-    //     );
-    //     // showWifiNetAlertDialog(context);
-    //   }
-    //   notifier = true;
-    // }
-
   }
 
+  // getData(){
+  //   print("im inside the get Data of first page");
+  //   initial();
+  //
+  //   // if((!wifiNotifier) && (result == ConnectivityResult.wifi)) {
+  //   //   if((!wifiNotifier) && (ipAddress.toString().toLowerCase() != 'false')){
+  //   //   }else{
+  //   //     showSimpleNotification(
+  //   //       Text(" Please Connect to your wiFi Network ",
+  //   //         style: TextStyle(color: Colors.white),), background: Colors.red,
+  //   //     );
+  //   //   }
+  //   //   wifiNotifier = true;
+  //   // }else if((result == ConnectivityResult.mobile)&&(!mobNotifier)){
+  //   //   if((!mobNotifier) && (ipAddress.toString().toLowerCase() != 'false')){
+  //   //     showSimpleNotification(
+  //   //       Text(" your are on Demo Login by Mobile Data   ",
+  //   //         style: TextStyle(color: Colors.white),), background: Colors.green,
+  //   //     );
+  //   //   }else{
+  //   //     showSimpleNotification(
+  //   //       Text(" please switch to wifi network   ",
+  //   //         style: TextStyle(color: Colors.white),), background: Colors.green,
+  //   //     );
+  //   //   }
+  //   //   mobNotifier = true;
+  //   // }
+  //
+  //   //important recently committed
+  //   // else if((result == ConnectivityResult.none)&&(!notifier))
+  //   // {
+  //   //   if(!notifier){
+  //   //     //showWifiNetAlertDialog(context);
+  //   //     showSimpleNotification(
+  //   //       Text(" No Internet Connectivity",
+  //   //         style: TextStyle(color: Colors.white),), background: Colors.red,
+  //   //     );
+  //   //     // showWifiNetAlertDialog(context);
+  //   //   }
+  //   //   notifier = true;
+  //   // }
+  //
+  // }
 
    internet() async {
     Connectivity().onConnectivityChanged.listen((result) {
@@ -205,6 +231,7 @@ class _FirstPageState extends State<FirstPage>{
     // });
     internet();
     fireData();
+    localData();
     // timer = Timer.periodic(Duration(seconds: 1), (Timer t) {
     //   getData();
     // });
@@ -440,10 +467,9 @@ class _FirstPageState extends State<FirstPage>{
     Widget okButton = TextButton(
       child: Text("ok"),
       onPressed: (){
-        notifier = false;
-        mobNotifier = false;
-        wifiNotifier = false;
-        getData();
+        initial();
+        fireData();
+        //localDataVariableStorage();
         Navigator.pop(context, false);
       },
     );
@@ -452,7 +478,7 @@ class _FirstPageState extends State<FirstPage>{
       backgroundColor: Colors.white.withOpacity(0.2),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12.0)),
       title: Text("Oops!!!! ",style: TextStyle(color: Colors.white60,fontWeight: FontWeight.bold),),
-      content: Text("please connect your device with Local WiFi Network  ",style: TextStyle(color: Colors.white60),),
+      content: Text("please connect your device with Local WiFi Network  message from(else of localData)  ",style: TextStyle(color: Colors.white60),),
       actions: [
         okButton,
       ],
